@@ -175,10 +175,10 @@ function Login() {
 
             if (response.ok) {
                 localStorage.setItem('authToken', data.token);
-                displayMessage('Login exitoso', 'success'); // Usar función de mensaje personalizada
+                alert('Login exitoso'); 
                 navigate('/links');
             } else {
-                displayMessage(data.message || 'Credenciales incorrectas', 'error'); 
+                alert('Credenciales incorrectas'); 
             }
         } catch (error) {
             console.error('Error durante el proceso de login:', error);
@@ -199,7 +199,7 @@ function Login() {
         <div>
             <form className="login-form" onSubmit={handleLogin}>
                 <h1 className="text-x1 font-bold text-white-600">Login</h1>
-                {error && <div className="error">{error}</div>}
+                {error && <div className="error text-center">{error}</div>}
 
                 <div className="form-group flex flex-col items-center mt-6">
 
