@@ -1,14 +1,13 @@
-import { createRoot } from 'react-dom/client'
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import CryptoJS from 'crypto-js';
+
 
 
 import './styles/App.css';
 
 function Login() {
     const API_BASE = process.env.REACT_APP_API_BASE_URL;
-    const SECRET_KEY = process.env.REACT_APP_SECRET_KEY;
+
 
     const [email, setEmail] = useState('')
     const [password, setPassword] = useState('')
@@ -21,14 +20,14 @@ function Login() {
         const payload = JSON.stringify({ email, password });
 
         try {
-            //Transforma la contraseña secreta en una clave binaria fuerte de 256 bits
-            const keyMaterial = await getKeyMaterial(SECRET_KEY);
-            const key = await getAesKey(keyMaterial);
+            // 1. Generar clave AES aleatoria
+            const sessionKey = await generateRandomKey();
+            const rawSessionKey = await exportKeyRaw(sessionKey);
 
-            // Cifrar
-            const { ciphertext, iv } = await encrypt(payload, key);
+            // 2. Cifrar payload con esa clave
+            const { ciphertext, iv } = await encrypt(payload, sessionKey);
 
-            // Enviar payload cifrado + IV al backend
+            // 3. Enviar todo al backend: clave (raw), IV, payload
             const response = await fetch(`${API_BASE}/api/login`, {
                 method: 'POST',
                 headers: {
@@ -37,21 +36,30 @@ function Login() {
                 },
                 credentials: 'include',
                 body: JSON.stringify({
-                    payload: btoa(String.fromCharCode(...new Uint8Array(ciphertext))), // Base64
-                    iv: Array.from(iv) // Array simple para facilitar el parseo
+                    key: btoa(String.fromCharCode(...new Uint8Array(rawSessionKey))), // clave en base64
+                    iv: Array.from(iv),
+                    payload: btoa(String.fromCharCode(...new Uint8Array(ciphertext)))
                 })
             });
 
+
+
             const data = await response.json();
-            
             if (response.ok) {
-                const decryptedUser = await decrypt(data.user.payload, data.user.iv, SECRET_KEY);
-                localStorage.setItem('authToken', data.token);
-                alert('Bienvenido/a: ' + decryptedUser.name);
+                const user = data.user;
+                const message = data.message;
+
+                console.log('Usuario:', user);
+                console.log('Mensaje:', message);
+
+                alert(`${message}: ${user.name}`);
+                localStorage.setItem('authToken', 'fake-token'); 
                 navigate('/links');
             } else {
-                alert(data.message || 'Credenciales incorrectas');
+                const message = data.message;
+                alert(`${message}`);
             }
+
         } catch (error) {
             console.error('Error al conectar con la API:', error);
             alert('Error al conectar con el servidor');
@@ -59,41 +67,28 @@ function Login() {
     };
 
 
-    async function getKeyMaterial(secret) { //	Importa clave RAW para derivar.
-        const encoder = new TextEncoder();
-        return crypto.subtle.importKey(
-            'raw',
-            encoder.encode(secret),
-            { name: 'PBKDF2' },
-            false,
-            ['deriveKey']
+
+    async function generateRandomKey() {
+        return crypto.subtle.generateKey(
+            { name: "AES-GCM", length: 256 },
+            true,
+            ["encrypt", "decrypt"]
         );
     }
 
-    async function getAesKey(keyMaterial) { //Deriva clave AES para cifrado.
-        return crypto.subtle.deriveKey(
-            {
-                name: 'PBKDF2',
-                salt: new TextEncoder().encode('mi_salt_fijo'),
-                iterations: 100000,
-                hash: 'SHA-256',
-            },
-            keyMaterial,
-            { name: 'AES-GCM', length: 256 },
-            false,
-            ['encrypt', 'decrypt']
-        );
+    async function exportKeyRaw(key) {
+        return await crypto.subtle.exportKey("raw", key); // devuelve ArrayBuffer
     }
 
-    async function encrypt(plainText, key) { //Cifra texto con AES-GCM.
+    async function encrypt(plainText, key) {
         const encoder = new TextEncoder();
         const data = encoder.encode(plainText);
-        const iv = crypto.getRandomValues(new Uint8Array(12)); // IV aleatorio
+        const iv = crypto.getRandomValues(new Uint8Array(12));
 
         const ciphertext = await crypto.subtle.encrypt(
             {
                 name: 'AES-GCM',
-                iv: iv
+                iv
             },
             key,
             data
@@ -101,47 +96,31 @@ function Login() {
 
         return { ciphertext, iv };
     }
-    async function getDerivedKey(password, salt = 'mi_salt_fijo') { //Deriva clave AES para descifrado.
-        const enc = new TextEncoder();
-        const keyMaterial = await window.crypto.subtle.importKey(
-            "raw",
-            enc.encode(password),
-            { name: "PBKDF2" },
+
+    /*async function decrypt(base64Payload, ivArray, rawKey) {
+        const key = await crypto.subtle.importKey(
+            'raw',
+            rawKey,
+            'AES-GCM',
             false,
-            ["deriveKey"]
+            ['decrypt']
         );
 
-        return await window.crypto.subtle.deriveKey(
-            {
-                name: "PBKDF2",
-                salt: enc.encode(salt),
-                iterations: 100000,
-                hash: "SHA-256",
-            },
-            keyMaterial,
-            { name: "AES-GCM", length: 256 },
-            false,
-            ["decrypt"]
-        );
-    }
-    async function decrypt(base64Payload, ivArray, password) {  //Descifra y parsea JSON del backend.
-        const key = await getDerivedKey(password);
-
-        const ciphertextWithTag = Uint8Array.from(atob(base64Payload), c => c.charCodeAt(0));
+        const ciphertext = Uint8Array.from(atob(base64Payload), c => c.charCodeAt(0));
         const iv = new Uint8Array(ivArray);
 
-        const decrypted = await window.crypto.subtle.decrypt(
+        const decrypted = await crypto.subtle.decrypt(
             {
-                name: "AES-GCM",
-                iv: iv,
+                name: 'AES-GCM',
+                iv
             },
             key,
-            ciphertextWithTag
+            ciphertext
         );
 
         const decoder = new TextDecoder();
-        return JSON.parse(decoder.decode(decrypted)); 
-    }
+        return JSON.parse(decoder.decode(decrypted));
+    }*/
 
 
     //Vista que voy a mostrar en el index.html
