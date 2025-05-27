@@ -8,20 +8,15 @@ import './styles/App.css';
 function Login() {
     const API_BASE = process.env.REACT_APP_API_BASE_URL;
 
-
     const [email, setEmail] = useState('')
     const [password, setPassword] = useState('')
     const [error, setError] = useState(null)
     const navigate = useNavigate();
 
     let aesKey = null;
-
-
-    // Paso 1 - Obtener clave desde el backend (una vez por sesión)
-
     async function fetchKey() {
         try {
-            const response = await fetch('https://c80c-181-30-186-149.ngrok-free.app/api/get-key', {
+            const response = await fetch(`${API_BASE}/api/get-key`, {
                 method: 'GET',
                 credentials: 'include',
                 headers: {
@@ -33,10 +28,9 @@ function Login() {
             }
             const data = await response.json();
 
-            
+
             const base64Key = data.key.trim().replace(/\s+/g, '');
             const keyRaw = atob(base64Key); // Base64 → texto binario
-            console.log('Clave recibida del backend:', JSON.stringify(data.key));
 
             const keyBuffer = new Uint8Array([...keyRaw].map(c => c.charCodeAt(0))); // Texto binario → bytes
 
@@ -54,86 +48,63 @@ function Login() {
                 ['encrypt', 'decrypt']
 
             );
-            console.log('Clave importada correctamente:', aesKey);
         } catch (err) {
-            console.error('Fetch failed:', err);
             aesKey = null;
         }
 
     }
 
-    async function encryptAndSend(message) {
+    async function encryptLoginAndSend(email, password) {
         if (!aesKey) {
             throw new Error('La clave AES no está cargada. Ejecutá fetchKey() primero.');
         }
-        const iv = window.crypto.getRandomValues(new Uint8Array(12)); // IV de 12 bytes recomendado para AES-GCM
 
-        const encodedMessage = new TextEncoder().encode(message);
+        const loginPayload = JSON.stringify({
+            usuario: email,
+            password: password
+        });
 
-        
+        const iv = window.crypto.getRandomValues(new Uint8Array(12));
+        const encodedMessage = new TextEncoder().encode(loginPayload);
+
         const ciphertextBuffer = await crypto.subtle.encrypt(
-
             {
-
                 name: "AES-GCM",
-
                 iv: iv
-
             },
-
             aesKey,
-
             encodedMessage
-
         );
 
-
         const ciphertext = btoa(String.fromCharCode(...new Uint8Array(ciphertextBuffer)));
-
         const ivBase64 = btoa(String.fromCharCode(...iv));
 
-
-        // Enviar al backend
-
-        const response = await fetch('https://c80c-181-30-186-149.ngrok-free.app/api/decrypt', {
-
+        const response = await fetch(`${API_BASE}/api/login`, {
             method: 'POST',
-
             headers: {
-
                 'Content-Type': 'application/json'
-
             },
-
-            credentials: 'include', 
-
+            credentials: 'include',
             body: JSON.stringify({
-
                 ciphertext: ciphertext,
-
                 iv: ivBase64
-
             })
-
         });
 
 
-        // Leer respuesta cifrada del backend
+
 
         const data = await response.json();
-        
         if (data.error) {
-            console.error('Error del backend:', data.error);
-            return; // No intentes desencriptar si hay error
+            throw new Error(data.error);
         }
+
         const mensajeDesencriptado = await decryptResponseFromBackend(data);
-
-        alert('Respuesta desencriptada del backend:', mensajeDesencriptado);
-
+        return mensajeDesencriptado;
     }
 
+
     async function decryptResponseFromBackend(data) {
-        console.log('Respuesta cifrada del backend:', data);
 
         const ciphertextWithTag = Uint8Array.from(atob(data.ciphertext), c => c.charCodeAt(0));
 
@@ -165,14 +136,38 @@ function Login() {
 
     async function iniciar(event) {
         event.preventDefault();
-        await fetchKey(); // Solo una vez
-        if (!aesKey) {
-            console.error('No se pudo obtener la clave AES, no se puede encriptar');
-            return;
-        }
-        await encryptAndSend('Hola backend, ¿cómo estás?');
+        setError(null);
 
+        try {
+            await fetchKey();
+
+            if (!aesKey) {
+                throw new Error('No se pudo obtener la clave AES, no se puede encriptar');
+            }
+
+            const respuesta = await encryptLoginAndSend(email, password);
+
+            try {
+                const user = JSON.parse(respuesta);
+
+
+                if (user && user.email) {
+                    alert(`Bienvenido ${user.nombre}`);
+                    localStorage.setItem('authToken', 'logged_in');
+                    navigate("/links");
+                } else {
+                    alert(respuesta);
+                }
+            } catch (e) {
+                alert(respuesta);
+            }
+
+        } catch (err) {
+            console.error("Error en login:", err);
+            setError(err.message);
+        }
     }
+
 
     //Vista que voy a mostrar en el index.html
     return (
