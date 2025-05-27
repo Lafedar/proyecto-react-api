@@ -42,6 +42,11 @@ module.exports = {
         { from: path.resolve(__dirname, '_redirects'), to: '' },
       ],
     }),
+    new CopyWebpackPlugin({
+      patterns: [
+        { from: '_redirects', to: '' } // Copia el archivo desde la raíz al build (dist/)
+      ]
+    }),
     new Dotenv({
       path: './.env',
     }),  // cargará tu .env y expondrá process.env.VAR en tu código
