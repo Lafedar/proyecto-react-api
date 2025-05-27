@@ -1,7 +1,6 @@
-import { createRoot } from 'react-dom/client'
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import CryptoJS from 'crypto-js';
+
 
 
 import './styles/App.css';
@@ -14,53 +13,167 @@ function Login() {
     const [error, setError] = useState(null)
     const navigate = useNavigate();
 
-    const SECRET_KEY = 'clave_secreta_de_32_bytes_123456'; // debe coincidir con el backend
-    const IV = 'vector_init_16byt'; // también debe coincidir
-
-    const handleLogin = async (e) => {
-        e.preventDefault();
-
-        const payload = JSON.stringify({ email, password });
-
-        // Encriptar con AES (CBC + PKCS7)
-        const encrypted = CryptoJS.AES.encrypt(payload, CryptoJS.enc.Utf8.parse(SECRET_KEY), {
-            iv: CryptoJS.enc.Utf8.parse(IV),
-            mode: CryptoJS.mode.CBC,
-            padding: CryptoJS.pad.Pkcs7
-        }).toString();
-
+    let aesKey = null;
+    async function fetchKey() {
         try {
-            const response = await fetch(`${API_BASE}/api/login`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'ngrok-skip-browser-warning': 'true'
-                },
+            const response = await fetch(`${API_BASE}/api/get-key`, {
+                method: 'GET',
                 credentials: 'include',
-                body: JSON.stringify({ payload: encrypted }) // <-- solo enviás esto
+                headers: {
+                    'Accept': 'application/json',
+                }
             });
-
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
             const data = await response.json();
 
-            if (response.ok) {
-                localStorage.setItem('authToken', data.token);
-                alert('Login exitoso');
-                navigate('/links');
-            } else {
-                alert(data.message || 'Credenciales incorrectas');
-            }
-        } catch (error) {
-            console.error('Error al conectar con la API:', error);
-            alert('Error al conectar con el servidor');
+
+            const base64Key = data.key.trim().replace(/\s+/g, '');
+            const keyRaw = atob(base64Key); // Base64 → texto binario
+
+            const keyBuffer = new Uint8Array([...keyRaw].map(c => c.charCodeAt(0))); // Texto binario → bytes
+
+
+            aesKey = await crypto.subtle.importKey(
+
+                'raw',
+
+                keyBuffer,
+
+                'AES-GCM',
+
+                false,
+
+                ['encrypt', 'decrypt']
+
+            );
+        } catch (err) {
+            aesKey = null;
         }
-    };
+
+    }
+
+    async function encryptLoginAndSend(email, password) {
+        if (!aesKey) {
+            throw new Error('La clave AES no está cargada. Ejecutá fetchKey() primero.');
+        }
+
+        const loginPayload = JSON.stringify({
+            usuario: email,
+            password: password
+        });
+
+        const iv = window.crypto.getRandomValues(new Uint8Array(12));
+        const encodedMessage = new TextEncoder().encode(loginPayload);
+
+        const ciphertextBuffer = await crypto.subtle.encrypt(
+            {
+                name: "AES-GCM",
+                iv: iv
+            },
+            aesKey,
+            encodedMessage
+        );
+
+        const ciphertext = btoa(String.fromCharCode(...new Uint8Array(ciphertextBuffer)));
+        const ivBase64 = btoa(String.fromCharCode(...iv));
+
+        const response = await fetch(`${API_BASE}/api/login`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            credentials: 'include',
+            body: JSON.stringify({
+                ciphertext: ciphertext,
+                iv: ivBase64
+            })
+        });
+
+
+
+
+        const data = await response.json();
+        if (data.error) {
+            throw new Error(data.error);
+        }
+
+        const mensajeDesencriptado = await decryptResponseFromBackend(data);
+        return mensajeDesencriptado;
+    }
+
+
+    async function decryptResponseFromBackend(data) {
+
+        const ciphertextWithTag = Uint8Array.from(atob(data.ciphertext), c => c.charCodeAt(0));
+
+        const iv = Uint8Array.from(atob(data.iv), c => c.charCodeAt(0));
+
+
+        const decryptedBuffer = await window.crypto.subtle.decrypt(
+
+            {
+
+                name: "AES-GCM",
+
+                iv: iv
+
+            },
+
+            aesKey,
+
+            ciphertextWithTag
+
+        );
+
+
+        return new TextDecoder().decode(decryptedBuffer);
+
+    }
+
+
+
+    async function iniciar(event) {
+        event.preventDefault();
+        setError(null);
+
+        try {
+            await fetchKey();
+
+            if (!aesKey) {
+                throw new Error('No se pudo obtener la clave AES, no se puede encriptar');
+            }
+
+            const respuesta = await encryptLoginAndSend(email, password);
+
+            try {
+                const user = JSON.parse(respuesta);
+
+
+                if (user && user.email) {
+                    alert(`Bienvenido ${user.nombre}`);
+                    localStorage.setItem('authToken', 'logged_in');
+                    navigate("/links");
+                } else {
+                    alert(respuesta);
+                }
+            } catch (e) {
+                alert(respuesta);
+            }
+
+        } catch (err) {
+            console.error("Error en login:", err);
+            setError(err.message);
+        }
+    }
 
 
     //Vista que voy a mostrar en el index.html
     return (
 
         <div>
-            <form className="login-form" onSubmit={handleLogin}>
+            <form className="login-form" onSubmit={iniciar}>
                 <h1 className="text-x1 font-bold text-white-600">Login</h1>
                 {error && <div className="error">{error}</div>}
 
