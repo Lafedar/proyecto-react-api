@@ -14,120 +14,171 @@ function Login() {
     const [error, setError] = useState(null)
     const navigate = useNavigate();
 
-    const handleLogin = async (e) => {
-        e.preventDefault();
+    let aesKey = null;
 
-        const payload = JSON.stringify({ email, password });
 
+    // Paso 1 - Obtener clave desde el backend (una vez por sesión)
+
+    async function fetchKey() {
         try {
-            // 1. Generar clave AES aleatoria
-            const sessionKey = await generateRandomKey();
-            const rawSessionKey = await exportKeyRaw(sessionKey);
-
-            // 2. Cifrar payload con esa clave
-            const { ciphertext, iv } = await encrypt(payload, sessionKey);
-
-            // 3. Enviar todo al backend: clave (raw), IV, payload
-            const response = await fetch(`${API_BASE}/api/login`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'ngrok-skip-browser-warning': 'true'
-                },
+            const response = await fetch('https://c80c-181-30-186-149.ngrok-free.app/api/get-key', {
+                method: 'GET',
                 credentials: 'include',
-                body: JSON.stringify({
-                    key: btoa(String.fromCharCode(...new Uint8Array(rawSessionKey))), // clave en base64
-                    iv: Array.from(iv),
-                    payload: btoa(String.fromCharCode(...new Uint8Array(ciphertext)))
-                })
+                headers: {
+                    'Accept': 'application/json',
+                }
             });
-
-
-
-            const data = await response.json();
-            if (response.ok) {
-                const user = data.user;
-                const message = data.message;
-
-                console.log('Usuario:', user);
-                console.log('Mensaje:', message);
-
-                alert(`${message}: ${user.name}`);
-                localStorage.setItem('authToken', 'fake-token'); 
-                navigate('/links');
-            } else {
-                const message = data.message;
-                alert(`${message}`);
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
             }
+            const data = await response.json();
 
-        } catch (error) {
-            console.error('Error al conectar con la API:', error);
-            alert('Error al conectar con el servidor');
+            
+            const base64Key = data.key.trim().replace(/\s+/g, '');
+            const keyRaw = atob(base64Key); // Base64 → texto binario
+            console.log('Clave recibida del backend:', JSON.stringify(data.key));
+
+            const keyBuffer = new Uint8Array([...keyRaw].map(c => c.charCodeAt(0))); // Texto binario → bytes
+
+
+            aesKey = await crypto.subtle.importKey(
+
+                'raw',
+
+                keyBuffer,
+
+                'AES-GCM',
+
+                false,
+
+                ['encrypt', 'decrypt']
+
+            );
+            console.log('Clave importada correctamente:', aesKey);
+        } catch (err) {
+            console.error('Fetch failed:', err);
+            aesKey = null;
         }
-    };
 
-
-
-    async function generateRandomKey() {
-        return crypto.subtle.generateKey(
-            { name: "AES-GCM", length: 256 },
-            true,
-            ["encrypt", "decrypt"]
-        );
     }
 
-    async function exportKeyRaw(key) {
-        return await crypto.subtle.exportKey("raw", key); // devuelve ArrayBuffer
-    }
+    async function encryptAndSend(message) {
+        if (!aesKey) {
+            throw new Error('La clave AES no está cargada. Ejecutá fetchKey() primero.');
+        }
+        const iv = window.crypto.getRandomValues(new Uint8Array(12)); // IV de 12 bytes recomendado para AES-GCM
 
-    async function encrypt(plainText, key) {
-        const encoder = new TextEncoder();
-        const data = encoder.encode(plainText);
-        const iv = crypto.getRandomValues(new Uint8Array(12));
+        const encodedMessage = new TextEncoder().encode(message);
 
-        const ciphertext = await crypto.subtle.encrypt(
+        
+        const ciphertextBuffer = await crypto.subtle.encrypt(
+
             {
-                name: 'AES-GCM',
-                iv
+
+                name: "AES-GCM",
+
+                iv: iv
+
             },
-            key,
-            data
+
+            aesKey,
+
+            encodedMessage
+
         );
 
-        return { ciphertext, iv };
+
+        const ciphertext = btoa(String.fromCharCode(...new Uint8Array(ciphertextBuffer)));
+
+        const ivBase64 = btoa(String.fromCharCode(...iv));
+
+
+        // Enviar al backend
+
+        const response = await fetch('https://c80c-181-30-186-149.ngrok-free.app/api/decrypt', {
+
+            method: 'POST',
+
+            headers: {
+
+                'Content-Type': 'application/json'
+
+            },
+
+            credentials: 'include', 
+
+            body: JSON.stringify({
+
+                ciphertext: ciphertext,
+
+                iv: ivBase64
+
+            })
+
+        });
+
+
+        // Leer respuesta cifrada del backend
+
+        const data = await response.json();
+        
+        if (data.error) {
+            console.error('Error del backend:', data.error);
+            return; // No intentes desencriptar si hay error
+        }
+        const mensajeDesencriptado = await decryptResponseFromBackend(data);
+
+        alert('Respuesta desencriptada del backend:', mensajeDesencriptado);
+
     }
 
-    /*async function decrypt(base64Payload, ivArray, rawKey) {
-        const key = await crypto.subtle.importKey(
-            'raw',
-            rawKey,
-            'AES-GCM',
-            false,
-            ['decrypt']
-        );
+    async function decryptResponseFromBackend(data) {
+        console.log('Respuesta cifrada del backend:', data);
 
-        const ciphertext = Uint8Array.from(atob(base64Payload), c => c.charCodeAt(0));
-        const iv = new Uint8Array(ivArray);
+        const ciphertextWithTag = Uint8Array.from(atob(data.ciphertext), c => c.charCodeAt(0));
 
-        const decrypted = await crypto.subtle.decrypt(
+        const iv = Uint8Array.from(atob(data.iv), c => c.charCodeAt(0));
+
+
+        const decryptedBuffer = await window.crypto.subtle.decrypt(
+
             {
-                name: 'AES-GCM',
-                iv
+
+                name: "AES-GCM",
+
+                iv: iv
+
             },
-            key,
-            ciphertext
+
+            aesKey,
+
+            ciphertextWithTag
+
         );
 
-        const decoder = new TextDecoder();
-        return JSON.parse(decoder.decode(decrypted));
-    }*/
 
+        return new TextDecoder().decode(decryptedBuffer);
+
+    }
+
+
+
+    async function iniciar(event) {
+        event.preventDefault();
+        await fetchKey(); // Solo una vez
+        if (!aesKey) {
+            console.error('No se pudo obtener la clave AES, no se puede encriptar');
+            return;
+        }
+        await encryptAndSend('Hola backend, ¿cómo estás?');
+
+    }
 
     //Vista que voy a mostrar en el index.html
     return (
 
         <div>
-            <form className="login-form" onSubmit={handleLogin}>
+            <form className="login-form" onSubmit={iniciar}>
                 <h1 className="text-x1 font-bold text-white-600">Login</h1>
                 {error && <div className="error">{error}</div>}
 
