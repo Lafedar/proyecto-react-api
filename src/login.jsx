@@ -16,7 +16,7 @@ function Login() {
     let aesKey = null;
     async function fetchKey() {
         try {
-            const response = await fetch(`https://c80c-181-30-186-149.ngrok-free.app/api/get-key`, {
+            const response = await fetch(`https://b64d-181-30-186-149.ngrok-free.app/api/get-key`, {
                 method: 'GET',
                 credentials: 'include',
                 headers: {
@@ -27,7 +27,7 @@ function Login() {
                 throw new Error(`HTTP error! status: ${response.status}`);
             }
             const data = await response.json();
-
+            alert(data);
 
             const base64Key = data.key.trim().replace(/\s+/g, '');
             const keyRaw = atob(base64Key); // Base64 → texto binario
@@ -49,6 +49,7 @@ function Login() {
 
             );
         } catch (err) {
+            alert(err.message);
             aesKey = null;
         }
 
@@ -79,7 +80,7 @@ function Login() {
         const ciphertext = btoa(String.fromCharCode(...new Uint8Array(ciphertextBuffer)));
         const ivBase64 = btoa(String.fromCharCode(...iv));
 
-        const response = await fetch(`https://c80c-181-30-186-149.ngrok-free.app/api/login`, {
+        const response = await fetch(`https://b64d-181-30-186-149.ngrok-free.app/api/login`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
