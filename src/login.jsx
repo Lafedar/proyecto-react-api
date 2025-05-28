@@ -16,7 +16,7 @@ function Login() {
     let aesKey = null;
     async function fetchKey() {
         try {
-            const response = await fetch(`https://6e86-181-30-186-149.ngrok-free.app/api/get-key`, {
+            const response = await fetch(`https://c6fb-181-30-186-149.ngrok-free.app/api/get-key`, {
                 credentials: 'include',
 
             });
@@ -78,7 +78,7 @@ function Login() {
         const ciphertext = btoa(String.fromCharCode(...new Uint8Array(ciphertextBuffer)));
         const ivBase64 = btoa(String.fromCharCode(...iv));
 
-        const response = await fetch(`https://6e86-181-30-186-149.ngrok-free.app/api/login`, {
+        const response = await fetch(`https://c6fb-181-30-186-149.ngrok-free.app/api/login`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
