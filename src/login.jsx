@@ -27,7 +27,7 @@ function Login() {
                 throw new Error(`HTTP error! status: ${response.status}`);
             }
             const data = await response.json();
-            alert(data);
+            //alert(data);
 
             const base64Key = data.key.trim().replace(/\s+/g, '');
             const keyRaw = atob(base64Key); // Base64 → texto binario
