@@ -46,6 +46,7 @@ function Login() {
                 ['encrypt', 'decrypt']
 
             );
+            alert("Clave AES obtenida correctamente", aesKey);
         } catch (err) {
             alert(err.message);
             aesKey = null;
@@ -143,7 +144,7 @@ function Login() {
             if (!aesKey) {
                 throw new Error('No se pudo obtener la clave AES, no se puede encriptar');
             }
-
+            alert("Se obtuvo la clave");
             const respuesta = await encryptLoginAndSend(email, password);
 
             try {
@@ -162,7 +163,7 @@ function Login() {
             }
 
         } catch (err) {
-            console.error("Error en login:", err);
+            alert("Error en login:", err);
             setError(err.message);
         }
     }
