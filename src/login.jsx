@@ -17,11 +17,8 @@ function Login() {
     async function fetchKey() {
         try {
             const response = await fetch(`https://86d2-181-30-186-149.ngrok-free.app/api/get-key`, {
-                method: 'GET',
                 credentials: 'include',
-                headers: {
-                    'Accept': 'application/json',
-                }
+                
             });
             if (!response.ok) {
                 throw new Error(`HTTP error! status: ${response.status}`);
