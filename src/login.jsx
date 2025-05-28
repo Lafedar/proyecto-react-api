@@ -16,10 +16,7 @@ function Login() {
     let aesKey = null;
     async function fetchKey() {
         try {
-            const response = await fetch(`https://linking-population-mandatory-short.trycloudflare.com
-/api/get-key`, {
-                method: 'GET',
-                mode: 'cors',
+            const response = await fetch(`https://6e86-181-30-186-149.ngrok-free.app/api/get-key`, {
                 credentials: 'include',
 
             });
@@ -28,7 +25,7 @@ function Login() {
                 throw new Error(`HTTP error! status: ${response.status}`);
             }
             const data = await response.json();
-            
+
 
             const base64Key = data.key.trim().replace(/\s+/g, '');
             const keyRaw = atob(base64Key); // Base64 → texto binario
@@ -81,8 +78,7 @@ function Login() {
         const ciphertext = btoa(String.fromCharCode(...new Uint8Array(ciphertextBuffer)));
         const ivBase64 = btoa(String.fromCharCode(...iv));
 
-        const response = await fetch(`https://linking-population-mandatory-short.trycloudflare.com
-/api/login`, {
+        const response = await fetch(`https://6e86-181-30-186-149.ngrok-free.app/api/login`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
