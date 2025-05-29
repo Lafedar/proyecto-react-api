@@ -55,57 +55,75 @@ function Login() {
     }
 
     async function encryptLoginAndSend(email, password) {
-        if (!aesKey) {
-            alert('La clave AES no está cargada. Ejecutá fetchKey() primero.');
+        try {
+            if (!aesKey) {
+                alert('La clave AES no está cargada. Ejecutá fetchKey() primero.');
+            }
+
+            const loginPayload = JSON.stringify({
+                usuario: email,
+                password: password
+            });
+            alert("Payload a encriptar: " + loginPayload);
+            const iv = window.crypto.getRandomValues(new Uint8Array(12));
+            const encodedMessage = new TextEncoder().encode(loginPayload);
+
+            const ciphertextBuffer = await crypto.subtle.encrypt(
+                {
+                    name: "AES-GCM",
+                    iv: iv
+                },
+                aesKey,
+                encodedMessage
+            );
+            alert("Mensaje encriptado correctamente" + ciphertextBuffer);
+
+            const ciphertext = arrayBufferToBase64(ciphertextBuffer);
+            const ivBase64 = arrayBufferToBase64(iv);
+
+            alert("Mensaje encriptado: " + ciphertext + " IV: " + ivBase64);
+            const response = await fetch(`https://continuity-country-distinguished-seven.trycloudflare.com/api/login`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                credentials: 'include',
+                body: JSON.stringify({
+                    ciphertext: ciphertext,
+                    iv: ivBase64
+                })
+            });
+
+            alert("Se enviaron los datos al servidor: " + response.status);
+
+
+
+
+            const data = await response.json();
+            if (data.error) {
+                alert(data.error);
+            }
+
+            const mensajeDesencriptado = await decryptResponseFromBackend(data);
+            ALERT("Mensaje desencriptado: " + mensajeDesencriptado);
+            return mensajeDesencriptado;
+        }
+        catch (err) {
+            alert("Error: " + err.message);
+            throw err;
         }
 
-        const loginPayload = JSON.stringify({
-            usuario: email,
-            password: password
-        });
-        alert("Payload a encriptar: " + loginPayload);
-        const iv = window.crypto.getRandomValues(new Uint8Array(12));
-        const encodedMessage = new TextEncoder().encode(loginPayload);
+    }
+    function arrayBufferToBase64(buffer) {  // Convierte un ArrayBuffer a una cadena Base64
+        let binary = '';
+        const bytes = new Uint8Array(buffer);
+        const len = bytes.byteLength;
 
-        const ciphertextBuffer = await crypto.subtle.encrypt(
-            {
-                name: "AES-GCM",
-                iv: iv
-            },
-            aesKey,
-            encodedMessage
-        );
-        alert("Mensaje encriptado correctamente" + ciphertextBuffer);
-
-        const ciphertext = btoa(String.fromCharCode(...new Uint8Array(ciphertextBuffer)));
-        const ivBase64 = btoa(String.fromCharCode(...iv));
-
-        alert("Mensaje encriptado: " + ciphertext + " IV: " + ivBase64);
-        const response = await fetch(`https://continuity-country-distinguished-seven.trycloudflare.com/api/login`, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            credentials: 'include',
-            body: JSON.stringify({
-                ciphertext: ciphertext,
-                iv: ivBase64
-            })
-        });
-
-        alert("Se enviaron los datos al servidor: " + response.status);
-
-
-
-
-        const data = await response.json();
-        if (data.error) {
-            alert(data.error);
+        for (let i = 0; i < len; i++) {
+            binary += String.fromCharCode(bytes[i]);
         }
 
-        const mensajeDesencriptado = await decryptResponseFromBackend(data);
-        ALERT("Mensaje desencriptado: " + mensajeDesencriptado);
-        return mensajeDesencriptado;
+        return btoa(binary);
     }
 
 
