@@ -146,10 +146,10 @@ function Login() {
             }
             alert("Se obtuvo la clave");
             const respuesta = await encryptLoginAndSend(email, password);
-
+            alert("Respuesta del servidor: " + respuesta);
             try {
                 const user = JSON.parse(respuesta);
-
+                alert("Usuario: " + user.email + " Nombre: " + user.name);
 
                 if (user && user.email) {
                     alert(`Bienvenido ${user.nombre}`);
@@ -164,8 +164,6 @@ function Login() {
 
         } catch (err) {
             alert("Error en login: " + err.message);
-
-            setError(err.message);
         }
     }
 
