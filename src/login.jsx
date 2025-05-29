@@ -163,7 +163,8 @@ function Login() {
             }
 
         } catch (err) {
-            alert("Error en login:", err);
+            alert("Error en login: " + err.message);
+
             setError(err.message);
         }
     }
