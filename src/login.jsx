@@ -56,14 +56,14 @@ function Login() {
 
     async function encryptLoginAndSend(email, password) {
         if (!aesKey) {
-            throw new Error('La clave AES no está cargada. Ejecutá fetchKey() primero.');
+            alert('La clave AES no está cargada. Ejecutá fetchKey() primero.');
         }
 
         const loginPayload = JSON.stringify({
             usuario: email,
             password: password
         });
-
+        alert("Payload a encriptar: " + loginPayload);
         const iv = window.crypto.getRandomValues(new Uint8Array(12));
         const encodedMessage = new TextEncoder().encode(loginPayload);
 
@@ -75,10 +75,12 @@ function Login() {
             aesKey,
             encodedMessage
         );
+        alert("Mensaje encriptado correctamente" + ciphertextBuffer);
 
         const ciphertext = btoa(String.fromCharCode(...new Uint8Array(ciphertextBuffer)));
         const ivBase64 = btoa(String.fromCharCode(...iv));
 
+        alert("Mensaje encriptado: " + ciphertext + " IV: " + ivBase64);
         const response = await fetch(`https://continuity-country-distinguished-seven.trycloudflare.com/api/login`, {
             method: 'POST',
             headers: {
@@ -91,15 +93,18 @@ function Login() {
             })
         });
 
+        alert("Se enviaron los datos al servidor: " + response.status);
+
 
 
 
         const data = await response.json();
         if (data.error) {
-            throw new Error(data.error);
+            alert(data.error);
         }
 
         const mensajeDesencriptado = await decryptResponseFromBackend(data);
+        ALERT("Mensaje desencriptado: " + mensajeDesencriptado);
         return mensajeDesencriptado;
     }
 
