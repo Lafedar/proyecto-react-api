@@ -41,7 +41,7 @@ function Medications() {
 
         const timer = setTimeout(async () => {
             try {
-                const res = await fetch(`${API_BASE}/api/buscarPersona`, {
+                const res = await fetch(`https://continuity-country-distinguished-seven.trycloudflare.com/api/buscarPersona`, {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
@@ -74,7 +74,7 @@ function Medications() {
         }, 500); // espera 500ms antes de lanzar la validacion
 
         return () => clearTimeout(timer);
-    }, [dni, API_BASE]);
+    }, [dni]);
 
 
 
@@ -87,7 +87,7 @@ function Medications() {
                 return;
             }
 
-            const response = await fetch(`${API_BASE}/api/medications`, {
+            const response = await fetch(`https://continuity-country-distinguished-seven.trycloudflare.com/api/medications`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
