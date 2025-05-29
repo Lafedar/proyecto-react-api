@@ -16,7 +16,7 @@ function Login() {
     let aesKey = null;
     async function fetchKey() {
         try {
-            const response = await fetch(`https://clearance-brazilian-camps-int.trycloudflare.com/api/get-key`, {
+            const response = await fetch(`https://continuity-country-distinguished-seven.trycloudflare.com/api/get-key`, {
                 credentials: 'include',
 
             });
@@ -79,7 +79,7 @@ function Login() {
         const ciphertext = btoa(String.fromCharCode(...new Uint8Array(ciphertextBuffer)));
         const ivBase64 = btoa(String.fromCharCode(...iv));
 
-        const response = await fetch(`https://clearance-brazilian-camps-int.trycloudflare.com/api/login`, {
+        const response = await fetch(`https://continuity-country-distinguished-seven.trycloudflare.com/api/login`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
