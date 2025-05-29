@@ -92,6 +92,7 @@ function Login() {
                     ciphertext: ciphertext,
                     iv: ivBase64
                 })
+                
             });
 
             alert("Se enviaron los datos al servidor: " + response.status);
@@ -105,7 +106,7 @@ function Login() {
             }
 
             const mensajeDesencriptado = await decryptResponseFromBackend(data);
-            ALERT("Mensaje desencriptado: " + mensajeDesencriptado);
+            alert("Mensaje desencriptado: " + mensajeDesencriptado);
             return mensajeDesencriptado;
         }
         catch (err) {
