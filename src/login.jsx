@@ -16,7 +16,7 @@ function Login() {
     let aesKey = null;
     async function fetchKey() {
         try {
-            const response = await fetch(`https://draws-automated-logos-bloom.trycloudflare.com/api/get-key`, {
+            const response = await fetch(`https://cameron-ethical-idol-xhtml.trycloudflare.com/api/get-key`, {
                 credentials: 'include',
 
             });
@@ -82,7 +82,7 @@ function Login() {
             const ivBase64 = arrayBufferToBase64(iv);
 
             alert("Mensaje encriptado: " + ciphertext + " IV: " + ivBase64);
-            const response = await fetch(`https://draws-automated-logos-bloom.trycloudflare.com/api/login`, {
+            const response = await fetch(`https://cameron-ethical-idol-xhtml.trycloudflare.com/api/login`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
