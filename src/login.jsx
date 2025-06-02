@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useSession } from './contexts/SessionContext';
+
 
 
 
@@ -11,12 +13,14 @@ function Login() {
     const [email, setEmail] = useState('')
     const [password, setPassword] = useState('')
     const [error, setError] = useState(null)
-    const navigate = useNavigate();
 
-    let aesKey = null;
+    const navigate = useNavigate();
+    const { updateSessionKey } = useSession();
+
+    let aesKey = null; // Variable para almacenar la clave AES
     async function fetchKey() {
         try {
-            const response = await fetch(`https://cameron-ethical-idol-xhtml.trycloudflare.com/api/get-key`, {
+            const response = await fetch(`https://ranks-lighter-together-enjoying.trycloudflare.com/api/get-key`, {
                 credentials: 'include',
 
             });
@@ -41,15 +45,17 @@ function Login() {
 
                 'AES-GCM',
 
-                false,
+                true,
 
                 ['encrypt', 'decrypt']
 
             );
+
             alert("Clave AES obtenida correctamente", aesKey);
         } catch (err) {
             alert(err.message);
             aesKey = null;
+            setAesKey(null);
         }
 
     }
@@ -82,7 +88,7 @@ function Login() {
             const ivBase64 = arrayBufferToBase64(iv);
 
             alert("Mensaje encriptado: " + ciphertext + " IV: " + ivBase64);
-            const response = await fetch(`https://cameron-ethical-idol-xhtml.trycloudflare.com/api/login`, {
+            const response = await fetch(`https://ranks-lighter-together-enjoying.trycloudflare.com/api/login`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
@@ -92,7 +98,7 @@ function Login() {
                     ciphertext: ciphertext,
                     iv: ivBase64
                 })
-                
+
             });
 
             alert("Se enviaron los datos al servidor: " + response.status);
@@ -168,6 +174,12 @@ function Login() {
             if (!aesKey) {
                 throw new Error('No se pudo obtener la clave AES, no se puede encriptar');
             }
+            const rawKey = await window.crypto.subtle.exportKey('raw', aesKey);
+            const base64Key = btoa(String.fromCharCode(...new Uint8Array(rawKey)));
+            updateSessionKey(base64Key);
+            localStorage.removeItem("sessionKey"); // borrar la vieja
+            localStorage.setItem("sessionKey", base64Key);
+            alert("Clave guardada:" + aesKey);
             alert("Se obtuvo la clave");
             const respuesta = await encryptLoginAndSend(email, password);
             alert("Respuesta del servidor: " + respuesta);
@@ -178,7 +190,9 @@ function Login() {
                 if (user && user.email) {
                     alert(`Bienvenido ${user.nombre}`);
                     localStorage.setItem('authToken', 'logged_in');
-                    navigate("/links");
+                    setTimeout(() => {
+                        navigate("/links");
+                    }, 0);
                 } else {
                     alert(respuesta);
                 }
