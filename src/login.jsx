@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useSession } from './contexts/SessionContext';
+import { arrayBufferToBase64 } from './cryptoUtils';
 
 
 
@@ -103,9 +104,6 @@ function Login() {
 
             alert("Se enviaron los datos al servidor: " + response.status);
 
-
-
-
             const data = await response.json();
             if (data.error) {
                 alert(data.error);
@@ -121,18 +119,7 @@ function Login() {
         }
 
     }
-    function arrayBufferToBase64(buffer) {  // Convierte un ArrayBuffer a una cadena Base64
-        let binary = '';
-        const bytes = new Uint8Array(buffer);
-        const len = bytes.byteLength;
-
-        for (let i = 0; i < len; i++) {
-            binary += String.fromCharCode(bytes[i]);
-        }
-
-        return btoa(binary);
-    }
-
+ 
 
     async function decryptResponseFromBackend(data) {
 

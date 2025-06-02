@@ -14,11 +14,10 @@ export default function App() {
             <BrowserRouter>
                 <Routes>
                     <Route path="/" element={<Login />} />
-
-                    <Route path="/links" element={<Links />} />
-                    <Route path="/medications" element={<Medications />} />
-
-
+                    <Route element={<ProtectedRoute />}>
+                        <Route path="/links" element={<Links />} />
+                        <Route path="/medications" element={<Medications />} />
+                    </Route>
                 </Routes>
             </BrowserRouter>
         </SessionProvider>

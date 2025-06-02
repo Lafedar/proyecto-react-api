@@ -1,7 +1,7 @@
 import { createRoot } from 'react-dom/client'
 import React, { useRef, useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { fetchKey, encryptData, decryptData } from './cryptoUtils';
+import { fetchKey, encryptData, decryptData, arrayBufferToBase64 } from './cryptoUtils';
 import { useSession } from './contexts/SessionContext';
 
 
@@ -33,42 +33,48 @@ function Medications() {
     // 2) En el primer useEffect, la cargas una sola vez:
 
     useEffect(() => {
-        // Reinicio estado
+        // Solo ejecutar cuando el DNI tenga 8 dígitos y la clave esté cargada
+        if (dni.length !== 8 || !sessionKey) return;
+
+        // Reinicio de estado
         setDniError(null);
         setDniValid(false);
         setPersonName('');
 
-        // Solo ejecutar cuando el DNI tenga exactamente 8 dígitos
-        if (dni.length !== 8) return;
-
         const fetchPerson = async () => {
             try {
-                alert("Antes de encriptar")
-                // Encriptar
-                if (!sessionKey) {
-                    alert("sessionKey no está disponible");
+                alert("Antes de encriptar");
+
+                const encrypted = await encryptData({ dni }, sessionKey);
+
+                if (!encrypted) {
+                    alert("Falló la encriptación");
                     return;
                 }
-                const encrypted = await encryptData({ dni }, sessionKey);
-                alert("Datos encriptados.")
-                // Llamar a la API
+
+                alert("Datos encriptados.");
+
                 const res = await fetch(
                     `https://ranks-lighter-together-enjoying.trycloudflare.com/api/buscarPersona`,
                     {
                         method: 'POST',
                         headers: { 'Content-Type': 'application/json' },
+                        credentials: 'include',
                         body: JSON.stringify({
                             ciphertext: encrypted.ciphertext,
                             iv: encrypted.iv,
                         }),
                     }
                 );
-                alert("Datos enviados a la api")
+
+                alert("Datos enviados a la API");
+
                 const data = await res.json();
                 alert(`Response ${res.status}: ${JSON.stringify(data)}`);
+
                 if (res.ok) {
-                    alert("Antes de desencriptar")
-                    const decrypted = await decryptData(data);
+                    alert("Antes de desencriptar");
+                    const decrypted = await decryptData(data, sessionKey);
                     const persona = JSON.parse(decrypted);
                     setPersonName(`${persona.nombre_p} ${persona.apellido}`);
                     setDniValid(true);
@@ -84,8 +90,7 @@ function Medications() {
         };
 
         fetchPerson();
-    }, [dni]);
-
+    }, [dni, sessionKey]); // ⬅ se agrega sessionKey como dependencia
 
 
     const handleMedications = async (e) => {

@@ -18,23 +18,6 @@ function Links() {
 
 }
 
-
-/*function MedicationButton({ type = 'button', children, to }) {
-    const handleClick = () => {
-        if (to) {
-            window.open(to, '_blank', 'noopener,noreferrer'); //abre eñ link en otra pestaña de forma segura
-        }
-    };
-
-    return (
-        <button
-            type={type}
-            onClick={handleClick}
-            className="w-[300px] bg-blue-500 transition delay-700 duration-700 ease-in-out hover:-translate-y-1 hover:scale-110 hover:bg-indigo-500">
-            {children}
-        </button>
-    );
-}*/
 function MedicationButton({ type = 'button', children, to }) {
     const navigate = useNavigate();
 
@@ -75,6 +58,7 @@ function AlmuerzosButton({ type = 'button', children, to }) {
 function ExitButton({ type = 'button', children, to }) {
     const handleClick = () => {
         localStorage.removeItem('authToken');
+        localStorage.removeItem('sessionKey');
         if (to) {
             window.open(to, 'noopener,noreferrer'); //abre eñ link en otra pestaña de forma segura
         }
