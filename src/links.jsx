@@ -57,8 +57,8 @@ function AlmuerzosButton({ type = 'button', children, to }) {
 
 function ExitButton({ type = 'button', children, to }) {
     const handleClick = () => {
-        localStorage.removeItem('authToken');
-        localStorage.removeItem('sessionKey');
+        sessionStorage.removeItem('authToken');
+        sessionStorage.removeItem('sessionKey');
         if (to) {
             window.open(to, 'noopener,noreferrer'); //abre eñ link en otra pestaña de forma segura
         }

@@ -2,7 +2,7 @@
 export async function encryptData(data, aesKey) {
     try {
         if (!aesKey) {
-            alert('La clave AES no está cargada.');
+            alert('La clave AES no está cargada.' +  aesKey);
             return null;
         }
         alert("Entro para encriptar, es CryptoKey? " + (aesKey instanceof CryptoKey));

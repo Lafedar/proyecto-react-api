@@ -14,7 +14,7 @@ function Login() {
     const [email, setEmail] = useState('')
     const [password, setPassword] = useState('')
     const [error, setError] = useState(null)
-   
+
     const navigate = useNavigate();
     const { updateSessionKey } = useSession();
 
@@ -46,7 +46,7 @@ function Login() {
 
                 'AES-GCM',
 
-                false,
+                true,
 
                 ['encrypt', 'decrypt']
 
@@ -119,7 +119,7 @@ function Login() {
         }
 
     }
- 
+
 
     async function decryptResponseFromBackend(data) {
 
@@ -170,7 +170,7 @@ function Login() {
 
                 if (user && user.email) {
                     alert(`Bienvenido ${user.nombre}`);
-                    localStorage.setItem('authToken', 'logged_in');
+                    sessionStorage.setItem('authToken', 'logged_in');
                     navigate("/links");
                 } else {
                     alert(respuesta);
