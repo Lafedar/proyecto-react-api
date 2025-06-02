@@ -1,6 +1,9 @@
 import { createRoot } from 'react-dom/client'
-import React, { useState, useEffect } from 'react';
+import React, { useRef, useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { fetchKey, encryptData, decryptData, arrayBufferToBase64 } from './cryptoUtils';
+import { useSession } from './contexts/SessionContext';
+
 
 
 import './styles/App.css';
@@ -8,17 +11,15 @@ import './styles/App.css';
 function Medications() {
     const API_BASE = process.env.REACT_APP_API_BASE_URL;
 
-    const [dni, setDni] = useState('')
-    const [medication, setMedication] = useState('')
-    const [amount, setAmount] = useState('')
+    const [dni, setDni] = useState('');
+    const [medication, setMedication] = useState('');
+    const [amount, setAmount] = useState('');
+    const [medication2, setMedication2] = useState('');
+    const [amount2, setAmount2] = useState('');
+    const [medication3, setMedication3] = useState('');
+    const [amount3, setAmount3] = useState('');
 
-    const [medication2, setMedication2] = useState('')
-    const [amount2, setAmount2] = useState('')
-
-    const [medication3, setMedication3] = useState('')
-    const [amount3, setAmount3] = useState('')
-
-    const [error, setError] = useState(null)
+    const [error, setError] = useState(null);
     const navigate = useNavigate();
 
     const [dniValid, setDniValid] = useState(false);
@@ -27,55 +28,69 @@ function Medications() {
 
     const [showMed2, setShowMed2] = useState(false);
     const [showMed3, setShowMed3] = useState(false);
+    const { sessionKey } = useSession();
 
-    useEffect(() => {  //useEffect: hook que se ejecuta cada vez que cambian cualquiera de las variables del array final ([dni, API_BASE]).
-        setDniError(null); //limpiamos las variables 
+    // 2) En el primer useEffect, la cargas una sola vez:
+
+    useEffect(() => {
+        // Solo ejecutar cuando el DNI tenga 8 dígitos y la clave esté cargada
+        if (dni.length !== 8 || !sessionKey) return;
+
+        // Reinicio de estado
+        setDniError(null);
         setDniValid(false);
         setPersonName('');
 
-        if (!dni) return;    //si dni es vacio, sale del flujo            
-        if (dni.length < 6) {
-            setDniError('El DNI debe tener al menos 6 dígitos.');
-            return;
-        }
-
-        const timer = setTimeout(async () => {
+        const fetchPerson = async () => {
             try {
-                const res = await fetch(`https://continuity-country-distinguished-seven.trycloudflare.com/api/buscarPersona`, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'Accept': 'application/json',
-                        'ngrok-skip-browser-warning': 'true'
-                    },
-                    body: JSON.stringify({ dni })
-                });
+                alert("Antes de encriptar");
 
+                const encrypted = await encryptData({ dni }, sessionKey);
+
+                if (!encrypted) {
+                    alert("Falló la encriptación");
+                    return;
+                }
+
+                alert("Datos encriptados.");
+
+                const res = await fetch(
+                    `https://ranks-lighter-together-enjoying.trycloudflare.com/api/buscarPersona`,
+                    {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        credentials: 'include',
+                        body: JSON.stringify({
+                            ciphertext: encrypted.ciphertext,
+                            iv: encrypted.iv,
+                        }),
+                    }
+                );
+
+                alert("Datos enviados a la API");
 
                 const data = await res.json();
+                alert(`Response ${res.status}: ${JSON.stringify(data)}`);
+
                 if (res.ok) {
-
-                    setPersonName(`${data.nombre_p} ${data.apellido}`);
+                    alert("Antes de desencriptar");
+                    const decrypted = await decryptData(data, sessionKey);
+                    const persona = JSON.parse(decrypted);
+                    setPersonName(`${persona.nombre_p} ${persona.apellido}`);
                     setDniValid(true);
-                    setDniError(null);
-
                 } else if (res.status === 404) {
-                    setDniValid(false);
                     setDniError('Persona no encontrada');
                 } else {
-                    // otro error de servidor
-                    setDniValid(false);
                     setDniError('Error validando DNI');
                 }
             } catch (e) {
-                setDniValid(false);
+                console.error(e);
                 setDniError('No se pudo contactar al servidor');
             }
-        }, 500); // espera 500ms antes de lanzar la validacion
+        };
 
-        return () => clearTimeout(timer);
-    }, [dni]);
-
+        fetchPerson();
+    }, [dni, sessionKey]); // ⬅ se agrega sessionKey como dependencia
 
 
     const handleMedications = async (e) => {
@@ -86,40 +101,54 @@ function Medications() {
                 alert("Por favor, completá todos los campos.");
                 return;
             }
+            // 2. Construir el payload para enviar (igual que antes)
+            const payload = { dni, medication, amount, medication2, amount2, medication3, amount3 };
 
-            const response = await fetch(`https://continuity-country-distinguished-seven.trycloudflare.com/api/medications`, {
+            // 3. Encriptar el payload
+            const encrypted = await encryptData(payload, sessionKey); // segundo parámetro no se usa porque encryptData usa aesKey global
+            alert("Datos encriptados correctamente: " + JSON.stringify(encrypted));
+            if (!encrypted) {
+                alert('Error al encriptar los datos.');
+                return;
+            }
+
+            // 4. Enviar la data encriptada al backend
+            const response = await fetch(`https://ranks-lighter-together-enjoying.trycloudflare.com/api/medications`, {
                 method: 'POST',
                 headers: {
-                    'Content-Type': 'application/json',
-                    'ngrok-skip-browser-warning': 'true'
+                    'Content-Type': 'application/json'
+
                 },
                 credentials: 'include',
-                body: JSON.stringify({ dni, medication, amount, medication2, amount2, medication3, amount3 })
+                body: JSON.stringify({
+                    ciphertext: encrypted.ciphertext,
+                    iv: encrypted.iv
+                })
             });
+            alert("Datos enviados al servidor: " + response.status);
 
+            const isOk = response.ok; // Guardamos esto antes por seguridad
+            const status = response.status;
             const data = await response.json();
 
-            if (response.ok) {
+            alert("Datos recibidos del servidor: " + status + " " + JSON.stringify(data));
 
-                alert('Solicitud creada con exito');
+            if (isOk) {
+                alert(data.message || 'Solicitud creada con éxito.');
                 navigate('/links');
-
-                //console.log(data.user);
             } else {
-                alert(data.message || 'Hubo problemas al crear la solicitud');
+                alert('Hubo problemas al crear la solicitud');
             }
         } catch (error) {
-            console.error('Error al conectar con la API:', error);
+            console.error('Error al enviar solicitud:', error);
             alert('Error al conectar con el servidor');
         }
     };
-
 
     const closeMed2 = () => {
         setShowMed2(false);
         setMedication2('');
         setAmount2('');
-        // Si cierras Med2, también cerramos Med3 por dependencia
         setShowMed3(false);
         setMedication3('');
         setAmount3('');

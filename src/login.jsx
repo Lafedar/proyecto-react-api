@@ -1,5 +1,8 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useSession } from './contexts/SessionContext';
+import { arrayBufferToBase64 } from './cryptoUtils';
+
 
 
 
@@ -11,12 +14,14 @@ function Login() {
     const [email, setEmail] = useState('')
     const [password, setPassword] = useState('')
     const [error, setError] = useState(null)
+   
     const navigate = useNavigate();
+    const { updateSessionKey } = useSession();
 
-    let aesKey = null;
+    let aesKey = null; // Variable para almacenar la clave AES
     async function fetchKey() {
         try {
-            const response = await fetch(`https://cameron-ethical-idol-xhtml.trycloudflare.com/api/get-key`, {
+            const response = await fetch(`https://ranks-lighter-together-enjoying.trycloudflare.com/api/get-key`, {
                 credentials: 'include',
 
             });
@@ -46,10 +51,12 @@ function Login() {
                 ['encrypt', 'decrypt']
 
             );
+            updateSessionKey(aesKey);
             alert("Clave AES obtenida correctamente", aesKey);
         } catch (err) {
             alert(err.message);
             aesKey = null;
+            setAesKey(null);
         }
 
     }
@@ -82,7 +89,7 @@ function Login() {
             const ivBase64 = arrayBufferToBase64(iv);
 
             alert("Mensaje encriptado: " + ciphertext + " IV: " + ivBase64);
-            const response = await fetch(`https://cameron-ethical-idol-xhtml.trycloudflare.com/api/login`, {
+            const response = await fetch(`https://ranks-lighter-together-enjoying.trycloudflare.com/api/login`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
@@ -92,13 +99,10 @@ function Login() {
                     ciphertext: ciphertext,
                     iv: ivBase64
                 })
-                
+
             });
 
             alert("Se enviaron los datos al servidor: " + response.status);
-
-
-
 
             const data = await response.json();
             if (data.error) {
@@ -115,18 +119,7 @@ function Login() {
         }
 
     }
-    function arrayBufferToBase64(buffer) {  // Convierte un ArrayBuffer a una cadena Base64
-        let binary = '';
-        const bytes = new Uint8Array(buffer);
-        const len = bytes.byteLength;
-
-        for (let i = 0; i < len; i++) {
-            binary += String.fromCharCode(bytes[i]);
-        }
-
-        return btoa(binary);
-    }
-
+ 
 
     async function decryptResponseFromBackend(data) {
 
