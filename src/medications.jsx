@@ -31,9 +31,7 @@ function Medications() {
     const { sessionKey } = useSession();
 
     // 2) En el primer useEffect, la cargas una sola vez:
-    useEffect(() => {
-        alert("sessionKey en Medications.jsx:" + sessionKey);
-    }, [sessionKey]);
+
     useEffect(() => {
         // Reinicio estado
         setDniError(null);
@@ -51,12 +49,11 @@ function Medications() {
                     alert("sessionKey no está disponible");
                     return;
                 }
-                const key = await importSessionKey(sessionKey);
-                const encrypted = await encryptData({ dni }, key);
+                const encrypted = await encryptData({ dni }, sessionKey);
                 alert("Datos encriptados.")
                 // Llamar a la API
                 const res = await fetch(
-                    `https://cameron-ethical-idol-xhtml.trycloudflare.com/api/buscarPersona`,
+                    `https://ranks-lighter-together-enjoying.trycloudflare.com/api/buscarPersona`,
                     {
                         method: 'POST',
                         headers: { 'Content-Type': 'application/json' },
@@ -90,17 +87,6 @@ function Medications() {
     }, [dni]);
 
 
-    async function importSessionKey(base64Key) {
-        const raw = Uint8Array.from(atob(base64Key), c => c.charCodeAt(0));
-        return await window.crypto.subtle.importKey(
-            "raw",
-            raw,
-            { name: "AES-GCM" },
-            false,
-            ["encrypt", "decrypt"]
-        );
-    }
-
 
     const handleMedications = async (e) => {
         e.preventDefault();
@@ -122,7 +108,7 @@ function Medications() {
             }
 
             // 4. Enviar la data encriptada al backend
-            const response = await fetch(`https://cameron-ethical-idol-xhtml.trycloudflare.com/api/medications`, {
+            const response = await fetch(`https://ranks-lighter-together-enjoying.trycloudflare.com/api/medications`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'

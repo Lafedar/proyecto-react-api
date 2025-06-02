@@ -13,7 +13,7 @@ function Login() {
     const [email, setEmail] = useState('')
     const [password, setPassword] = useState('')
     const [error, setError] = useState(null)
-
+   
     const navigate = useNavigate();
     const { updateSessionKey } = useSession();
 
@@ -45,12 +45,12 @@ function Login() {
 
                 'AES-GCM',
 
-                true,
+                false,
 
                 ['encrypt', 'decrypt']
 
             );
-
+            updateSessionKey(aesKey);
             alert("Clave AES obtenida correctamente", aesKey);
         } catch (err) {
             alert(err.message);
@@ -174,12 +174,6 @@ function Login() {
             if (!aesKey) {
                 throw new Error('No se pudo obtener la clave AES, no se puede encriptar');
             }
-            const rawKey = await window.crypto.subtle.exportKey('raw', aesKey);
-            const base64Key = btoa(String.fromCharCode(...new Uint8Array(rawKey)));
-            updateSessionKey(base64Key);
-            localStorage.removeItem("sessionKey"); // borrar la vieja
-            localStorage.setItem("sessionKey", base64Key);
-            alert("Clave guardada:" + aesKey);
             alert("Se obtuvo la clave");
             const respuesta = await encryptLoginAndSend(email, password);
             alert("Respuesta del servidor: " + respuesta);
@@ -190,9 +184,7 @@ function Login() {
                 if (user && user.email) {
                     alert(`Bienvenido ${user.nombre}`);
                     localStorage.setItem('authToken', 'logged_in');
-                    setTimeout(() => {
-                        navigate("/links");
-                    }, 0);
+                    navigate("/links");
                 } else {
                     alert(respuesta);
                 }
