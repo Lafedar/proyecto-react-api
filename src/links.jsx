@@ -23,7 +23,7 @@ function MedicationButton({ type = 'button', children, to }) {
 
     const handleClick = () => {
         if (to) {
-            navigate(to); // ✅ navegación interna, mantiene el contexto
+            navigate(to); 
         }
     };
 

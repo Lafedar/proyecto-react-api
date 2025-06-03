@@ -30,10 +30,9 @@ function Medications() {
     const [showMed3, setShowMed3] = useState(false);
     const { sessionKey } = useSession();
 
-    // 2) En el primer useEffect, la cargas una sola vez:
+   
 
     useEffect(() => {
-        // Solo ejecutar cuando el DNI tenga 8 dígitos y la clave esté cargada
         if (dni.length !== 8 || !sessionKey) return;
 
         // Reinicio de estado
@@ -43,19 +42,15 @@ function Medications() {
 
         const fetchPerson = async () => {
             try {
-                alert("Antes de encriptar");
-
                 const encrypted = await encryptData({ dni }, sessionKey);
 
                 if (!encrypted) {
-                    alert("Falló la encriptación");
+                    console.error("Falló la encriptación en medications");
                     return;
                 }
 
-                alert("Datos encriptados.");
-
                 const res = await fetch(
-                    `https://ranks-lighter-together-enjoying.trycloudflare.com/api/buscarPersona`,
+                    `https://meters-beauty-asn-cups.trycloudflare.com/api/buscarPersona`,
                     {
                         method: 'POST',
                         headers: { 'Content-Type': 'application/json' },
@@ -67,13 +62,11 @@ function Medications() {
                     }
                 );
 
-                alert("Datos enviados a la API");
 
                 const data = await res.json();
-                alert(`Response ${res.status}: ${JSON.stringify(data)}`);
-
+                
                 if (res.ok) {
-                    alert("Antes de desencriptar");
+                   
                     const decrypted = await decryptData(data, sessionKey);
                     const persona = JSON.parse(decrypted);
                     setPersonName(`${persona.nombre_p} ${persona.apellido}`);
@@ -90,7 +83,7 @@ function Medications() {
         };
 
         fetchPerson();
-    }, [dni, sessionKey]); // ⬅ se agrega sessionKey como dependencia
+    }, [dni, sessionKey]); 
 
 
     const handleMedications = async (e) => {
@@ -101,19 +94,16 @@ function Medications() {
                 alert("Por favor, completá todos los campos.");
                 return;
             }
-            // 2. Construir el payload para enviar (igual que antes)
             const payload = { dni, medication, amount, medication2, amount2, medication3, amount3 };
 
-            // 3. Encriptar el payload
-            const encrypted = await encryptData(payload, sessionKey); // segundo parámetro no se usa porque encryptData usa aesKey global
-            alert("Datos encriptados correctamente: " + JSON.stringify(encrypted));
+            const encrypted = await encryptData(payload, sessionKey); 
             if (!encrypted) {
-                alert('Error al encriptar los datos.');
+                console.error('Error al encriptar los datos en medications.');
                 return;
             }
 
-            // 4. Enviar la data encriptada al backend
-            const response = await fetch(`https://ranks-lighter-together-enjoying.trycloudflare.com/api/medications`, {
+        
+            const response = await fetch(`https://meters-beauty-asn-cups.trycloudflare.com/api/medications`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
@@ -125,14 +115,13 @@ function Medications() {
                     iv: encrypted.iv
                 })
             });
-            alert("Datos enviados al servidor: " + response.status);
+            
 
-            const isOk = response.ok; // Guardamos esto antes por seguridad
+            const isOk = response.ok; 
             const status = response.status;
             const data = await response.json();
 
-            alert("Datos recibidos del servidor: " + status + " " + JSON.stringify(data));
-
+        
             if (isOk) {
                 alert(data.message || 'Solicitud creada con éxito.');
                 navigate('/links');
@@ -141,7 +130,7 @@ function Medications() {
             }
         } catch (error) {
             console.error('Error al enviar solicitud:', error);
-            alert('Error al conectar con el servidor');
+            console.error('Error al conectar con el servidor');
         }
     };
 
