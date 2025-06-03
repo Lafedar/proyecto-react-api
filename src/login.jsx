@@ -10,18 +10,17 @@ import './styles/App.css';
 
 function Login() {
     //const API_BASE = process.env.REACT_APP_API_BASE_URL;
-
     const [email, setEmail] = useState('')
     const [password, setPassword] = useState('')
     const [error, setError] = useState(null)
-   
+
     const navigate = useNavigate();
     const { updateSessionKey } = useSession();
 
-    let aesKey = null; // Variable para almacenar la clave AES
+    let aesKey = null;
     async function fetchKey() {
         try {
-            const response = await fetch(`https://ranks-lighter-together-enjoying.trycloudflare.com/api/get-key`, {
+            const response = await fetch(`https://meters-beauty-asn-cups.trycloudflare.com/api/get-key`, {
                 credentials: 'include',
 
             });
@@ -46,15 +45,14 @@ function Login() {
 
                 'AES-GCM',
 
-                false,
+                true,
 
                 ['encrypt', 'decrypt']
 
             );
-            updateSessionKey(aesKey);
-            alert("Clave AES obtenida correctamente", aesKey);
+            updateSessionKey(aesKey); // Actualiza la clave en el contexto de sesión
         } catch (err) {
-            alert(err.message);
+            console.error(err.message);
             aesKey = null;
             setAesKey(null);
         }
@@ -64,14 +62,12 @@ function Login() {
     async function encryptLoginAndSend(email, password) {
         try {
             if (!aesKey) {
-                alert('La clave AES no está cargada. Ejecutá fetchKey() primero.');
+                console.error('La clave AES no está cargada.');
             }
-
             const loginPayload = JSON.stringify({
                 usuario: email,
                 password: password
             });
-            alert("Payload a encriptar: " + loginPayload);
             const iv = window.crypto.getRandomValues(new Uint8Array(12));
             const encodedMessage = new TextEncoder().encode(loginPayload);
 
@@ -83,13 +79,11 @@ function Login() {
                 aesKey,
                 encodedMessage
             );
-            alert("Mensaje encriptado correctamente" + ciphertextBuffer);
 
             const ciphertext = arrayBufferToBase64(ciphertextBuffer);
             const ivBase64 = arrayBufferToBase64(iv);
 
-            alert("Mensaje encriptado: " + ciphertext + " IV: " + ivBase64);
-            const response = await fetch(`https://ranks-lighter-together-enjoying.trycloudflare.com/api/login`, {
+            const response = await fetch(`https://meters-beauty-asn-cups.trycloudflare.com/api/login`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
@@ -102,7 +96,6 @@ function Login() {
 
             });
 
-            alert("Se enviaron los datos al servidor: " + response.status);
 
             const data = await response.json();
             if (data.error) {
@@ -110,42 +103,47 @@ function Login() {
             }
 
             const mensajeDesencriptado = await decryptResponseFromBackend(data);
-            alert("Mensaje desencriptado: " + mensajeDesencriptado);
             return mensajeDesencriptado;
         }
         catch (err) {
-            alert("Error: " + err.message);
+            console.error("Error: " + err.message);
             throw err;
         }
 
     }
- 
+
 
     async function decryptResponseFromBackend(data) {
+        try {
+            const ciphertextWithTag = Uint8Array.from(atob(data.ciphertext), c => c.charCodeAt(0));
 
-        const ciphertextWithTag = Uint8Array.from(atob(data.ciphertext), c => c.charCodeAt(0));
-
-        const iv = Uint8Array.from(atob(data.iv), c => c.charCodeAt(0));
-
-
-        const decryptedBuffer = await window.crypto.subtle.decrypt(
-
-            {
-
-                name: "AES-GCM",
-
-                iv: iv
-
-            },
-
-            aesKey,
-
-            ciphertextWithTag
-
-        );
+            const iv = Uint8Array.from(atob(data.iv), c => c.charCodeAt(0));
 
 
-        return new TextDecoder().decode(decryptedBuffer);
+            const decryptedBuffer = await window.crypto.subtle.decrypt(
+
+                {
+
+                    name: "AES-GCM",
+
+                    iv: iv
+
+                },
+
+                aesKey,
+
+                ciphertextWithTag
+
+            );
+
+
+            return new TextDecoder().decode(decryptedBuffer);
+        }catch (err) {
+            console.error("Error al desencriptar la respuesta en el login:", err);
+            throw err;
+        }
+
+        
 
     }
 
@@ -161,16 +159,16 @@ function Login() {
             if (!aesKey) {
                 throw new Error('No se pudo obtener la clave AES, no se puede encriptar');
             }
-            alert("Se obtuvo la clave");
+            
             const respuesta = await encryptLoginAndSend(email, password);
-            alert("Respuesta del servidor: " + respuesta);
+           
             try {
                 const user = JSON.parse(respuesta);
-                alert("Usuario: " + user.email + " Nombre: " + user.name);
+               
 
                 if (user && user.email) {
                     alert(`Bienvenido ${user.nombre}`);
-                    localStorage.setItem('authToken', 'logged_in');
+                    sessionStorage.setItem('authToken', 'logged_in');
                     navigate("/links");
                 } else {
                     alert(respuesta);
@@ -180,7 +178,7 @@ function Login() {
             }
 
         } catch (err) {
-            alert("Error en login: " + err.message);
+            console.error("Error en login: " + err.message);
         }
     }
 
