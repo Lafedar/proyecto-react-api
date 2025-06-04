@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import { fetchKey, encryptData, decryptData, arrayBufferToBase64 } from './cryptoUtils';
 import { useSession } from './contexts/SessionContext';
 import Toast from './components/Toast';
+import './styles/App.css';
 
 
 
