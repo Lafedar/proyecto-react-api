@@ -193,14 +193,14 @@ function Medications() {
                     />
                 )}
                 <form className="w-full" onSubmit={handleMedications}>
-                    <h1 className="text-xl font-bold text-center text-white-600 mb-4">Solicitud de Medicamentos</h1>
+                    <h1 className="text-xl font-bold text-center text-white-600 mb-4" id="titulo-solicitudes">Solicitud de Medicamentos</h1>
                     {error && <div className="error">{error}</div>}
 
                     <div className="form-group flex flex-col items-center mt-6 gap-4">
 
 
                         <div className="flex flex-col items-center">
-                            <label htmlFor="dni" className="font-bold mb-1">DNI:</label>
+                            <label htmlFor="dni" className="font-bold mb-1" id="label-dni">DNI:</label>
                             <InputDni value={dni} onChange={e => setDni(e.target.value)} />
                             {dniError && (
                                 <p className="text-red-500 text-sm mt-1">{dniError}</p>
@@ -216,12 +216,12 @@ function Medications() {
                         <div className="flex justify-center gap-x-0.5 -mt-2">
 
                             <div className="flex flex-col items-center">
-                                <label htmlFor="input_medication" className="font-bold">Medicamento:</label>
+                                <label htmlFor="input_medication" className="font-bold" id="label-medication">Medicamento:</label>
                                 <InputMedication value={medication} onChange={e => setMedication(e.target.value)} />
                             </div>
 
                             <div className="flex flex-col items-center">
-                                <label htmlFor="amount" className="font-bold">Cantidad:</label>
+                                <label htmlFor="amount" className="font-bold" id="label-amount">Cantidad:</label>
                                 <InputAmount value={amount} onChange={e => setAmount(e.target.value)} />
                             </div>
                             <button
