@@ -86,7 +86,7 @@ body {
     background-color: white;
   }
   #titulo-solicitudes, #label-dni, #label-medication, #label-amount {
-    color:white;
+    color:black;
   }
 
 }
