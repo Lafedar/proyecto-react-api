@@ -34,7 +34,7 @@ button:focus-visible {
 
 input {
   display: block;
-  margin: 15px auto; /* esto también los centra horizontalmente */
+  margin: 15px auto; 
   padding: 8px;
  
   
