@@ -70,7 +70,7 @@ body {
     color: white;
   }
 
-  input, #dni {
+  input{
     border: 1px solid white;
     color: white;
     background-color: #1e1e1e;
@@ -79,6 +79,11 @@ body {
   input:-webkit-autofill {
     -webkit-box-shadow: 0 0 0 1000px #1e1e1e inset !important;
     -webkit-text-fill-color: white !important;
+  }
+  #dni{
+    border: 1px solid black;
+    color: black;
+    background-color: white;
   }
 
 }
