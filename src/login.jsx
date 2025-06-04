@@ -2,6 +2,8 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useSession } from './contexts/SessionContext';
 import { arrayBufferToBase64 } from './cryptoUtils';
+import Toast from './components/Toast'; 
+
 
 
 
@@ -13,14 +15,15 @@ function Login() {
     const [email, setEmail] = useState('')
     const [password, setPassword] = useState('')
     const [error, setError] = useState(null)
-
     const navigate = useNavigate();
     const { updateSessionKey } = useSession();
+    const [toastMessage, setToastMessage] = useState('');
+    const [showToast, setShowToast] = useState(false);
 
     let aesKey = null;
     async function fetchKey() {
         try {
-            const response = await fetch(`https://meters-beauty-asn-cups.trycloudflare.com/api/get-key`, {
+            const response = await fetch(`https://wrestling-family-mf-arbor.trycloudflare.com/api/get-key`, {
                 credentials: 'include',
 
             });
@@ -83,7 +86,7 @@ function Login() {
             const ciphertext = arrayBufferToBase64(ciphertextBuffer);
             const ivBase64 = arrayBufferToBase64(iv);
 
-            const response = await fetch(`https://meters-beauty-asn-cups.trycloudflare.com/api/login`, {
+            const response = await fetch(`https://wrestling-family-mf-arbor.trycloudflare.com/api/login`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
@@ -138,12 +141,12 @@ function Login() {
 
 
             return new TextDecoder().decode(decryptedBuffer);
-        }catch (err) {
+        } catch (err) {
             console.error("Error al desencriptar la respuesta en el login:", err);
             throw err;
         }
 
-        
+
 
     }
 
@@ -159,23 +162,29 @@ function Login() {
             if (!aesKey) {
                 throw new Error('No se pudo obtener la clave AES, no se puede encriptar');
             }
-            
-            const respuesta = await encryptLoginAndSend(email, password);
-           
-            try {
-                const user = JSON.parse(respuesta);
-               
 
-                if (user && user.email) {
-                    alert(`Bienvenido ${user.nombre}`);
+            const respuesta = await encryptLoginAndSend(email, password);
+
+
+            const user = JSON.parse(respuesta);
+
+
+            if (user && user.email) {
+                setToastMessage(`Bienvenido ${user.nombre}`);
+                setShowToast(true);
+                setTimeout(() => {
                     sessionStorage.setItem('authToken', 'logged_in');
                     navigate("/links");
-                } else {
-                    alert(respuesta);
-                }
-            } catch (e) {
-                alert(respuesta);
+                }, 2000);
+            } else {
+
+                setToastMessage(user.error);
+                setShowToast(true);
+                setTimeout(() => {
+                    setShowToast(false);
+                }, 2000);
             }
+
 
         } catch (err) {
             console.error("Error en login: " + err.message);
@@ -187,7 +196,15 @@ function Login() {
     return (
 
         <div>
+            {showToast && (
+                <Toast
+                    message={toastMessage}
+                    onClose={() => setShowToast(false)}
+                />
+            )}
+
             <form className="login-form" onSubmit={iniciar}>
+
                 <h1 className="text-x1 font-bold text-white-600">Login</h1>
                 {error && <div className="error">{error}</div>}
 

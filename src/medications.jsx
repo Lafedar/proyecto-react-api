@@ -3,6 +3,7 @@ import React, { useRef, useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { fetchKey, encryptData, decryptData, arrayBufferToBase64 } from './cryptoUtils';
 import { useSession } from './contexts/SessionContext';
+import Toast from './components/Toast';
 
 
 
@@ -30,7 +31,10 @@ function Medications() {
     const [showMed3, setShowMed3] = useState(false);
     const { sessionKey } = useSession();
 
-   
+    const [toastMessage, setToastMessage] = useState('');
+    const [showToast, setShowToast] = useState(false);
+
+
 
     useEffect(() => {
         if (dni.length !== 8 || !sessionKey) return;
@@ -50,7 +54,7 @@ function Medications() {
                 }
 
                 const res = await fetch(
-                    `https://meters-beauty-asn-cups.trycloudflare.com/api/buscarPersona`,
+                    `https://wrestling-family-mf-arbor.trycloudflare.com/api/buscarPersona`,
                     {
                         method: 'POST',
                         headers: { 'Content-Type': 'application/json' },
@@ -64,9 +68,9 @@ function Medications() {
 
 
                 const data = await res.json();
-                
+
                 if (res.ok) {
-                   
+
                     const decrypted = await decryptData(data, sessionKey);
                     const persona = JSON.parse(decrypted);
                     setPersonName(`${persona.nombre_p} ${persona.apellido}`);
@@ -83,7 +87,7 @@ function Medications() {
         };
 
         fetchPerson();
-    }, [dni, sessionKey]); 
+    }, [dni, sessionKey]);
 
 
     const handleMedications = async (e) => {
@@ -91,19 +95,20 @@ function Medications() {
 
         try {
             if (!dni || !medication || !amount) {
-                alert("Por favor, completá todos los campos.");
+                setToastMessage(`Por favor, completá todos los campos.`);
+                setShowToast(true);
                 return;
             }
             const payload = { dni, medication, amount, medication2, amount2, medication3, amount3 };
 
-            const encrypted = await encryptData(payload, sessionKey); 
+            const encrypted = await encryptData(payload, sessionKey);
             if (!encrypted) {
                 console.error('Error al encriptar los datos en medications.');
                 return;
             }
 
-        
-            const response = await fetch(`https://meters-beauty-asn-cups.trycloudflare.com/api/medications`, {
+
+            const response = await fetch(`https://wrestling-family-mf-arbor.trycloudflare.com/api/medications`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
@@ -115,18 +120,26 @@ function Medications() {
                     iv: encrypted.iv
                 })
             });
-            
 
-            const isOk = response.ok; 
+
+            const isOk = response.ok;
             const status = response.status;
             const data = await response.json();
 
-        
+
             if (isOk) {
-                alert(data.message || 'Solicitud creada con éxito.');
-                navigate('/links');
+                setToastMessage(data.message || 'Solicitud creada con éxito.');
+                setShowToast(true);
+                setTimeout(() => {
+                    navigate("/links");
+                }, 2000);
+
             } else {
-                alert('Hubo problemas al crear la solicitud');
+                setToastMessage(data.message);
+                setShowToast(true);
+                setTimeout(() => {
+                    setShowToast(false);
+                }, 2000);
             }
         } catch (error) {
             console.error('Error al enviar solicitud:', error);
@@ -150,6 +163,7 @@ function Medications() {
 
     //Vista que voy a mostrar en el index.html
     return (
+
         <div
             className={`
                 w-11/12            
@@ -170,7 +184,12 @@ function Medications() {
                     sm:rounded-[2.5rem] 
                     w-full`
                 }>
-
+                {showToast && (
+                    <Toast
+                        message={toastMessage}
+                        onClose={() => setShowToast(false)}
+                    />
+                )}
                 <form className="w-full" onSubmit={handleMedications}>
                     <h1 className="text-xl font-bold text-center text-white-600 mb-4">Solicitud de Medicamentos</h1>
                     {error && <div className="error">{error}</div>}
@@ -298,7 +317,7 @@ function Medications() {
                     </div>
 
 
-                    <div className="flex justify-center gap-2 my-5">
+                    <div className="flex justify-center gap-2 my-5 mt-10 mb-1">
                         <MyButton type="submit">Solicitar</MyButton>
 
                         <BackButton />
@@ -413,7 +432,7 @@ function MyButton({ type = 'button', children }) {
     return (
         <button
             className="w-full max-w-[120px] sm:max-w-[160px] px-2 py-2 bg-blue-500 rounded text-white text-sm transition delay-700 
-            duration-700 ease-in-out hover:-translate-y-1 hover:scale-110 hover:bg-indigo-500"
+            duration-700 ease-in-out hover:-translate-y-1 hover:scale-101 hover:bg-indigo-500"
         >
 
 
@@ -430,7 +449,7 @@ function BackButton() {
         <button
             onClick={() => navigate('/links')}
             className="w-full max-w-[120px] sm:max-w-[160px] px-2 py-2 bg-blue-500 rounded text-white text-sm transition delay-700 
-            duration-700 ease-in-out hover:-translate-y-1 hover:scale-110 hover:bg-indigo-500"
+            duration-700 ease-in-out hover:-translate-y-1 hover:scale-101 hover:bg-indigo-500"
         >
             Volver
         </button>

@@ -68,7 +68,7 @@ function ExitButton({ type = 'button', children, to }) {
         <button
             type={type}
             onClick={handleClick}
-            className="w-[300px] bg-blue-500 text-white transition delay-700 duration-700 ease-in-out hover:-translate-y-1 hover:scale-110 hover:bg-indigo-500"
+            className="w-[150px] bg-blue-500 text-white transition delay-700 duration-700 ease-in-out hover:-translate-y-1 hover:scale-110 hover:bg-indigo-500"
         >
             {children}
         </button>
