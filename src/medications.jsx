@@ -175,7 +175,7 @@ function Medications() {
                 mx-auto
                 shadow-[0_10px_40px_rgba(0,0,0,0.3)]
                 rounded-3xl         
-                overflow-hidden`} id="medications-container">
+                overflow-hidden`} >
             <div
                 className={`
                     bg-white
@@ -185,7 +185,7 @@ function Medications() {
                     rounded-2xl         
                     sm:rounded-[2.5rem] 
                     w-full`
-                }>
+                } id="medications-container">
                 {showToast && (
                     <Toast
                         message={toastMessage}
