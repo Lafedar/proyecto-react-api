@@ -1,6 +1,7 @@
 html, body {
   height: 100%;
   margin: 0;
+  overflow-y: hidden;
 }
 
 h1 {
@@ -46,7 +47,8 @@ input {
   justify-content: center;  
   align-items: center;      
   height: 100vh;           
-  gap: 1rem;              
+  gap: 1rem;     
+  margin-top: -110px;         
 }
 
 /*Saco las flechitas de los inputs de tipo number*/

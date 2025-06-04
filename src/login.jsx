@@ -195,7 +195,8 @@ function Login() {
     //Vista que voy a mostrar en el index.html
     return (
 
-        <div>
+        <div className={`
+                mt-[-110px]`}>
             {showToast && (
                 <Toast
                     message={toastMessage}
