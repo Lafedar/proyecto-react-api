@@ -166,6 +166,7 @@ function Medications() {
 
         <div
             className={`
+                mt-[-60px]
                 w-11/12            
                 sm:w-3/4            
                 md:w-full          
