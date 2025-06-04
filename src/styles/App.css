@@ -64,9 +64,20 @@ body {
   color: black;
 }
 
-@media (prefers-color-scheme: dark) {
+@media (prefers-color-scheme: dark) and (max-width: 768px) {
   body {
     background-color: #121212;
-    color: white; /* <- texto blanco puro */
+    color: white;
+  }
+
+  input {
+    border: 1px solid white;
+    color: white;
+    background-color: #1e1e1e;
+  }
+
+  input:-webkit-autofill {
+    -webkit-box-shadow: 0 0 0 1000px #1e1e1e inset !important;
+    -webkit-text-fill-color: white !important;
   }
 }
