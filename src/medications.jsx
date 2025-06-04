@@ -175,7 +175,7 @@ function Medications() {
                 mx-auto
                 shadow-[0_10px_40px_rgba(0,0,0,0.3)]
                 rounded-3xl         
-                overflow-hidden`}>
+                overflow-hidden`} id="medications-container">
             <div
                 className={`
                     bg-white

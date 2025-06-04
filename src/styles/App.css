@@ -81,12 +81,15 @@ body {
     -webkit-text-fill-color: white !important;
   }
   #dni, #medication, #amount, #medication2, #amount2, #medication3, #amount3 {
-    border: 1px solid black;
-    color: black;
-    background-color: white;
+    border: 1px solid white;
+    color: white;
+    background-color: black;
   }
   #titulo-solicitudes, #label-dni, #label-medication, #label-amount {
-    color:black;
+    color:white;
+  }
+  #medications-container{
+    background-color: black;
   }
 
 }
