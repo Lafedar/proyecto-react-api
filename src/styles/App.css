@@ -2,6 +2,8 @@ html, body {
   height: 100%;
   margin: 0;
   overflow-y: hidden;
+  background-color: white;
+  color: black;
 }
 
 h1 {
@@ -59,11 +61,7 @@ input[type=number]::-webkit-outer-spin-button {
 }
 
 
-body {
-  background-color: white;
-  color: black;
-}
-
+/*Adaptar al modo oscuro en celulares*/
 @media (prefers-color-scheme: dark) and (max-width: 768px) {
   body {
     background-color: #121212;
