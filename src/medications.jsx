@@ -5,11 +5,8 @@ import { fetchKey, encryptData, decryptData, arrayBufferToBase64 } from './crypt
 import { useSession } from './contexts/SessionContext';
 import Toast from './components/Toast';
 import './styles/App.css';
-
-
-
-import './styles/App.css';
 import Layout from './components/Layout';
+
 
 function Medications() {
     const API_BASE = process.env.REACT_APP_API_BASE_URL;
@@ -330,7 +327,7 @@ function Medications() {
 
 
                         <div className="flex justify-center gap-2 my-5 mt-10 mb-1">
-                            <MyButton type="submit" disabled={loading}>Solicitar</MyButton>
+                            <MyButton type="submit" disabled={loading} className={`btn ${loading ? 'opacity-100 cursor-not-allowed' : ''}`}> {loading ? 'Procesando...' : 'Solicitar'}</MyButton>
 
                             <BackButton disabled={loading} />
 

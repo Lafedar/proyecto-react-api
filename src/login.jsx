@@ -15,6 +15,7 @@ function Login() {
     const { updateSessionKey } = useSession();
     const [toastMessage, setToastMessage] = useState('');
     const [showToast, setShowToast] = useState(false);
+    const [loading, setLoading] = useState(false);
 
     let aesKey = null;
     async function fetchKey() {
@@ -151,7 +152,7 @@ function Login() {
     async function iniciar(event) {
         event.preventDefault();
         setError(null);
-
+        setLoading(true);
         try {
             await fetchKey();
 
@@ -185,6 +186,9 @@ function Login() {
         } catch (err) {
             console.error("Error en login: " + err.message);
         }
+        finally {
+            setLoading(false);
+        }
     }
 
 
@@ -216,7 +220,10 @@ function Login() {
                     </div>
 
                     <div className="flex justify-center">
-                        <MyButton type="submit">Ingresar</MyButton>
+                        <MyButton type="submit" disabled={loading}
+                            className={`btn ${loading ? 'opacity-100 cursor-not-allowed' : ''}`}
+                        >
+                            {loading ? 'Procesando...' : 'Ingresar'}</MyButton>
 
                     </div>
 
