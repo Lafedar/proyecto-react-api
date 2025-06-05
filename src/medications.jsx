@@ -450,7 +450,7 @@ function BackButton() {
 
     const handleClick = () => {
         document.activeElement.blur(); // fuerza cierre del teclado virtual
-        navigate('/links');
+        setTimeout(() => navigate('/links'), 100);
     };
 
     return (
