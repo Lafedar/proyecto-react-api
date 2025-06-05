@@ -2,7 +2,8 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useSession } from './contexts/SessionContext';
 import { arrayBufferToBase64 } from './cryptoUtils';
-import Toast from './components/Toast'; 
+import Toast from './components/Toast';
+import Layout from './components/Layout';
 
 
 
@@ -194,38 +195,40 @@ function Login() {
 
     //Vista que voy a mostrar en el index.html
     return (
+        <Layout>
+            <div>
+                {showToast && (
+                    <Toast
+                        message={toastMessage}
+                        onClose={() => setShowToast(false)}
+                    />
+                )}
 
-        <div>
-            {showToast && (
-                <Toast
-                    message={toastMessage}
-                    onClose={() => setShowToast(false)}
-                />
-            )}
+                <form className="login-form" onSubmit={iniciar}>
 
-            <form className="login-form" onSubmit={iniciar}>
+                    <h1 className="text-x1 font-bold text-white-600">Login</h1>
+                    {error && <div className="error">{error}</div>}
 
-                <h1 className="text-x1 font-bold text-white-600">Login</h1>
-                {error && <div className="error">{error}</div>}
+                    <div className="form-group flex flex-col items-center mt-6">
 
-                <div className="form-group flex flex-col items-center mt-6">
+                        <label htmlFor="email" id="input_email" className="font-bold">Usuario</label>
+                        <InputUser value={email} onChange={e => setEmail(e.target.value)} />
+                    </div>
 
-                    <label htmlFor="email" id="input_email" className="font-bold">Usuario</label>
-                    <InputUser value={email} onChange={e => setEmail(e.target.value)} />
-                </div>
+                    <div className="form-group flex flex-col items-center mb-4">
+                        <label htmlFor="password" className="font-bold">Contraseña</label>
+                        <InputPassword value={password} onChange={e => setPassword(e.target.value)} />
+                    </div>
 
-                <div className="form-group flex flex-col items-center mb-4">
-                    <label htmlFor="password" className="font-bold">Contraseña</label>
-                    <InputPassword value={password} onChange={e => setPassword(e.target.value)} />
-                </div>
+                    <div className="flex justify-center">
+                        <MyButton type="submit">Ingresar</MyButton>
 
-                <div className="flex justify-center">
-                    <MyButton type="submit">Ingresar</MyButton>
+                    </div>
 
-                </div>
+                </form>
+            </div>
+        </Layout>
 
-            </form>
-        </div>
 
     )
 }

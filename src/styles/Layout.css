@@ -1,0 +1,16 @@
+footer {
+  position: fixed;
+  bottom: 0;
+  width: 100%;
+  left: 0; 
+  margin: 0;
+  padding: 10px 0;
+  box-sizing: border-box;
+  background: linear-gradient(90deg, #1C547C 0%, #1E78C8 100%);
+  color: white;
+}
+
+footer p {
+    margin: 0;
+    padding: 0;
+}
