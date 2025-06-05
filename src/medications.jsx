@@ -35,7 +35,7 @@ function Medications() {
 
     const [toastMessage, setToastMessage] = useState('');
     const [showToast, setShowToast] = useState(false);
-
+    const [loading, setLoading] = useState(false);
 
 
     useEffect(() => {
@@ -94,7 +94,7 @@ function Medications() {
 
     const handleMedications = async (e) => {
         e.preventDefault();
-
+        setLoading(true);
         try {
             if (!dni || !medication || !amount) {
                 setToastMessage(`Por favor, completá todos los campos.`);
@@ -147,6 +147,11 @@ function Medications() {
             console.error('Error al enviar solicitud:', error);
             console.error('Error al conectar con el servidor');
         }
+        finally {
+            setTimeout(() => {
+                setLoading(false);
+            }, 3000);
+        }
     };
 
     const closeMed2 = () => {
@@ -168,7 +173,8 @@ function Medications() {
         <Layout>
             <div
                 className={`
-                mt-[-110px]
+                mt-[-110px]       
+                sm:mt-10         
                 w-11/12            
                 sm:w-3/4            
                 md:w-full          
@@ -176,7 +182,7 @@ function Medications() {
                 mx-auto
                 shadow-[0_10px_40px_rgba(0,0,0,0.3)]
                 rounded-3xl         
-                `} >
+                `}>
                 <div
                     className={`
                     bg-white
@@ -201,7 +207,7 @@ function Medications() {
 
                             <div className="flex flex-col items-center">
                                 <label htmlFor="dni" className="font-bold mb-1" id="label-dni">DNI:</label>
-                                <InputDni value={dni} onChange={e => setDni(e.target.value)} />
+                                <InputDni value={dni} onChange={e => setDni(e.target.value)} disabled={loading} />
                                 {dniError && (
                                     <p className="text-red-500 text-sm mt-1">{dniError}</p>
                                 )}
@@ -217,19 +223,20 @@ function Medications() {
 
                                 <div className="flex flex-col items-center">
                                     <label htmlFor="input_medication" className="font-bold" id="label-medication">Medicamento:</label>
-                                    <InputMedication value={medication} onChange={e => setMedication(e.target.value)} />
+                                    <InputMedication value={medication} onChange={e => setMedication(e.target.value)} disabled={loading} />
                                 </div>
 
                                 <div className="flex flex-col items-center">
                                     <label htmlFor="amount" className="font-bold" id="label-amount">Cantidad:</label>
-                                    <InputAmount value={amount} onChange={e => setAmount(e.target.value)} />
+                                    <InputAmount value={amount} onChange={e => setAmount(e.target.value)} disabled={loading} />
                                 </div>
                                 <button
                                     type="button"
                                     onClick={() => setShowMed2(true)}
-                                    disabled={showMed2}
+                                    disabled={showMed2 || loading}
+
                                     className={`self-start mt-12 inline-flex items-center justify-center text-xs text-green-500 hover:text-green-700 p-0 m-0 h-5 w-5
-                                ${showMed2 ? 'opacity-50 cursor-not-allowed hover:text-green-500' : 'hover:text-green-700'}`}
+                                ${(showMed2 || loading) ? 'opacity-50 cursor-not-allowed hover:text-green-500' : 'hover:text-green-700'}`}
 
                                 >
                                     +
@@ -246,7 +253,7 @@ function Medications() {
                                             <div className="flex flex-col items-center">
                                                 <InputMedication2
                                                     value={medication2}
-                                                    onChange={e => setMedication2(e.target.value)}
+                                                    onChange={e => setMedication2(e.target.value)} disabled={loading}
                                                 />
                                             </div>
 
@@ -254,7 +261,7 @@ function Medications() {
                                             <div className="flex flex-col items-center">
                                                 <InputAmount2
                                                     value={amount2}
-                                                    onChange={e => setAmount2(e.target.value)}
+                                                    onChange={e => setAmount2(e.target.value)} disabled={loading}
                                                 />
                                             </div>
 
@@ -262,9 +269,9 @@ function Medications() {
                                                 <button
                                                     type="button"
                                                     onClick={closeMed2}
-                                                    disabled={showMed3}
+                                                    disabled={showMed3 || loading}
                                                     className={`inline-flex items-center h-5 w-5 justify-center text-xs leading-none text-red-500 p-0 m-0
-                                                ${showMed3 ? 'opacity-50 cursor-not-allowed hover:text-red-500' : 'hover:text-red-700'}`}
+                                                ${(showMed3 || loading) ? 'opacity-50 cursor-not-allowed hover:text-red-500' : 'hover:text-red-700'}`}
                                                     style={{ lineHeight: 1 }}
                                                 >
                                                     -
@@ -273,9 +280,9 @@ function Medications() {
                                                 <button
                                                     type="button"
                                                     onClick={() => setShowMed3(true)}
-                                                    disabled={showMed3}
+                                                    disabled={showMed3 || loading}
                                                     className={`inline-flex items-center h-5 w-5 justify-center text-xs leading-none text-red-500 p-0 m-0
-                                                ${showMed3 ? 'opacity-50 cursor-not-allowed hover:text-red-500' : 'hover:text-red-700'} `}                                                                                            //si es true se bloquea el boton y sino se desbloquea
+                                                ${(showMed3 || loading) ? 'opacity-50 cursor-not-allowed hover:text-red-500' : 'hover:text-red-700'} `}                                                                                            //si es true se bloquea el boton y sino se desbloquea
                                                     style={{ lineHeight: 1 }}
                                                 >
                                                     +
@@ -297,20 +304,23 @@ function Medications() {
 
                                         <div className="flex flex-col items-center">
 
-                                            <InputMedication3 value={medication3} onChange={e => setMedication3(e.target.value)} />
+                                            <InputMedication3 value={medication3} onChange={e => setMedication3(e.target.value)} disabled={loading} />
                                         </div>
 
                                         <div className="flex flex-col items-center">
 
-                                            <InputAmount3 value={amount3} onChange={e => setAmount3(e.target.value)} />
+                                            <InputAmount3 value={amount3} onChange={e => setAmount3(e.target.value)} disabled={loading} />
                                         </div>
                                         <button
                                             type="button"
                                             onClick={closeMed3}
-                                            className="self-start mt-6 inline-flex items-center justify-center text-xs text-red-500 hover:text-red-700 p-0 m-0 h-5 w-5">
-
+                                            disabled={loading}
+                                            className={`self-start mt-6 inline-flex items-center justify-center text-xs text-red-500 p-0 m-0 h-5 w-5
+                                            ${loading ? 'opacity-50 cursor-not-allowed hover:text-red-500' : 'hover:text-red-700'}`}
+                                        >
                                             -
                                         </button>
+
 
                                     </div>
 
@@ -320,9 +330,9 @@ function Medications() {
 
 
                         <div className="flex justify-center gap-2 my-5 mt-10 mb-1">
-                            <MyButton type="submit">Solicitar</MyButton>
+                            <MyButton type="submit" disabled={loading}>Solicitar</MyButton>
 
-                            <BackButton />
+                            <BackButton disabled={loading} />
 
                         </div>
 
@@ -334,7 +344,7 @@ function Medications() {
 }
 
 
-function InputDni({ value, onChange }) {
+function InputDni({ value, onChange, disabled }) {
     return (
         <input
             type="number"
@@ -344,11 +354,12 @@ function InputDni({ value, onChange }) {
             onChange={onChange}
             required
             className="w-80 px-3 py-2 rounded-md border border-black focus:outline-none focus:ring-2 focus:ring-blue-500"
+            disabled={disabled}
         />
     )
 }
 /*Medication 1*/
-function InputMedication({ value, onChange }) {
+function InputMedication({ value, onChange, disabled }) {
     return (
         <input
             type="text"
@@ -358,10 +369,11 @@ function InputMedication({ value, onChange }) {
             onChange={onChange}
             required
             className="w-50 px-3 py-2 rounded-md border border-black focus:outline-none focus:ring-2 focus:ring-blue-500"
+            disabled={disabled}
         />
     )
 }
-function InputAmount({ value, onChange }) {
+function InputAmount({ value, onChange, disabled }) {
     return (
         <input
             type="number"
@@ -372,12 +384,13 @@ function InputAmount({ value, onChange }) {
             required
             min={1}
             className="w-20 px-3 py-2 rounded-md border border-black focus:outline-none focus:ring-2 focus:ring-blue-500"
+            disabled={disabled}
         />
     )
 }
 
 /*Medicacion 2*/
-function InputMedication2({ value, onChange }) {
+function InputMedication2({ value, onChange, disabled }) {
     return (
         <input
             type="text"
@@ -386,10 +399,11 @@ function InputMedication2({ value, onChange }) {
             value={value}
             onChange={onChange}
             className="w-50 px-3 py-2 rounded-md border border-black focus:outline-none focus:ring-2 focus:ring-blue-500"
+            disabled={disabled}
         />
     )
 }
-function InputAmount2({ value, onChange }) {
+function InputAmount2({ value, onChange, disabled }) {
     return (
         <input
             type="number"
@@ -399,12 +413,13 @@ function InputAmount2({ value, onChange }) {
             onChange={onChange}
             min={1}
             className="w-20 px-3 py-2 rounded-md border border-black focus:outline-none focus:ring-2 focus:ring-blue-500"
+            disabled={disabled}
         />
     )
 }
 
 /*Medication 3*/
-function InputMedication3({ value, onChange }) {
+function InputMedication3({ value, onChange, disabled }) {
     return (
         <input
             type="text"
@@ -413,10 +428,11 @@ function InputMedication3({ value, onChange }) {
             value={value}
             onChange={onChange}
             className="w-50 px-3 py-2 rounded-md border border-black focus:outline-none focus:ring-2 focus:ring-blue-500"
+            disabled={disabled}
         />
     )
 }
-function InputAmount3({ value, onChange }) {
+function InputAmount3({ value, onChange, disabled }) {
     return (
         <input
             type="number"
@@ -426,24 +442,27 @@ function InputAmount3({ value, onChange }) {
             onChange={onChange}
             min={1}
             className="w-20 px-3 py-2 rounded-md border border-black focus:outline-none focus:ring-2 focus:ring-blue-500"
+            disabled={disabled}
         />
     )
 }
-
-function MyButton({ type = 'button', children }) {
+function MyButton({ children, disabled }) {
     return (
         <button
-            className="w-full max-w-[120px] sm:max-w-[160px] px-2 py-2 bg-blue-500 rounded text-white text-sm transition delay-700 
-            duration-700 ease-in-out hover:-translate-y-1 hover:scale-101 hover:bg-indigo-500"
+            disabled={disabled}
+            className={`
+                w-full max-w-[120px] sm:max-w-[160px] px-2 py-2 rounded text-white text-sm 
+                ${disabled ? 'bg-gray-400 cursor-not-allowed' : 'bg-blue-500 hover:-translate-y-1 hover:scale-101 hover:bg-indigo-500'}
+            `}
         >
-
-
             {children}
         </button>
-    )
+    );
 }
 
-function BackButton() {
+
+
+function BackButton({ disabled = false }) {
     const navigate = useNavigate();
 
     const handleClick = () => {
@@ -458,8 +477,10 @@ function BackButton() {
     return (
         <button
             onClick={handleClick}
-            className="w-full max-w-[120px] sm:max-w-[160px] px-2 py-2 bg-blue-500 rounded text-white text-sm transition delay-700 
-            duration-700 ease-in-out hover:-translate-y-1 hover:scale-101 hover:bg-indigo-500"
+            disabled={disabled}
+            className={`w-full max-w-[120px] sm:max-w-[160px] px-2 py-2 bg-blue-500 rounded text-white text-sm transition delay-700 
+            duration-700 ease-in-out hover:-translate-y-1 hover:scale-101 hover:bg-indigo-500 
+            ${disabled ? 'opacity-50 cursor-not-allowed' : ''}`}
         >
             Volver
         </button>
