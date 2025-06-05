@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import logo from '../images/logo.png';
 import '../styles/Layout.css';
 
 
@@ -17,8 +18,8 @@ const Header = () => (
         <div className="logo">
             <a href="/">
                 <img
-                    src="/images/logo.png"
-                    alt="Logo de la empresa"
+                    src={logo}
+                    alt="Logo de Laboratorio Lafedar S.A."
                 />
             </a>
         </div>

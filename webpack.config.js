@@ -31,6 +31,10 @@ module.exports = {
         test: /\.css$/i,
         use: ['style-loader', 'css-loader'],
       },
+      {
+        test: /\.(png|jpe?g|gif|svg)$/i,
+        type: 'asset/resource',
+      },
     ],
   },
   plugins: [
@@ -42,7 +46,7 @@ module.exports = {
         { from: path.resolve(__dirname, '_redirects'), to: '' },
       ],
     }),
-    
+
     new Dotenv({
       path: './.env',
     }),  // cargará tu .env y expondrá process.env.VAR en tu código
