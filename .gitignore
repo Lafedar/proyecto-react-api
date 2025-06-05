@@ -24,3 +24,10 @@ build/
 *.jpeg
 *.gif
 *.svg
+
+# NO ignorar imágenes dentro de src/images/
+!src/images/*.png
+!src/images/*.jpg
+!src/images/*.jpeg
+!src/images/*.gif
+!src/images/*.svg
