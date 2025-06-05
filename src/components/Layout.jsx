@@ -7,7 +7,11 @@ export default function Layout({ children }) {
     return (
         <>
             <Header />
-            <main>{children}</main>
+            <main className="min-h-screen flex flex-col justify-center">
+                {children}
+            </main>
+
+
             <Footer />
         </>
     );
