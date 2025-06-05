@@ -55,7 +55,7 @@ function Medications() {
                 }
 
                 const res = await fetch(
-                    `https://wrestling-family-mf-arbor.trycloudflare.com/api/buscarPersona`,
+                    `https://performer-hopefully-collection-mines.trycloudflare.com/api/buscarPersona`,
                     {
                         method: 'POST',
                         headers: { 'Content-Type': 'application/json' },
@@ -109,7 +109,7 @@ function Medications() {
             }
 
 
-            const response = await fetch(`https://wrestling-family-mf-arbor.trycloudflare.com/api/medications`, {
+            const response = await fetch(`https://performer-hopefully-collection-mines.trycloudflare.com/api/medications`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
