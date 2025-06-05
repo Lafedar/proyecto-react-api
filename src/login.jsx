@@ -264,7 +264,8 @@ function InputPassword({ value, onChange }) {
 
 function MyButton({ type = 'button', children }) {
     return (
-        <button type={type} className="black-buttons bg-blue-500 transition delay-700 duration-700 ease-in-out hover:-translate-y-1 hover:scale-110 hover:bg-indigo-500">
+        <button type={type} className="black-buttons bg-blue-500 transition hover:-translate-y-1 hover:scale-110 hover:bg-indigo-500">
+
             {children}
         </button>
     )
