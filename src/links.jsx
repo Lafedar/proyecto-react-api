@@ -2,16 +2,20 @@ import React from 'react'
 import { createRoot } from 'react-dom/client'
 import './styles/App.css';
 import { useNavigate } from 'react-router-dom';
+import Layout from './components/Layout';
 
 function Links() {
     return (
-        <div id="links-container">
-            <h1>Links</h1>
+        <Layout>
+            <div id="links-container">
+                <h1>Links</h1>
 
-            <MedicationButton to="/medications">Solicitudes de Medicamentos</MedicationButton>
-            <AlmuerzosButton to="https://tailwindcss.com/docs/animation">Almuerzos</AlmuerzosButton>
-            <ExitButton to="/">Salir</ExitButton>
-        </div>
+                <MedicationButton to="/medications">Solicitudes de Medicamentos</MedicationButton>
+                <AlmuerzosButton to="https://tailwindcss.com/docs/animation">Almuerzos</AlmuerzosButton>
+                <ExitButton to="/">Salir</ExitButton>
+            </div>
+
+        </Layout>
 
     )
 
@@ -23,7 +27,7 @@ function MedicationButton({ type = 'button', children, to }) {
 
     const handleClick = () => {
         if (to) {
-            navigate(to); 
+            navigate(to);
         }
     };
 

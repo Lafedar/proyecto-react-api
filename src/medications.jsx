@@ -9,6 +9,7 @@ import './styles/App.css';
 
 
 import './styles/App.css';
+import Layout from './components/Layout';
 
 function Medications() {
     const API_BASE = process.env.REACT_APP_API_BASE_URL;
@@ -164,7 +165,7 @@ function Medications() {
 
     //Vista que voy a mostrar en el index.html
     return (
-
+        <Layout>
         <div
             className={`
                 mt-[-110px]
@@ -329,7 +330,7 @@ function Medications() {
                 </form>
             </div>
         </div>
-
+    </Layout>
     )
 }
 
