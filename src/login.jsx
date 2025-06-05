@@ -4,11 +4,6 @@ import { useSession } from './contexts/SessionContext';
 import { arrayBufferToBase64 } from './cryptoUtils';
 import Toast from './components/Toast';
 import Layout from './components/Layout';
-
-
-
-
-
 import './styles/App.css';
 
 function Login() {
