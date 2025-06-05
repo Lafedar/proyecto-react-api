@@ -191,7 +191,7 @@ function Login() {
     //Vista que voy a mostrar en el index.html
     return (
         <Layout>
-            <div>
+            <div id="login-container">
                 {showToast && (
                     <Toast
                         message={toastMessage}
