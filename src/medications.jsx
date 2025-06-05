@@ -448,9 +448,14 @@ function MyButton({ type = 'button', children }) {
 function BackButton() {
     const navigate = useNavigate();
 
+    const handleClick = () => {
+        document.activeElement.blur(); // fuerza cierre del teclado virtual
+        navigate('/links');
+    };
+
     return (
         <button
-            onClick={() => navigate('/links')}
+            onClick={handleClick}
             className="w-full max-w-[120px] sm:max-w-[160px] px-2 py-2 bg-blue-500 rounded text-white text-sm transition delay-700 
             duration-700 ease-in-out hover:-translate-y-1 hover:scale-101 hover:bg-indigo-500"
         >
@@ -458,6 +463,7 @@ function BackButton() {
         </button>
     );
 }
+
 
 
 export default Medications;
