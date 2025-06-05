@@ -176,11 +176,10 @@ function Medications() {
                 mx-auto
                 shadow-[0_10px_40px_rgba(0,0,0,0.3)]
                 rounded-3xl         
-                overflow-hidden`} >
+                `} >
             <div
                 className={`
                     bg-white
-                    overflow-hidden
                     px-4 py-6           
                     sm:px-8 sm:py-8     
                     rounded-2xl         
