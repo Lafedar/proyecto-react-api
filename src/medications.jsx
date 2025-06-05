@@ -166,8 +166,8 @@ function Medications() {
     //Vista que voy a mostrar en el index.html
     return (
         <Layout>
-        <div
-            className={`
+            <div
+                className={`
                 mt-[-110px]
                 w-11/12            
                 sm:w-3/4            
@@ -177,8 +177,8 @@ function Medications() {
                 shadow-[0_10px_40px_rgba(0,0,0,0.3)]
                 rounded-3xl         
                 overflow-hidden`} >
-            <div
-                className={`
+                <div
+                    className={`
                     bg-white
                     overflow-hidden
                     px-4 py-6           
@@ -186,151 +186,151 @@ function Medications() {
                     rounded-2xl         
                     sm:rounded-[2.5rem] 
                     w-full`
-                } id="medications-container">
-                {showToast && (
-                    <Toast
-                        message={toastMessage}
-                        onClose={() => setShowToast(false)}
-                    />
-                )}
-                <form className="w-full" onSubmit={handleMedications}>
-                    <h1 className="text-xl font-bold text-center text-white-600 mb-4" id="titulo-solicitudes">Solicitud de Medicamentos</h1>
-                    {error && <div className="error">{error}</div>}
+                    } id="medications-container">
+                    {showToast && (
+                        <Toast
+                            message={toastMessage}
+                            onClose={() => setShowToast(false)}
+                        />
+                    )}
+                    <form className="w-full" onSubmit={handleMedications}>
+                        <h1 className="text-xl font-bold text-center text-white-600 mb-4" id="titulo-solicitudes">Solicitud de Medicamentos</h1>
+                        {error && <div className="error">{error}</div>}
 
-                    <div className="form-group flex flex-col items-center mt-6 gap-4">
+                        <div className="form-group flex flex-col items-center mt-6 gap-4">
 
-
-                        <div className="flex flex-col items-center">
-                            <label htmlFor="dni" className="font-bold mb-1" id="label-dni">DNI:</label>
-                            <InputDni value={dni} onChange={e => setDni(e.target.value)} />
-                            {dniError && (
-                                <p className="text-red-500 text-sm mt-1">{dniError}</p>
-                            )}
-                            {dniValid && personName && (
-                                <p className="text-green-600 text-sm mt-1">
-                                    Persona encontrada: <strong>{personName}</strong>
-                                </p>
-                            )}
-                        </div>
-
-
-                        <div className="flex justify-center gap-x-0.5 -mt-2">
 
                             <div className="flex flex-col items-center">
-                                <label htmlFor="input_medication" className="font-bold" id="label-medication">Medicamento:</label>
-                                <InputMedication value={medication} onChange={e => setMedication(e.target.value)} />
-                            </div>
-
-                            <div className="flex flex-col items-center">
-                                <label htmlFor="amount" className="font-bold" id="label-amount">Cantidad:</label>
-                                <InputAmount value={amount} onChange={e => setAmount(e.target.value)} />
-                            </div>
-                            <button
-                                type="button"
-                                onClick={() => setShowMed2(true)}
-                                disabled={showMed2}
-                                className={`self-start mt-12 inline-flex items-center justify-center text-xs text-green-500 hover:text-green-700 p-0 m-0 h-5 w-5
-                                ${showMed2 ? 'opacity-50 cursor-not-allowed hover:text-green-500' : 'hover:text-green-700'}`}
-
-                            >
-                                +
-                            </button>
-
-
-                        </div>
-
-                        {showMed2 && (
-                            <>
-                                {showMed2 && (
-                                    <div className="flex justify-center gap-x-0.5 -mt-8">
-                                        {/* Campo Medicamento 2 */}
-                                        <div className="flex flex-col items-center">
-                                            <InputMedication2
-                                                value={medication2}
-                                                onChange={e => setMedication2(e.target.value)}
-                                            />
-                                        </div>
-
-                                        {/* Campo Cantidad 2 */}
-                                        <div className="flex flex-col items-center">
-                                            <InputAmount2
-                                                value={amount2}
-                                                onChange={e => setAmount2(e.target.value)}
-                                            />
-                                        </div>
-
-                                        <div className="flex flex-col items-center gap-1 mt-3.5 mr-0">
-                                            <button
-                                                type="button"
-                                                onClick={closeMed2}
-                                                disabled={showMed3}
-                                                className={`inline-flex items-center h-5 w-5 justify-center text-xs leading-none text-red-500 p-0 m-0
-                                                ${showMed3 ? 'opacity-50 cursor-not-allowed hover:text-red-500' : 'hover:text-red-700'}`}
-                                                style={{ lineHeight: 1 }}
-                                            >
-                                                -
-                                            </button>
-
-                                            <button
-                                                type="button"
-                                                onClick={() => setShowMed3(true)}
-                                                disabled={showMed3}
-                                                className={`inline-flex items-center h-5 w-5 justify-center text-xs leading-none text-red-500 p-0 m-0
-                                                ${showMed3 ? 'opacity-50 cursor-not-allowed hover:text-red-500' : 'hover:text-red-700'} `}                                                                                            //si es true se bloquea el boton y sino se desbloquea
-                                                style={{ lineHeight: 1 }}
-                                            >
-                                                +
-                                            </button>
-
-                                        </div>
-
-                                    </div>
+                                <label htmlFor="dni" className="font-bold mb-1" id="label-dni">DNI:</label>
+                                <InputDni value={dni} onChange={e => setDni(e.target.value)} />
+                                {dniError && (
+                                    <p className="text-red-500 text-sm mt-1">{dniError}</p>
                                 )}
+                                {dniValid && personName && (
+                                    <p className="text-green-600 text-sm mt-1">
+                                        Persona encontrada: <strong>{personName}</strong>
+                                    </p>
+                                )}
+                            </div>
 
 
-                            </>
-                        )}
+                            <div className="flex justify-center gap-x-0.5 -mt-2">
 
-
-                        {showMed3 && (
-                            <>
-                                <div className="flex justify-center gap-x-0.5 -mt-8">
-
-                                    <div className="flex flex-col items-center">
-
-                                        <InputMedication3 value={medication3} onChange={e => setMedication3(e.target.value)} />
-                                    </div>
-
-                                    <div className="flex flex-col items-center">
-
-                                        <InputAmount3 value={amount3} onChange={e => setAmount3(e.target.value)} />
-                                    </div>
-                                    <button
-                                        type="button"
-                                        onClick={closeMed3}
-                                        className="self-start mt-6 inline-flex items-center justify-center text-xs text-red-500 hover:text-red-700 p-0 m-0 h-5 w-5">
-
-                                        -
-                                    </button>
-
+                                <div className="flex flex-col items-center">
+                                    <label htmlFor="input_medication" className="font-bold" id="label-medication">Medicamento:</label>
+                                    <InputMedication value={medication} onChange={e => setMedication(e.target.value)} />
                                 </div>
 
-                            </>
-                        )}
-                    </div>
+                                <div className="flex flex-col items-center">
+                                    <label htmlFor="amount" className="font-bold" id="label-amount">Cantidad:</label>
+                                    <InputAmount value={amount} onChange={e => setAmount(e.target.value)} />
+                                </div>
+                                <button
+                                    type="button"
+                                    onClick={() => setShowMed2(true)}
+                                    disabled={showMed2}
+                                    className={`self-start mt-12 inline-flex items-center justify-center text-xs text-green-500 hover:text-green-700 p-0 m-0 h-5 w-5
+                                ${showMed2 ? 'opacity-50 cursor-not-allowed hover:text-green-500' : 'hover:text-green-700'}`}
+
+                                >
+                                    +
+                                </button>
 
 
-                    <div className="flex justify-center gap-2 my-5 mt-10 mb-1">
-                        <MyButton type="submit">Solicitar</MyButton>
+                            </div>
 
-                        <BackButton />
+                            {showMed2 && (
+                                <>
+                                    {showMed2 && (
+                                        <div className="flex justify-center gap-x-0.5 -mt-8">
+                                            {/* Campo Medicamento 2 */}
+                                            <div className="flex flex-col items-center">
+                                                <InputMedication2
+                                                    value={medication2}
+                                                    onChange={e => setMedication2(e.target.value)}
+                                                />
+                                            </div>
 
-                    </div>
+                                            {/* Campo Cantidad 2 */}
+                                            <div className="flex flex-col items-center">
+                                                <InputAmount2
+                                                    value={amount2}
+                                                    onChange={e => setAmount2(e.target.value)}
+                                                />
+                                            </div>
 
-                </form>
+                                            <div className="flex flex-col items-center gap-1 mt-3.5 mr-0">
+                                                <button
+                                                    type="button"
+                                                    onClick={closeMed2}
+                                                    disabled={showMed3}
+                                                    className={`inline-flex items-center h-5 w-5 justify-center text-xs leading-none text-red-500 p-0 m-0
+                                                ${showMed3 ? 'opacity-50 cursor-not-allowed hover:text-red-500' : 'hover:text-red-700'}`}
+                                                    style={{ lineHeight: 1 }}
+                                                >
+                                                    -
+                                                </button>
+
+                                                <button
+                                                    type="button"
+                                                    onClick={() => setShowMed3(true)}
+                                                    disabled={showMed3}
+                                                    className={`inline-flex items-center h-5 w-5 justify-center text-xs leading-none text-red-500 p-0 m-0
+                                                ${showMed3 ? 'opacity-50 cursor-not-allowed hover:text-red-500' : 'hover:text-red-700'} `}                                                                                            //si es true se bloquea el boton y sino se desbloquea
+                                                    style={{ lineHeight: 1 }}
+                                                >
+                                                    +
+                                                </button>
+
+                                            </div>
+
+                                        </div>
+                                    )}
+
+
+                                </>
+                            )}
+
+
+                            {showMed3 && (
+                                <>
+                                    <div className="flex justify-center gap-x-0.5 -mt-8">
+
+                                        <div className="flex flex-col items-center">
+
+                                            <InputMedication3 value={medication3} onChange={e => setMedication3(e.target.value)} />
+                                        </div>
+
+                                        <div className="flex flex-col items-center">
+
+                                            <InputAmount3 value={amount3} onChange={e => setAmount3(e.target.value)} />
+                                        </div>
+                                        <button
+                                            type="button"
+                                            onClick={closeMed3}
+                                            className="self-start mt-6 inline-flex items-center justify-center text-xs text-red-500 hover:text-red-700 p-0 m-0 h-5 w-5">
+
+                                            -
+                                        </button>
+
+                                    </div>
+
+                                </>
+                            )}
+                        </div>
+
+
+                        <div className="flex justify-center gap-2 my-5 mt-10 mb-1">
+                            <MyButton type="submit">Solicitar</MyButton>
+
+                            <BackButton />
+
+                        </div>
+
+                    </form>
+                </div>
             </div>
-        </div>
-    </Layout>
+        </Layout>
     )
 }
 
@@ -449,8 +449,18 @@ function BackButton() {
     const navigate = useNavigate();
 
     const handleClick = () => {
-        document.activeElement.blur(); // fuerza cierre del teclado virtual
-        setTimeout(() => navigate('/links'), 100);
+        // Desenfoca cualquier input activo
+        if (document.activeElement && document.activeElement.blur) {
+            document.activeElement.blur();
+        }
+
+        // Fuerza un pequeño scroll para que el teclado realmente se cierre
+        window.scrollTo(0, 1);
+
+        // Espera un poco para que el teclado se oculte antes del cambio de ruta
+        setTimeout(() => {
+            navigate('/links');
+        }, 150); // 100–200 ms suele ser suficiente
     };
 
     return (
