@@ -20,7 +20,7 @@ function Login() {
     let aesKey = null;
     async function fetchKey() {
         try {
-            const response = await fetch(`https://performer-hopefully-collection-mines.trycloudflare.com/api/get-key`, {
+            const response = await fetch(`https://nu-dts-involve-ft.trycloudflare.com/api/get-key`, {
                 credentials: 'include',
 
             });
@@ -83,7 +83,7 @@ function Login() {
             const ciphertext = arrayBufferToBase64(ciphertextBuffer);
             const ivBase64 = arrayBufferToBase64(iv);
 
-            const response = await fetch(`https://performer-hopefully-collection-mines.trycloudflare.com/api/login`, {
+            const response = await fetch(`https://nu-dts-involve-ft.trycloudflare.com/api/login`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
