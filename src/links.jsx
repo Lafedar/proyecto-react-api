@@ -11,8 +11,7 @@ function Links() {
                 <h1>Links</h1>
 
                 <MedicationButton to="/medications">Solicitudes de Medicamentos</MedicationButton>
-                <AlmuerzosButton to="https://tailwindcss.com/docs/animation">Almuerzos</AlmuerzosButton>
-                <ExitButton to="/">Salir</ExitButton>
+                <ExitButton to="/">Salir</ExitButton> 
             </div>
 
         </Layout>

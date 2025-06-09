@@ -11,8 +11,9 @@ export const useSession = () => {
 // Proveedor del contexto
 export const SessionProvider = ({ children }) => {
   const [sessionKey, setSessionKey] = useState(null);
+  const [usuario, setUsuario] = useState(null);
 
- 
+
   useEffect(() => {
     const savedKey = sessionStorage.getItem("sessionKey");
     if (savedKey) {
@@ -27,6 +28,11 @@ export const SessionProvider = ({ children }) => {
         setSessionKey(importedKey);
       }).catch(console.error);
     }
+
+    const savedUsuario = sessionStorage.getItem("usuario");
+    if (savedUsuario) {
+      setUsuario(JSON.parse(savedUsuario));
+    }
   }, []);
 
 
@@ -38,8 +44,13 @@ export const SessionProvider = ({ children }) => {
     sessionStorage.setItem("sessionKey", base64);
   };
 
+  const updateUsuario = (user) => {
+    setUsuario(user);
+    sessionStorage.setItem("usuario", JSON.stringify(user));
+  };
+
   return (
-    <SessionContext.Provider value={{ sessionKey, updateSessionKey }}>
+    <SessionContext.Provider value={{ sessionKey, updateSessionKey, usuario, updateUsuario  }}>
       {children}
     </SessionContext.Provider>
   );

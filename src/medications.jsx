@@ -29,13 +29,14 @@ function Medications() {
     const [showMed2, setShowMed2] = useState(false);
     const [showMed3, setShowMed3] = useState(false);
     const { sessionKey } = useSession();
+    const { usuario } = useSession();
 
     const [toastMessage, setToastMessage] = useState('');
     const [showToast, setShowToast] = useState(false);
     const [loading, setLoading] = useState(false);
 
 
-    useEffect(() => {
+    /*useEffect(() => {
         if (dni.length !== 8 || !sessionKey) return;
 
         // Reinicio de estado
@@ -86,19 +87,24 @@ function Medications() {
         };
 
         fetchPerson();
-    }, [dni, sessionKey]);
+    }, [dni, sessionKey]);*/
+    if (!usuario) {
+        return <div className="text-center mt-10">Cargando sesión...</div>;
+    }
 
+    const dni_user = usuario.dni;
 
     const handleMedications = async (e) => {
         e.preventDefault();
         setLoading(true);
         try {
-            if (!dni || !medication || !amount) {
+            if (!medication || !amount) {
                 setToastMessage(`Por favor, completá todos los campos.`);
                 setShowToast(true);
                 return;
             }
-            const payload = { dni, medication, amount, medication2, amount2, medication3, amount3 };
+
+            const payload = { dni_user, medication, amount, medication2, amount2, medication3, amount3 };
 
             const encrypted = await encryptData(payload, sessionKey);
             if (!encrypted) {
@@ -203,16 +209,7 @@ function Medications() {
 
 
                             <div className="flex flex-col items-center">
-                                <label htmlFor="dni" className="font-bold mb-1" id="label-dni">DNI:</label>
-                                <InputDni value={dni} onChange={e => setDni(e.target.value)} disabled={loading} />
-                                {dniError && (
-                                    <p className="text-red-500 text-sm mt-1">{dniError}</p>
-                                )}
-                                {dniValid && personName && (
-                                    <p className="text-green-600 text-sm mt-1">
-                                        Persona encontrada: <strong>{personName}</strong>
-                                    </p>
-                                )}
+                                <label className='font-bold mb-4'>Bienvenido, {usuario.nombre}</label>
                             </div>
 
 
@@ -341,20 +338,7 @@ function Medications() {
 }
 
 
-function InputDni({ value, onChange, disabled }) {
-    return (
-        <input
-            type="number"
-            id="dni"
-            name="dni"
-            value={value}
-            onChange={onChange}
-            required
-            className="w-80 px-3 py-2 rounded-md border border-black focus:outline-none focus:ring-2 focus:ring-blue-500"
-            disabled={disabled}
-        />
-    )
-}
+
 /*Medication 1*/
 function InputMedication({ value, onChange, disabled }) {
     return (

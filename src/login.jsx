@@ -16,6 +16,7 @@ function Login() {
     const [toastMessage, setToastMessage] = useState('');
     const [showToast, setShowToast] = useState(false);
     const [loading, setLoading] = useState(false);
+    const { updateUsuario } = useSession();
 
     let aesKey = null;
     async function fetchKey() {
@@ -164,9 +165,11 @@ function Login() {
 
 
             const user = JSON.parse(respuesta);
+            updateUsuario(user);
 
 
             if (user && user.email) {
+                console.log(user);
                 setToastMessage(`Bienvenido ${user.nombre}`);
                 setShowToast(true);
                 setTimeout(() => {
