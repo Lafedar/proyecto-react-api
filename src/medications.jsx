@@ -113,7 +113,7 @@ function Medications() {
             }
 
 
-            const response = await fetch(`https://fees-lamps-exist-seat.trycloudflare.com/api/medications`, {
+            const response = await fetch(`https://yields-previews-ko-nw.trycloudflare.com/api/medications`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
@@ -247,7 +247,7 @@ function Medications() {
                                             <div className="flex flex-col items-center">
                                                 <InputMedication2
                                                     value={medication2}
-                                                    onChange={e => setMedication2(e.target.value)} disabled={loading}
+                                                    onChange={e => setMedication2(e.target.value)} disabled={loading} required={showMed2}
                                                 />
                                             </div>
 
@@ -255,7 +255,7 @@ function Medications() {
                                             <div className="flex flex-col items-center">
                                                 <InputAmount2
                                                     value={amount2}
-                                                    onChange={e => setAmount2(e.target.value)} disabled={loading}
+                                                    onChange={e => setAmount2(e.target.value)} disabled={loading} required={showMed2}
                                                 />
                                             </div>
 
@@ -298,12 +298,12 @@ function Medications() {
 
                                         <div className="flex flex-col items-center">
 
-                                            <InputMedication3 value={medication3} onChange={e => setMedication3(e.target.value)} disabled={loading} />
+                                            <InputMedication3 value={medication3} onChange={e => setMedication3(e.target.value)} disabled={loading} required={showMed3} />
                                         </div>
 
                                         <div className="flex flex-col items-center">
 
-                                            <InputAmount3 value={amount3} onChange={e => setAmount3(e.target.value)} disabled={loading} />
+                                            <InputAmount3 value={amount3} onChange={e => setAmount3(e.target.value)} disabled={loading} required={showMed3} />
                                         </div>
                                         <button
                                             type="button"
@@ -371,7 +371,7 @@ function InputAmount({ value, onChange, disabled }) {
 }
 
 /*Medicacion 2*/
-function InputMedication2({ value, onChange, disabled }) {
+function InputMedication2({ value, onChange, disabled, required }) {
     return (
         <input
             type="text"
@@ -381,10 +381,11 @@ function InputMedication2({ value, onChange, disabled }) {
             onChange={onChange}
             className="w-50 px-3 py-2 rounded-md border border-black focus:outline-none focus:ring-2 focus:ring-blue-500"
             disabled={disabled}
+            required={required}
         />
     )
 }
-function InputAmount2({ value, onChange, disabled }) {
+function InputAmount2({ value, onChange, disabled, required}) {
     return (
         <input
             type="number"
@@ -395,12 +396,13 @@ function InputAmount2({ value, onChange, disabled }) {
             min={1}
             className="w-20 px-3 py-2 rounded-md border border-black focus:outline-none focus:ring-2 focus:ring-blue-500"
             disabled={disabled}
+            required={required}
         />
     )
 }
 
 /*Medication 3*/
-function InputMedication3({ value, onChange, disabled }) {
+function InputMedication3({ value, onChange, disabled, required }) {
     return (
         <input
             type="text"
@@ -410,10 +412,11 @@ function InputMedication3({ value, onChange, disabled }) {
             onChange={onChange}
             className="w-50 px-3 py-2 rounded-md border border-black focus:outline-none focus:ring-2 focus:ring-blue-500"
             disabled={disabled}
+            required={required}
         />
     )
 }
-function InputAmount3({ value, onChange, disabled }) {
+function InputAmount3({ value, onChange, disabled, required }) {
     return (
         <input
             type="number"
@@ -424,6 +427,7 @@ function InputAmount3({ value, onChange, disabled }) {
             min={1}
             className="w-20 px-3 py-2 rounded-md border border-black focus:outline-none focus:ring-2 focus:ring-blue-500"
             disabled={disabled}
+            required={required}
         />
     )
 }

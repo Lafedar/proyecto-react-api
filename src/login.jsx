@@ -21,7 +21,7 @@ function Login() {
     let aesKey = null;
     async function fetchKey() {
         try {
-            const response = await fetch(`https://fees-lamps-exist-seat.trycloudflare.com/api/get-key`, {
+            const response = await fetch(`https://yields-previews-ko-nw.trycloudflare.com/api/get-key`, {
                 credentials: 'include',
 
             });
@@ -84,7 +84,7 @@ function Login() {
             const ciphertext = arrayBufferToBase64(ciphertextBuffer);
             const ivBase64 = arrayBufferToBase64(iv);
 
-            const response = await fetch(`https://fees-lamps-exist-seat.trycloudflare.com/api/login`, {
+            const response = await fetch(`https://yields-previews-ko-nw.trycloudflare.com/api/login`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
