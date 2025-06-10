@@ -113,7 +113,7 @@ function Medications() {
             }
 
 
-            const response = await fetch(`https://yields-previews-ko-nw.trycloudflare.com/api/medications`, {
+            const response = await fetch(`https://demands-mag-lite-enjoying.trycloudflare.com/api/medications`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
@@ -209,7 +209,7 @@ function Medications() {
 
 
                             <div className="flex flex-col items-center">
-                                <label className='font-bold mb-4'>Bienvenido, {usuario.nombre}</label>
+                                <label className='font-bold mb-4'>Bienvenido, {usuario.nombre}!</label>
                             </div>
 
 
