@@ -11,7 +11,8 @@ function Links() {
                 <h1>Links</h1>
 
                 <MedicationButton to="/medications">Solicitudes de Medicamentos</MedicationButton>
-                <ExitButton to="/">Salir</ExitButton> 
+                <MyRequestsButton to="/myRequests">Mis Solicitudes de Medicamentos</MyRequestsButton>
+                <ExitButton to="/">Salir</ExitButton>
             </div>
 
         </Layout>
@@ -57,6 +58,27 @@ function AlmuerzosButton({ type = 'button', children, to }) {
         </button>
     );
 }
+function MyRequestsButton({ type = 'button', children, to }) {
+    const navigate = useNavigate();
+
+    const handleClick = () => {
+        if (to) {
+            navigate(to); // navegación interna sin recargar
+        }
+    };
+
+    return (
+        <button
+            type={type}
+            onClick={handleClick}
+            className="w-[300px] bg-blue-500 transition delay-700 duration-700 ease-in-out hover:-translate-y-1 hover:scale-110 hover:bg-indigo-500"
+        >
+            {children}
+        </button>
+    );
+}
+
+
 
 function ExitButton({ type = 'button', children, to }) {
     const handleClick = () => {

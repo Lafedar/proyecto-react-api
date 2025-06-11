@@ -1,7 +1,7 @@
 import { createRoot } from 'react-dom/client'
 import React, { useRef, useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { fetchKey, encryptData, decryptData, arrayBufferToBase64 } from './cryptoUtils';
+import { encryptData } from './cryptoUtils';
 import { useSession } from './contexts/SessionContext';
 import Toast from './components/Toast';
 import './styles/App.css';
@@ -315,7 +315,10 @@ function Medications() {
                                             -
                                         </button>
 
-
+                                        
+                                    </div>
+                                    <div className="text-center mt-[-20px] text-sm text-gray-600">
+                                        Máximo 3 medicamentos
                                     </div>
 
                                 </>
@@ -323,7 +326,7 @@ function Medications() {
                         </div>
 
 
-                        <div className="flex justify-center gap-2 my-5 mt-10 mb-1">
+                        <div className="flex justify-center gap-2 my-5 mt-6 mb-1">
                             <MyButton type="submit" disabled={loading} className={`btn ${loading ? 'opacity-100 cursor-not-allowed' : ''}`}> {loading ? 'Procesando...' : 'Solicitar'}</MyButton>
 
                             <BackButton disabled={loading} />
@@ -385,7 +388,7 @@ function InputMedication2({ value, onChange, disabled, required }) {
         />
     )
 }
-function InputAmount2({ value, onChange, disabled, required}) {
+function InputAmount2({ value, onChange, disabled, required }) {
     return (
         <input
             type="number"
