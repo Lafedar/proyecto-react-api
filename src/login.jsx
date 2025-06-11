@@ -17,6 +17,7 @@ function Login() {
     const [showToast, setShowToast] = useState(false);
     const [loading, setLoading] = useState(false);
     const { updateUsuario } = useSession();
+    const [loadingToast, setLoadingToast] = useState(false);
 
     let aesKey = null;
     async function fetchKey() {
@@ -154,6 +155,7 @@ function Login() {
         event.preventDefault();
         setError(null);
         setLoading(true);
+        setLoadingToast(true);
         try {
             await fetchKey();
 
@@ -166,7 +168,7 @@ function Login() {
 
             const user = JSON.parse(respuesta);
             updateUsuario(user);
-
+            setLoadingToast(false);
 
             if (user && user.email) {
                 console.log(user);
@@ -197,45 +199,62 @@ function Login() {
 
     //Vista que voy a mostrar en el index.html
     return (
-        <Layout>
-            <div id="login-container">
-                {showToast && (
-                    <Toast
-                        message={toastMessage}
-                        onClose={() => setShowToast(false)}
-                    />
-                )}
-
-                <form className="login-form" onSubmit={iniciar}>
-
-                    <h1 className="text-x1 font-bold text-white-600">Login</h1>
-                    {error && <div className="error">{error}</div>}
-
-                    <div className="form-group flex flex-col items-center mt-6">
-
-                        <label htmlFor="email" id="input_email" className="font-bold">Usuario</label>
-                        <InputUser value={email} onChange={e => setEmail(e.target.value)} />
-                    </div>
-
-                    <div className="form-group flex flex-col items-center mb-4">
-                        <label htmlFor="password" className="font-bold">Contraseña</label>
-                        <InputPassword value={password} onChange={e => setPassword(e.target.value)} />
-                    </div>
-
-                    <div className="flex justify-center">
-                        <MyButton type="submit" disabled={loading}
-                            className={`btn ${loading ? 'opacity-100 cursor-not-allowed' : ''}`}
-                        >
-                            {loading ? 'Procesando...' : 'Ingresar'}</MyButton>
-
-                    </div>
-
-                </form>
-            </div>
-        </Layout>
+        <>
+            {loadingToast && (
+                <div className="fixed top-20 left-1/2 transform -translate-x-1/2 bg-transparent px-4 py-2 rounded flex items-center gap-2 z-50">
+                    <div
+                        className="animate-spin rounded-full h-10 w-10 border-t-4 border-solid"
+                        style={{ borderColor: "rgba(15, 79, 141, 0.83)" }}
+                    ></div>
+                    <span
+                        className="font-semibold text-lg"
+                        style={{ color: "rgba(15, 79, 141, 0.83)" }}
+                    >
+                        Procesando...
+                    </span>
+                </div>
+            )}
 
 
+            <Layout>
+                <div id="login-container">
+                    {showToast && (
+                        <Toast
+                            message={toastMessage}
+                            onClose={() => setShowToast(false)}
+                        />
+                    )}
+
+                    <form className="login-form" onSubmit={iniciar}>
+
+                        <h1 className="text-x1 font-bold text-white-600">Login</h1>
+                        {error && <div className="error">{error}</div>}
+
+                        <div className="form-group flex flex-col items-center mt-6">
+
+                            <label htmlFor="email" id="input_email" className="font-bold">Usuario</label>
+                            <InputUser value={email} onChange={e => setEmail(e.target.value)} />
+                        </div>
+
+                        <div className="form-group flex flex-col items-center mb-4">
+                            <label htmlFor="password" className="font-bold">Contraseña</label>
+                            <InputPassword value={password} onChange={e => setPassword(e.target.value)} />
+                        </div>
+
+                        <div className="flex justify-center">
+                            <MyButton type="submit" disabled={loading}>Ingresar</MyButton>
+
+                        </div>
+
+                    </form>
+                </div>
+            </Layout>
+
+
+
+        </>
     )
+
 }
 
 
@@ -267,9 +286,12 @@ function InputPassword({ value, onChange }) {
     )
 }
 
-function MyButton({ type = 'button', children }) {
+function MyButton({ type = 'button', children, disabled = false }) {
     return (
-        <button type={type} className="black-buttons bg-blue-500 transition hover:-translate-y-1 hover:scale-110 hover:bg-indigo-500">
+        <button type={type} disabled={disabled}
+            className={`w-full max-w-[120px] sm:max-w-[160px] px-2 py-2 bg-blue-500 rounded text-white text-sm transition delay-700 
+            duration-700 ease-in-out hover:-translate-y-1 hover:scale-101 hover:bg-indigo-500 
+            ${disabled ? 'opacity-50 cursor-not-allowed' : ''}`}>
 
             {children}
         </button>

@@ -1,8 +1,9 @@
-html, body {
+html,
+body {
   height: 100%;
   margin: 0;
-  overflow-y: hidden; 
-  background-color:white;
+  overflow-y: hidden;
+  background-color: white;
   color: black;
 }
 
@@ -10,8 +11,8 @@ h1 {
   font-size: 3.2em;
   line-height: 1.1;
   display: flex;
-  justify-content: center;  
-  align-items: center;  
+  justify-content: center;
+  align-items: center;
 }
 
 button {
@@ -25,11 +26,13 @@ button {
   cursor: pointer;
   transition: border-color 0.25s;
   color: white;
-  
+
 }
+
 button:hover {
   border-color: white;
 }
+
 button:focus,
 button:focus-visible {
   outline: 4px auto -webkit-focus-ring-color;
@@ -37,23 +40,24 @@ button:focus-visible {
 
 input {
   display: block;
-  margin: 15px auto; 
+  margin: 15px auto;
   padding: 8px;
- 
-  
+
+
 }
+
 #login-container {
-  margin-top: -50px;
+  margin-top: -10px;
 }
 
 #links-container {
   display: flex;
-  flex-direction: column; 
-  justify-content: center;  
-  align-items: center;      
-  height: 100vh;           
-  gap: 1rem;     
-  margin-top: -110px;         
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  gap: 1rem;
+  margin-top: -110px;
 }
 
 /*Saco las flechitas de los inputs de tipo number*/
@@ -71,7 +75,7 @@ input[type=number]::-webkit-outer-spin-button {
     color: white;
   }
 
-  input{
+  input {
     border: 1px solid white;
     color: white;
     background-color: #1e1e1e;
@@ -81,16 +85,31 @@ input[type=number]::-webkit-outer-spin-button {
     -webkit-box-shadow: 0 0 0 1000px #1e1e1e inset !important;
     -webkit-text-fill-color: white !important;
   }
-  #dni, #medication, #amount, #medication2, #amount2, #medication3, #amount3 {
+
+  #dni,
+  #medication,
+  #amount,
+  #medication2,
+  #amount2,
+  #medication3,
+  #amount3 {
     border: 1px solid white;
     color: white;
     background-color: black;
   }
-  #titulo-solicitudes, #label-dni, #label-medication, #label-amount {
-    color:white;
+
+  #titulo-solicitudes,
+  #label-dni,
+  #label-medication,
+  #label-amount {
+    color: white;
   }
-  #medications-container{
+
+  #medications-container {
     background-color: black;
   }
+
+
+
 
 }

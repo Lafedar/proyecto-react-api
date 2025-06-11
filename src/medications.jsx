@@ -35,6 +35,10 @@ function Medications() {
     const [showToast, setShowToast] = useState(false);
     const [loading, setLoading] = useState(false);
 
+    const [loadingToast, setLoadingToast] = useState(false);
+
+
+
 
     /*useEffect(() => {
         if (dni.length !== 8 || !sessionKey) return;
@@ -97,6 +101,9 @@ function Medications() {
     const handleMedications = async (e) => {
         e.preventDefault();
         setLoading(true);
+        setLoadingToast(true);
+
+
         try {
             if (!medication || !amount) {
                 setToastMessage(`Por favor, completá todos los campos.`);
@@ -130,21 +137,21 @@ function Medications() {
             const isOk = response.ok;
             const status = response.status;
             const data = await response.json();
-
+            setLoadingToast(false);
 
             if (isOk) {
-                setToastMessage(data.message || 'Solicitud creada con éxito.');
+                setToastMessage(data.message || 'Solicitud creada exitosamente! Se enviará un correo de confirmación.');
                 setShowToast(true);
                 setTimeout(() => {
                     navigate("/links");
-                }, 2000);
+                }, 3000);
 
             } else {
                 setToastMessage(data.message);
                 setShowToast(true);
                 setTimeout(() => {
                     setShowToast(false);
-                }, 2000);
+                }, 3000);
             }
         } catch (error) {
             console.error('Error al enviar solicitud:', error);
@@ -173,9 +180,27 @@ function Medications() {
 
     //Vista que voy a mostrar en el index.html
     return (
-        <Layout>
-            <div
-                className={`
+        <>
+            {loadingToast && (
+                <div className="fixed top-20 left-1/2 transform -translate-x-1/2 bg-transparent px-4 py-2 rounded flex items-center gap-2 z-50">
+                    <div
+                        className="animate-spin rounded-full h-10 w-10 border-t-4 border-solid"
+                        style={{ borderColor: "rgba(15, 79, 141, 0.83)" }}
+                    ></div>
+                    <span
+                        className="font-semibold text-lg"
+                        style={{ color: "rgba(15, 79, 141, 0.83)" }}
+                    >
+                        Procesando...
+                    </span>
+                </div>
+            )}
+
+
+
+            <Layout>
+                <div
+                    className={`
                 mt-[-110px]       
                 sm:mt-10         
                 w-11/12            
@@ -186,156 +211,160 @@ function Medications() {
                 shadow-[0_10px_40px_rgba(0,0,0,0.3)]
                 rounded-3xl         
                 `}>
-                <div
-                    className={`
+                    <div
+                        className={`
                     bg-white
                     px-4 py-6           
                     sm:px-8 sm:py-8     
                     rounded-2xl         
                     sm:rounded-[2.5rem] 
                     w-full`
-                    } id="medications-container">
-                    {showToast && (
-                        <Toast
-                            message={toastMessage}
-                            onClose={() => setShowToast(false)}
-                        />
-                    )}
-                    <form className="w-full" onSubmit={handleMedications}>
-                        <h1 className="text-xl font-bold text-center text-white-600 mb-4" id="titulo-solicitudes">Solicitud de Medicamentos</h1>
-                        {error && <div className="error">{error}</div>}
+                        } id="medications-container">
+                        {showToast && (
+                            <Toast
+                                message={toastMessage}
+                                onClose={() => setShowToast(false)}
+                            />
+                        )}
+                        <form className="w-full" onSubmit={handleMedications}>
+                            <h1 className="text-xl font-bold text-center text-white-600 mb-4" id="titulo-solicitudes">Solicitud de Medicamentos</h1>
+                            {error && <div className="error">{error}</div>}
 
-                        <div className="form-group flex flex-col items-center mt-6 gap-4">
+                            <div className="form-group flex flex-col items-center mt-6 gap-4">
 
-
-                            <div className="flex flex-col items-center">
-                                <label className='font-bold mb-4'>Bienvenido, {usuario.nombre}!</label>
-                            </div>
-
-
-                            <div className="flex justify-center gap-x-0.5 -mt-2">
 
                                 <div className="flex flex-col items-center">
-                                    <label htmlFor="input_medication" className="font-bold" id="label-medication">Medicamento:</label>
-                                    <InputMedication value={medication} onChange={e => setMedication(e.target.value)} disabled={loading} />
+                                    <label className='font-bold mb-4'>Bienvenido, {usuario.nombre}!</label>
                                 </div>
 
-                                <div className="flex flex-col items-center">
-                                    <label htmlFor="amount" className="font-bold" id="label-amount">Cantidad:</label>
-                                    <InputAmount value={amount} onChange={e => setAmount(e.target.value)} disabled={loading} />
-                                </div>
-                                <button
-                                    type="button"
-                                    onClick={() => setShowMed2(true)}
-                                    disabled={showMed2 || loading}
 
-                                    className={`self-start mt-12 inline-flex items-center justify-center text-xs text-green-500 hover:text-green-700 p-0 m-0 h-5 w-5
-                                ${(showMed2 || loading) ? 'opacity-50 cursor-not-allowed hover:text-green-500' : 'hover:text-green-700'}`}
+                                <div className="flex justify-center gap-x-0.5 -mt-2">
 
-                                >
-                                    +
-                                </button>
-
-
-                            </div>
-
-                            {showMed2 && (
-                                <>
-                                    {showMed2 && (
-                                        <div className="flex justify-center gap-x-0.5 -mt-8">
-                                            {/* Campo Medicamento 2 */}
-                                            <div className="flex flex-col items-center">
-                                                <InputMedication2
-                                                    value={medication2}
-                                                    onChange={e => setMedication2(e.target.value)} disabled={loading} required={showMed2}
-                                                />
-                                            </div>
-
-                                            {/* Campo Cantidad 2 */}
-                                            <div className="flex flex-col items-center">
-                                                <InputAmount2
-                                                    value={amount2}
-                                                    onChange={e => setAmount2(e.target.value)} disabled={loading} required={showMed2}
-                                                />
-                                            </div>
-
-                                            <div className="flex flex-col items-center gap-1 mt-3.5 mr-0">
-                                                <button
-                                                    type="button"
-                                                    onClick={closeMed2}
-                                                    disabled={showMed3 || loading}
-                                                    className={`inline-flex items-center h-5 w-5 justify-center text-xs leading-none text-red-500 p-0 m-0
-                                                ${(showMed3 || loading) ? 'opacity-50 cursor-not-allowed hover:text-red-500' : 'hover:text-red-700'}`}
-                                                    style={{ lineHeight: 1 }}
-                                                >
-                                                    -
-                                                </button>
-
-                                                <button
-                                                    type="button"
-                                                    onClick={() => setShowMed3(true)}
-                                                    disabled={showMed3 || loading}
-                                                    className={`inline-flex items-center h-5 w-5 justify-center text-xs leading-none text-red-500 p-0 m-0
-                                                ${(showMed3 || loading) ? 'opacity-50 cursor-not-allowed hover:text-red-500' : 'hover:text-red-700'} `}                                                                                            //si es true se bloquea el boton y sino se desbloquea
-                                                    style={{ lineHeight: 1 }}
-                                                >
-                                                    +
-                                                </button>
-
-                                            </div>
-
-                                        </div>
-                                    )}
-
-
-                                </>
-                            )}
-
-
-                            {showMed3 && (
-                                <>
-                                    <div className="flex justify-center gap-x-0.5 -mt-8">
-
-                                        <div className="flex flex-col items-center">
-
-                                            <InputMedication3 value={medication3} onChange={e => setMedication3(e.target.value)} disabled={loading} required={showMed3} />
-                                        </div>
-
-                                        <div className="flex flex-col items-center">
-
-                                            <InputAmount3 value={amount3} onChange={e => setAmount3(e.target.value)} disabled={loading} required={showMed3} />
-                                        </div>
-                                        <button
-                                            type="button"
-                                            onClick={closeMed3}
-                                            disabled={loading}
-                                            className={`self-start mt-6 inline-flex items-center justify-center text-xs text-red-500 p-0 m-0 h-5 w-5
-                                            ${loading ? 'opacity-50 cursor-not-allowed hover:text-red-500' : 'hover:text-red-700'}`}
-                                        >
-                                            -
-                                        </button>
-
-
+                                    <div className="flex flex-col items-center">
+                                        <label htmlFor="input_medication" className="font-bold" id="label-medication">Medicamento:</label>
+                                        <InputMedication value={medication} onChange={e => setMedication(e.target.value)} disabled={loading} />
                                     </div>
 
-                                </>
-                            )}
-                        </div>
+                                    <div className="flex flex-col items-center">
+                                        <label htmlFor="amount" className="font-bold" id="label-amount">Cantidad:</label>
+                                        <InputAmount value={amount} onChange={e => setAmount(e.target.value)} disabled={loading} />
+                                    </div>
+                                    <button
+                                        type="button"
+                                        onClick={() => setShowMed2(true)}
+                                        disabled={showMed2 || loading}
+
+                                        className={`self-start mt-12 inline-flex items-center justify-center text-xs text-green-500 hover:text-green-700 p-0 m-0 h-5 w-5
+                                ${(showMed2 || loading) ? 'opacity-50 cursor-not-allowed hover:text-green-500' : 'hover:text-green-700'}`}
+
+                                    >
+                                        +
+                                    </button>
 
 
-                        <div className="flex justify-center gap-2 my-5 mt-10 mb-1">
-                            <MyButton type="submit" disabled={loading} className={`btn ${loading ? 'opacity-100 cursor-not-allowed' : ''}`}> {loading ? 'Procesando...' : 'Solicitar'}</MyButton>
+                                </div>
 
-                            <BackButton disabled={loading} />
+                                {showMed2 && (
+                                    <>
+                                        {showMed2 && (
+                                            <div className="flex justify-center gap-x-0.5 -mt-8">
+                                                {/* Campo Medicamento 2 */}
+                                                <div className="flex flex-col items-center">
+                                                    <InputMedication2
+                                                        value={medication2}
+                                                        onChange={e => setMedication2(e.target.value)} disabled={loading} required={showMed2}
+                                                    />
+                                                </div>
 
-                        </div>
+                                                {/* Campo Cantidad 2 */}
+                                                <div className="flex flex-col items-center">
+                                                    <InputAmount2
+                                                        value={amount2}
+                                                        onChange={e => setAmount2(e.target.value)} disabled={loading} required={showMed2}
+                                                    />
+                                                </div>
 
-                    </form>
+                                                <div className="flex flex-col items-center gap-1 mt-3.5 mr-0">
+                                                    <button
+                                                        type="button"
+                                                        onClick={closeMed2}
+                                                        disabled={showMed3 || loading}
+                                                        className={`inline-flex items-center h-5 w-5 justify-center text-xs leading-none text-red-500 p-0 m-0
+                                                ${(showMed3 || loading) ? 'opacity-50 cursor-not-allowed hover:text-red-500' : 'hover:text-red-700'}`}
+                                                        style={{ lineHeight: 1 }}
+                                                    >
+                                                        -
+                                                    </button>
+
+                                                    <button
+                                                        type="button"
+                                                        onClick={() => setShowMed3(true)}
+                                                        disabled={showMed3 || loading}
+                                                        className={`inline-flex items-center h-5 w-5 justify-center text-xs leading-none text-red-500 p-0 m-0
+                                                ${(showMed3 || loading) ? 'opacity-50 cursor-not-allowed hover:text-red-500' : 'hover:text-red-700'} `}                                                                                            //si es true se bloquea el boton y sino se desbloquea
+                                                        style={{ lineHeight: 1 }}
+                                                    >
+                                                        +
+                                                    </button>
+
+                                                </div>
+
+                                            </div>
+                                        )}
+
+
+                                    </>
+                                )}
+
+
+                                {showMed3 && (
+                                    <>
+                                        <div className="flex justify-center gap-x-0.5 -mt-8">
+
+                                            <div className="flex flex-col items-center">
+
+                                                <InputMedication3 value={medication3} onChange={e => setMedication3(e.target.value)} disabled={loading} required={showMed3} />
+                                            </div>
+
+                                            <div className="flex flex-col items-center">
+
+                                                <InputAmount3 value={amount3} onChange={e => setAmount3(e.target.value)} disabled={loading} required={showMed3} />
+                                            </div>
+                                            <button
+                                                type="button"
+                                                onClick={closeMed3}
+                                                disabled={loading}
+                                                className={`self-start mt-6 inline-flex items-center justify-center text-xs text-red-500 p-0 m-0 h-5 w-5
+                                            ${loading ? 'opacity-50 cursor-not-allowed hover:text-red-500' : 'hover:text-red-700'}`}
+                                            >
+                                                -
+                                            </button>
+
+
+                                        </div>
+
+                                    </>
+                                )}
+                            </div>
+
+
+                            <div className="flex justify-center gap-2 my-5 mt-10 mb-1">
+                                <BackButton disabled={loading} />
+                                <MyButton type="submit" disabled={loading}> Solicitar</MyButton>
+
+
+
+                            </div>
+
+                        </form>
+                    </div>
                 </div>
-            </div>
-        </Layout>
+            </Layout>
+        </>
+
     )
 }
+
 
 
 
@@ -385,7 +414,7 @@ function InputMedication2({ value, onChange, disabled, required }) {
         />
     )
 }
-function InputAmount2({ value, onChange, disabled, required}) {
+function InputAmount2({ value, onChange, disabled, required }) {
     return (
         <input
             type="number"
@@ -435,10 +464,9 @@ function MyButton({ children, disabled }) {
     return (
         <button
             disabled={disabled}
-            className={`
-                w-full max-w-[120px] sm:max-w-[160px] px-2 py-2 rounded text-white text-sm 
-                ${disabled ? 'bg-gray-400 cursor-not-allowed' : 'bg-blue-500 hover:-translate-y-1 hover:scale-101 hover:bg-indigo-500'}
-            `}
+            className={`w-full max-w-[120px] sm:max-w-[160px] px-2 py-2 bg-blue-500 rounded text-white text-sm transition delay-700 
+            duration-700 ease-in-out hover:-translate-y-1 hover:scale-101 hover:bg-indigo-500 
+            ${disabled ? 'opacity-50 cursor-not-allowed' : ''}`}
         >
             {children}
         </button>
