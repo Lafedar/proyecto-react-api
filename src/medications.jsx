@@ -184,10 +184,6 @@ function Medications() {
             {loadingToast && (
                 <>
                     <style>{`
-      :root {
-        --color-primary: rgba(15, 79, 141, 0.83);
-        --color-background: transparent;
-      }
       @keyframes loading {
         0% {
           transform: rotate(0deg);
@@ -196,52 +192,17 @@ function Medications() {
           transform: rotate(360deg);
         }
       }
-      ul.spinner {
-        position: relative;
-        margin: 0;
-        padding: 0;
-        list-style: none;
-        width: 60px; /* para que el contenedor tenga tamaño fijo */
-        height: 60px;
-      }
-      ul.spinner li {
-        position: absolute;
-        top: 50%;
-        left: 50%;
-        border: 5px solid var(--color-background);
+      .custom-spinner {
+        border: 6px dotted rgba(15, 79, 141, 0.83);
         border-radius: 100%;
-        /* Oculta todos los bordes menos el top para efecto de spinner */
-        border-top-color: var(--color-primary);
-        border-right-color: transparent;
-        border-bottom-color: transparent;
-        border-left-color: transparent;
-      }
-      ul.spinner li:nth-child(1) {
-        margin: -30px 0 0 -30px;
-        width: 60px;
-        height: 60px;
-        animation: loading 3s infinite linear;
-      }
-      ul.spinner li:nth-child(2) {
-        margin: -20px 0 0 -20px;
-        width: 40px;
-        height: 40px;
+        width: 50px;
+        height: 50px;
         animation: loading 2s infinite linear;
-      }
-      ul.spinner li:nth-child(3) {
-        margin: -10px 0 0 -10px;
-        width: 20px;
-        height: 20px;
-        animation: loading 1s infinite linear;
       }
     `}</style>
 
                     <div className="fixed top-20 left-1/2 transform -translate-x-1/2 bg-transparent px-4 py-2 rounded flex items-center gap-2 z-50">
-                        <ul className="spinner">
-                            <li></li>
-                            <li></li>
-                            <li></li>
-                        </ul>
+                        <div className="custom-spinner"></div>
                         <span
                             className="font-semibold text-lg"
                             style={{ color: "rgba(15, 79, 141, 0.83)" }}
@@ -251,8 +212,6 @@ function Medications() {
                     </div>
                 </>
             )}
-
-
 
 
             <Layout>
