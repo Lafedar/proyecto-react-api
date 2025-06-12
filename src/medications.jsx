@@ -120,7 +120,7 @@ function Medications() {
             }
 
 
-            const response = await fetch(`https://demands-mag-lite-enjoying.trycloudflare.com/api/medications`, {
+            const response = await fetch(`https://knows-prisoner-pee-bow.trycloudflare.com/api/medications`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
@@ -195,8 +195,8 @@ function Medications() {
       .custom-spinner {
         border: 6px dotted rgba(15, 79, 141, 0.83);
         border-radius: 100%;
-        width: 50px;
-        height: 50px;
+        width: 30px;
+        height: 30px;
         animation: loading 2s infinite linear;
       }
     `}</style>

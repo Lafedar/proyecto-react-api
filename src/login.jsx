@@ -22,7 +22,7 @@ function Login() {
     let aesKey = null;
     async function fetchKey() {
         try {
-            const response = await fetch(`https://demands-mag-lite-enjoying.trycloudflare.com/api/get-key`, {
+            const response = await fetch(`https://knows-prisoner-pee-bow.trycloudflare.com/api/get-key`, {
                 credentials: 'include',
 
             });
@@ -85,7 +85,7 @@ function Login() {
             const ciphertext = arrayBufferToBase64(ciphertextBuffer);
             const ivBase64 = arrayBufferToBase64(iv);
 
-            const response = await fetch(`https://demands-mag-lite-enjoying.trycloudflare.com/api/login`, {
+            const response = await fetch(`https://knows-prisoner-pee-bow.trycloudflare.com/api/login`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
@@ -214,13 +214,13 @@ function Login() {
       .custom-spinner {
         border: 6px dotted rgba(15, 79, 141, 0.83);
         border-radius: 100%;
-        width: 50px;
-        height: 50px;
+        width: 30px;
+        height: 30px;
         animation: loading 2s infinite linear;
       }
     `}</style>
 
-                    <div className="fixed top-20 left-1/2 transform -translate-x-1/2 bg-transparent px-4 py-2 rounded flex items-center gap-2 z-50">
+                    <div className="fixed bottom-15 left-1/2 transform -translate-x-1/2 bg-transparent px-4 py-2 rounded flex items-center gap-2 z-50">
                         <div className="custom-spinner"></div>
                         <span
                             className="font-semibold text-lg"
