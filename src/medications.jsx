@@ -201,7 +201,7 @@ function Medications() {
       }
     `}</style>
 
-                    <div className="fixed top-20 left-1/2 transform -translate-x-1/2 bg-transparent px-4 py-2 rounded flex items-center gap-2 z-50">
+                    <div className="fixed bottom-15 left-1/2 transform -translate-x-1/2 bg-transparent px-4 py-2 rounded flex items-center gap-2 z-50">
                         <div className="custom-spinner"></div>
                         <span
                             className="font-semibold text-lg"
