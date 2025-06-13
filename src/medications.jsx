@@ -120,7 +120,7 @@ function Medications() {
             }
 
 
-            const response = await fetch(`https://knows-prisoner-pee-bow.trycloudflare.com/api/medications`, {
+            const response = await fetch(`https://offense-catch-extensive-limit.trycloudflare.com/api/medications`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
