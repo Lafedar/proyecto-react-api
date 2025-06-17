@@ -21,7 +21,7 @@ function Login() {
     let aesKey = null;
     async function fetchKey() {
         try {
-            const response = await fetch(`https://demands-mag-lite-enjoying.trycloudflare.com/api/get-key`, {
+            const response = await fetch(`https://setup-influenced-numerical-copies.trycloudflare.com/api/get-key`, {
                 credentials: 'include',
 
             });
@@ -84,7 +84,7 @@ function Login() {
             const ciphertext = arrayBufferToBase64(ciphertextBuffer);
             const ivBase64 = arrayBufferToBase64(iv);
 
-            const response = await fetch(`https://demands-mag-lite-enjoying.trycloudflare.com/api/login`, {
+            const response = await fetch(`https://setup-influenced-numerical-copies.trycloudflare.com/api/loginApi`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
@@ -249,9 +249,11 @@ function InputUser({ value, onChange }) {
             onChange={onChange}
             required
             className="w-70 px-3 py-2 rounded-md border border-black focus:outline-none focus:ring-2 focus:ring-blue-500"
+            autoComplete="username"  
         />
     )
 }
+
 
 function InputPassword({ value, onChange }) {
     return (
@@ -263,9 +265,11 @@ function InputPassword({ value, onChange }) {
             onChange={onChange}
             required
             className="w-70 px-3 py-2 rounded-md border border-black focus:outline-none focus:ring-2 focus:ring-blue-500"
+            autoComplete="current-password" 
         />
     )
 }
+
 
 function MyButton({ type = 'button', children }) {
     return (

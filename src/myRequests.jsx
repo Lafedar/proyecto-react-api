@@ -25,7 +25,7 @@ function MyRequests() {
                     return;
                 }
 
-                const response = await fetch(`https://demands-mag-lite-enjoying.trycloudflare.com/api/medicationsRequests`, {
+                const response = await fetch(`https://setup-influenced-numerical-copies.trycloudflare.com/api/medicationsRequests`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     credentials: 'include',
@@ -66,44 +66,83 @@ function MyRequests() {
     if (!usuario) {
         return <div className="text-center mt-10">Cargando sesión...</div>;
     }
-
     return (
         <Layout>
-            <div className="tabla-container overflow-x-auto">
-                <div className="max-h-[80vh] overflow-y-auto">
-                    <table className="tabla-solicitudes">
-                        <thead className="sticky top-10 bg-[rgba(15,79,141,0.83)] text-white z-10">
-                            <tr>
-                                <th>Solicitante</th>
-                                <th>Estado</th>
-                                <th>Fecha</th>
-                                <th>Items</th>
+            <div className="w-full md:w-[95%] lg:w-[80%] mx-auto mt-1">
+                <table className="w-full table-fixed border border-white rounded-md border-separate border-spacing-y-2">
+                    <thead style={{ backgroundColor: 'rgba(15, 79, 141, 0.83)' }}>
+                        <tr>
+                            <th className="w-1/6 border border-white px-2 py-1 text-[10px] sm:text-xs md:text-sm
+ text-center font-bold text-white">
+                                Solicitante
+                            </th>
+                            <th className="w-1/6 border border-white px-2 py-1 text-[10px] sm:text-xs md:text-sm
+ text-center font-bold text-white">
+                                Estado
+                            </th>
+                            <th className="w-1/6 border border-white px-2 py-1 text-[10px] sm:text-xs md:text-sm
+ text-center font-bold text-white">
+                                Fecha
+                            </th>
+                            <th className="w-1/3 border border-white px-2 py-1 text-[10px] sm:text-xs md:text-sm
+ text-center font-bold text-white">
+                                Items Solicitados
+                            </th>
+                            <th className="w-1/3 border border-white px-2 py-1 text-[10px] sm:text-xs md:text-sm
+ text-center font-bold text-white">
+                                Items Aprobados
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {requests.map((req, index) => (
+                            <tr key={index} className="bg-gray-10 rounded-md">
+                                <td className="border border-white px-2 py-1 text-[9px] sm:text-xs md:text-sm break-words text-blue-900">
+                                    {usuario.nombre}
+                                </td>
+                                <td className="border border-white px-2 py-1 text-[9px] sm:text-xs md:text-sm
+ break-words text-blue-900">
+                                    {req.request.estado}
+                                </td>
+                                <td className="border border-white px-2 py-1 text-[9px] sm:text-xs md:text-sm
+ break-words text-blue-900">
+                                    {new Date(req.request.created_at).toLocaleDateString()}
+                                </td>
+                                <td className="border border-white px-2 py-1 text-[9px] sm:text-xs md:text-sm
+ break-words text-blue-900">
+                                    <ul className="list-disc ml-4">
+                                        {req.items.map((item, i) => (
+                                            <li key={i}>
+                                                {item.medicamento} (x{item.cantidad_solicitada})
+                                            </li>
+                                        ))}
+                                    </ul>
+                                </td>
+                                <td className="border border-white px-2 py-1 text-[9px] sm:text-xs md:text-smd
+ break-words text-blue-900">
+                                    <ul className="list-disc ml-4">
+                                        {req.items.map((item, i) => (
+                                            <li key={i}>
+                                                {item.aprobado === 1
+                                                    ? `${item.medicamento} (x${item.cantidad_aprobada})`
+                                                    : 'N/A'}
+                                            </li>
+                                        ))}
+                                    </ul>
+                                </td>
                             </tr>
-                        </thead>
-                        <tbody>
-                            {requests.map((req, index) => (
-                                <tr key={index}>
-                                    <td>{req.request.dni_persona}</td>
-                                    <td>{req.request.estado}</td>
-                                    <td>{new Date(req.request.created_at).toLocaleDateString()}</td>
-                                    <td>
-                                        <ul className="list-disc ml-4">
-                                            {req.items.map((item, i) => (
-                                                <li key={i}>
-                                                    {item.medicamento} (x{item.cantidad})
-                                                </li>
-                                            ))}
-                                        </ul>
-                                    </td>
-                                </tr>
-                            ))}
-                        </tbody>
-                    </table>
-                </div>
+                        ))}
+                    </tbody>
+                </table>
+                <BackButton to="/" />
             </div>
-            <BackButton to="/" />
+
+
         </Layout>
     );
+
+
+
 
 
 }
@@ -126,7 +165,7 @@ function BackButton({ disabled = false }) {
         <button
             onClick={handleClick}
             disabled={disabled}
-            className={`w-full max-w-[120px] sm:max-w-[160px] px-2 py-2 bg-blue-500 rounded text-white text-sm transition delay-700 
+            className={`w-full mt-2 max-w-[120px] sm:max-w-[160px] px-2 py-2 bg-blue-500 rounded text-white text-sm transition delay-700 
             duration-700 ease-in-out hover:-translate-y-1 hover:scale-101 hover:bg-indigo-500 
             ${disabled ? 'opacity-50 cursor-not-allowed' : ''}`}
         >

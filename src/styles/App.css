@@ -46,41 +46,6 @@ input {
 
 }
 
-.tabla-solicitudes {
-  width: 100%;
-  border-collapse: collapse;
-  font-family: sans-serif;
-  color: rgba(15, 79, 141, 0.83);
-  table-layout: auto;
-}
-
-.tabla-solicitudes th,
-.tabla-solicitudes td {
-  padding: 12px;
-  text-align: center;
-  vertical-align: top;
-  word-wrap: break-word;
-}
-
-.tabla-solicitudes thead th {
-  background: rgba(15, 79, 141, 0.83);
-  color: white;
-  font-weight: bold;
-}
-
-@media (max-width: 768px) {
-
-  .tabla-solicitudes th,
-  .tabla-solicitudes td {
-    padding: 8px;
-    font-size: 14px;
-  }
-
-  .tabla-solicitudes {
-    font-size: 14px;
-  }
-}
-
 
 #login-container {
   margin-top: -50px;
@@ -105,7 +70,7 @@ input[type=number]::-webkit-outer-spin-button {
 
 
 /*Adaptar al modo oscuro en celulares*/
-@media (prefers-color-scheme: dark) and (max-width: 768px) {
+@media (prefers-color-scheme: light) and (max-width: 768px) {
   body {
     background-color: #121212;
     color: white;
