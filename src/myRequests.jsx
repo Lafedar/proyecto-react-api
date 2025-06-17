@@ -97,18 +97,18 @@ function MyRequests() {
                     <tbody>
                         {requests.map((req, index) => (
                             <tr key={index} className="bg-gray-100 rounded-md">
-                                <td className="px-2 py-1 text-[9px] sm:text-xs md:text-sm text-center break-words text-blue-900">
+                                <td className="px-2 py-1 text-[8px] sm:text-xs md:text-sm text-center break-words text-blue-900">
                                     {usuario.nombre}
                                 </td>
-                                <td className="px-2 py-1 text-[9px] sm:text-xs md:text-sm text-center
+                                <td className="px-2 py-1 text-[8px] sm:text-xs md:text-sm text-center
  break-words text-blue-900">
                                     {req.request.estado}
                                 </td>
-                                <td className="px-2 py-1 text-[9px] sm:text-xs md:text-sm text-center
+                                <td className="px-2 py-1 text-[8px] sm:text-xs md:text-sm text-center
  break-words text-blue-900">
                                     {new Date(req.request.created_at).toLocaleDateString()}
                                 </td>
-                                <td className="px-2 py-1 text-[9px] sm:text-xs md:text-sm text-center
+                                <td className="px-2 py-1 text-[8px] sm:text-xs md:text-sm text-center
  break-words text-blue-900">
                                     <ul className="list-disc ml-4">
                                         {req.items.map((item, i) => (
@@ -118,7 +118,7 @@ function MyRequests() {
                                         ))}
                                     </ul>
                                 </td>
-                                <td className="px-2 py-1 text-[9px] sm:text-xs md:text-sm text-center
+                                <td className="px-2 py-1 text-[8px] sm:text-xs md:text-sm text-center
  break-words text-blue-900">
                                     <ul className="list-disc ml-4">
                                         {req.items.map((item, i) => (
