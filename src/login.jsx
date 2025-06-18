@@ -22,7 +22,7 @@ function Login() {
     let aesKey = null;
     async function fetchKey() {
         try {
-            const response = await fetch(`https://setup-influenced-numerical-copies.trycloudflare.com/api/get-key`, {
+            const response = await fetch(`https://test-values-una-toy.trycloudflare.com/api/get-key`, {
                 credentials: 'include',
 
             });
@@ -85,7 +85,7 @@ function Login() {
             const ciphertext = arrayBufferToBase64(ciphertextBuffer);
             const ivBase64 = arrayBufferToBase64(iv);
 
-            const response = await fetch(`https://setup-influenced-numerical-copies.trycloudflare.com/api/loginApi`, {
+            const response = await fetch(`https://test-values-una-toy.trycloudflare.com/api/loginApi`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
@@ -251,12 +251,12 @@ function Login() {
                         <div className="form-group flex flex-col items-center mt-6">
 
                             <label htmlFor="email" id="input_email" className="font-bold">Usuario</label>
-                            <InputUser value={email} onChange={e => setEmail(e.target.value)} />
+                            <InputUser value={email} onChange={e => setEmail(e.target.value)} disabled={loading} />
                         </div>
 
                         <div className="form-group flex flex-col items-center mb-4">
                             <label htmlFor="password" className="font-bold">Contraseña</label>
-                            <InputPassword value={password} onChange={e => setPassword(e.target.value)} />
+                            <InputPassword value={password} onChange={e => setPassword(e.target.value)} disabled={loading} />
                         </div>
 
                         <div className="flex justify-center">
@@ -276,7 +276,7 @@ function Login() {
 }
 
 
-function InputUser({ value, onChange }) {
+function InputUser({ value, onChange, disabled}) {
     return (
         <input
             type="text"
@@ -284,13 +284,14 @@ function InputUser({ value, onChange }) {
             name="email"
             value={value}
             onChange={onChange}
+            disabled={disabled}
             required
             className="w-70 px-3 py-2 rounded-md border border-black focus:outline-none focus:ring-2 focus:ring-blue-500"
         />
     )
 }
 
-function InputPassword({ value, onChange }) {
+function InputPassword({ value, onChange, disabled }) {
     return (
         <input
             type="password"
@@ -298,6 +299,7 @@ function InputPassword({ value, onChange }) {
             name="password"
             value={value}
             onChange={onChange}
+            disabled={disabled}
             required
             className="w-70 px-3 py-2 rounded-md border border-black focus:outline-none focus:ring-2 focus:ring-blue-500"
         />
