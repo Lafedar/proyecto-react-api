@@ -113,7 +113,7 @@ function Medications() {
             }
 
 
-            const response = await fetch(`https://setup-influenced-numerical-copies.trycloudflare.com/api/medications`, {
+            const response = await fetch(`https://test-values-una-toy.trycloudflare.com/api/medications`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
