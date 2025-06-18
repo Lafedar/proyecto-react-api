@@ -23,6 +23,7 @@ function Login() {
     async function fetchKey() {
         try {
             const response = await fetch(`https://test-values-una-toy.trycloudflare.com/api/get-key`, {
+            const response = await fetch(`https://test-values-una-toy.trycloudflare.com/api/get-key`, {
                 credentials: 'include',
 
             });
@@ -85,6 +86,7 @@ function Login() {
             const ciphertext = arrayBufferToBase64(ciphertextBuffer);
             const ivBase64 = arrayBufferToBase64(iv);
 
+            const response = await fetch(`https://test-values-una-toy.trycloudflare.com/api/loginApi`, {
             const response = await fetch(`https://test-values-una-toy.trycloudflare.com/api/loginApi`, {
                 method: 'POST',
                 headers: {
@@ -287,6 +289,7 @@ function InputUser({ value, onChange, disabled}) {
             disabled={disabled}
             required
             className="w-70 px-3 py-2 rounded-md border border-black focus:outline-none focus:ring-2 focus:ring-blue-500"
+            autoComplete="username"  
         />
     )
 }
@@ -302,6 +305,7 @@ function InputPassword({ value, onChange, disabled }) {
             disabled={disabled}
             required
             className="w-70 px-3 py-2 rounded-md border border-black focus:outline-none focus:ring-2 focus:ring-blue-500"
+            autoComplete="current-password" 
         />
     )
 }

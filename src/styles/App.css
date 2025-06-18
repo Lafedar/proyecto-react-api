@@ -46,6 +46,7 @@ input {
 
 }
 
+
 #login-container {
   margin-top: -10px;
 }
@@ -69,7 +70,7 @@ input[type=number]::-webkit-outer-spin-button {
 
 
 /*Adaptar al modo oscuro en celulares*/
-@media (prefers-color-scheme: dark) and (max-width: 768px) {
+@media (prefers-color-scheme: light) and (max-width: 768px) {
   body {
     background-color: #121212;
     color: white;

@@ -1,7 +1,7 @@
 import { createRoot } from 'react-dom/client'
 import React, { useRef, useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { fetchKey, encryptData, decryptData, arrayBufferToBase64 } from './cryptoUtils';
+import { encryptData } from './cryptoUtils';
 import { useSession } from './contexts/SessionContext';
 import Toast from './components/Toast';
 import './styles/App.css';
@@ -121,6 +121,7 @@ function Medications() {
 
 
             const response = await fetch(`https://test-values-una-toy.trycloudflare.com/api/medications`, {
+           
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
