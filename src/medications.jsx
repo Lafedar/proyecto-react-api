@@ -359,6 +359,9 @@ function Medications() {
 
 
                                         </div>
+                                        <div className="text-center mt-[-20px] text-sm text-gray-600">
+                                        Máximo 3 medicamentos
+                                    </div>
 
                                     </>
                                 )}
