@@ -69,14 +69,11 @@ function MyRequests() {
     return (
         <Layout>
             <div className="w-full md:w-[95%] lg:w-[80%] mx-auto mt-1">
-                <div className="overflow-y-auto max-h-[300px] md:max-h-[450px] lg:max-h-[450px]">
+                <div className="overflow-y-auto max-h-[calc(100vh-220px)] min-h-[50vh]">
 
                     <table className="w-full table-fixed rounded-md border-separate border-spacing-y-2">
                         <thead style={{ backgroundColor: 'rgba(15, 79, 141, 0.83)' }}>
                             <tr>
-                                <th className="sticky top-0 z-10 bg-[rgba(15,79,141,0.83)] w-1/3 px-2 py-1 text-[10px] sm:text-xs md:text-sm text-center font-bold text-white">
-                                    Solicitante
-                                </th>
                                 <th className="sticky top-0 z-10 bg-[rgba(15,79,141,0.83)] w-1/3 px-2 py-1 text-[10px] sm:text-xs md:text-sm text-center font-bold text-white">
                                     Estado
                                 </th>
@@ -94,9 +91,6 @@ function MyRequests() {
                         <tbody>
                             {requests.map((req, index) => (
                                 <tr key={index} className="bg-gray-100 rounded-md">
-                                    <td className="px-2 py-1 text-[8px] sm:text-xs md:text-sm text-center break-words text-blue-900">
-                                        {usuario.nombre}
-                                    </td>
                                     <td className="px-2 py-1 text-[8px] sm:text-xs md:text-sm text-center break-words text-blue-900">
                                         {req.request.estado}
                                     </td>
@@ -118,7 +112,7 @@ function MyRequests() {
                                                 <li key={i}>
                                                     {item.aprobado === 1
                                                         ? `${item.medicamento} (x${item.cantidad_aprobada})`
-                                                        : 'N/A'}
+                                                        : '-'}
                                                 </li>
                                             ))}
                                         </ul>
