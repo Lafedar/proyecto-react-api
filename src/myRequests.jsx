@@ -68,64 +68,74 @@ function MyRequests() {
     }
     return (
         <Layout>
-            <div className="w-full md:w-[95%] lg:w-[80%] mx-auto  mt-1 mb-[60px] md:mb-0">
-                <div className="overflow-y-auto max-h-[calc(100vh-275px)] md:max-h-[calc(100vh-220px)] min-h-[50vh]">
-
-                    <table className="w-full table-fixed rounded-md border-separate border-spacing-y-2">
-                        <thead style={{ backgroundColor: 'rgba(15, 79, 141, 0.83)' }}>
-                            <tr>
-                                <th className="sticky top-0 z-10 bg-[rgba(15,79,141,0.83)] w-1/3 px-2 py-1 text-[10px] sm:text-xs md:text-sm text-center font-bold text-white">
-                                    Estado
-                                </th>
-                                <th className="sticky top-0 z-10 bg-[rgba(15,79,141,0.83)] w-1/3 px-2 py-1 text-[10px] sm:text-xs md:text-sm text-center font-bold text-white">
-                                    Fecha
-                                </th>
-                                <th className="sticky top-0 z-10 bg-[rgba(15,79,141,0.83)] w-1/3 px-2 py-1 text-[10px] sm:text-xs md:text-sm text-center font-bold text-white">
-                                    Items Solicitados
-                                </th>
-                                <th className="sticky top-0 z-10 bg-[rgba(15,79,141,0.83)] w-1/3 px-2 py-1 text-[10px] sm:text-xs md:text-sm text-center font-bold text-white">
-                                    Items Aprobados
-                                </th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {requests.map((req, index) => (
-                                <tr key={index} className="bg-gray-100 rounded-md">
-                                    <td className="px-2 py-1 text-[8px] sm:text-xs md:text-sm text-center break-words text-blue-900">
-                                        {req.request.estado}
-                                    </td>
-                                    <td className="px-2 py-1 text-[8px] sm:text-xs md:text-sm text-center break-words text-blue-900">
-                                        {new Date(req.request.created_at).toLocaleDateString()}
-                                    </td>
-                                    <td className="px-2 py-1 text-[8px] sm:text-xs md:text-sm text-center break-words text-blue-900">
-                                        <ul className="list-disc ml-4">
-                                            {req.items.map((item, i) => (
-                                                <li key={i}>
-                                                    {item.medicamento} (x{item.cantidad_solicitada})
-                                                </li>
-                                            ))}
-                                        </ul>
-                                    </td>
-                                    <td className="px-2 py-1 text-[8px] sm:text-xs md:text-sm text-center break-words text-blue-900">
-                                        <ul className="list-disc ml-4">
-                                            {req.items.map((item, i) => (
-                                                <li key={i}>
-                                                    {item.aprobado === 1
-                                                        ? `${item.medicamento} (x${item.cantidad_aprobada})`
-                                                        : '-'}
-                                                </li>
-                                            ))}
-                                        </ul>
-                                    </td>
-                                </tr>
-                            ))}
-                        </tbody>
-                    </table>
-
-
+            {loading && (
+                <div className="fixed inset-0 flex items-center justify-center bg-transparent z-50">
+                    <div className="flex items-center gap-3 bg-transparent px-4 py-2 rounded">
+                        <div className="custom-spinner"></div>
+                        <span className="font-semibold text-lg loading-text">
+                            Procesando...
+                        </span>
+                    </div>
                 </div>
-                <BackButton to="/" />
-            </div>
+            )}
+
+            {!loading && (
+                <div className="w-full md:w-[95%] lg:w-[80%] mx-auto mt-1 mb-[60px] md:mb-0">
+                    <div className="overflow-y-auto max-h-[calc(100vh-275px)] md:max-h-[calc(100vh-220px)] min-h-[50vh]">
+                        <table className="w-full table-fixed rounded-md border-separate border-spacing-y-2">
+                            <thead style={{ backgroundColor: 'rgba(15, 79, 141, 0.83)' }}>
+                                <tr>
+                                    <th className="sticky top-0 z-10 bg-[rgba(15,79,141,0.83)] w-1/3 px-2 py-1 text-[10px] sm:text-xs md:text-sm text-center font-bold text-white">
+                                        Estado
+                                    </th>
+                                    <th className="sticky top-0 z-10 bg-[rgba(15,79,141,0.83)] w-1/3 px-2 py-1 text-[10px] sm:text-xs md:text-sm text-center font-bold text-white">
+                                        Fecha
+                                    </th>
+                                    <th className="sticky top-0 z-10 bg-[rgba(15,79,141,0.83)] w-1/3 px-2 py-1 text-[10px] sm:text-xs md:text-sm text-center font-bold text-white">
+                                        Items Solicitados
+                                    </th>
+                                    <th className="sticky top-0 z-10 bg-[rgba(15,79,141,0.83)] w-1/3 px-2 py-1 text-[10px] sm:text-xs md:text-sm text-center font-bold text-white">
+                                        Items Aprobados
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {requests.map((req, index) => (
+                                    <tr key={index} className="bg-gray-100 rounded-md">
+                                        <td className="px-2 py-1 text-[8px] sm:text-xs md:text-sm text-center break-words text-blue-900">
+                                            {req.request.estado}
+                                        </td>
+                                        <td className="px-2 py-1 text-[8px] sm:text-xs md:text-sm text-center break-words text-blue-900">
+                                            {new Date(req.request.created_at).toLocaleDateString()}
+                                        </td>
+                                        <td className="px-2 py-1 text-[8px] sm:text-xs md:text-sm text-center break-words text-blue-900">
+                                            <ul className="list-disc ml-4">
+                                                {req.items.map((item, i) => (
+                                                    <li key={i}>
+                                                        {item.medicamento} (x{item.cantidad_solicitada})
+                                                    </li>
+                                                ))}
+                                            </ul>
+                                        </td>
+                                        <td className="px-2 py-1 text-[8px] sm:text-xs md:text-sm text-center break-words text-blue-900">
+                                            <ul className="list-disc ml-4">
+                                                {req.items.map((item, i) => (
+                                                    <li key={i}>
+                                                        {item.aprobado === 1
+                                                            ? `${item.medicamento} (x${item.cantidad_aprobada})`
+                                                            : '-'}
+                                                    </li>
+                                                ))}
+                                            </ul>
+                                        </td>
+                                    </tr>
+                                ))}
+                            </tbody>
+                        </table>
+                    </div>
+                    <BackButton to="/" />
+                </div>
+            )}
         </Layout>
     );
 

@@ -121,7 +121,7 @@ function Medications() {
 
 
             const response = await fetch(`https://test-values-una-toy.trycloudflare.com/api/medications`, {
-           
+
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
@@ -183,37 +183,13 @@ function Medications() {
     return (
         <>
             {loadingToast && (
-                <>
-                    <style>{`
-      @keyframes loading {
-        0% {
-          transform: rotate(0deg);
-        }
-        100% {
-          transform: rotate(360deg);
-        }
-      }
-      .custom-spinner {
-        border: 6px dotted rgba(15, 79, 141, 0.83);
-        border-radius: 100%;
-        width: 30px;
-        height: 30px;
-        animation: loading 2s infinite linear;
-      }
-    `}</style>
-
-                    <div className="fixed bottom-15 left-1/2 transform -translate-x-1/2 bg-transparent px-4 py-2 rounded flex items-center gap-2 z-50">
-                        <div className="custom-spinner"></div>
-                        <span
-                            className="font-semibold text-lg"
-                            style={{ color: "rgba(15, 79, 141, 0.83)" }}
-                        >
-                            Procesando...
-                        </span>
-                    </div>
-                </>
+                <div className="fixed bottom-25 left-1/2 transform -translate-x-1/2 bg-transparent px-4 py-2 rounded flex items-center gap-2 z-50">
+                    <div className="custom-spinner"></div>
+                    <span className="font-semibold text-lg loading-text">
+                        Procesando...
+                    </span>
+                </div>
             )}
-
 
             <Layout>
                 <div
@@ -360,8 +336,8 @@ function Medications() {
 
                                         </div>
                                         <div className="text-center mt-[-20px] text-sm text-gray-600">
-                                        Máximo 3 medicamentos
-                                    </div>
+                                            Máximo 3 medicamentos
+                                        </div>
 
                                     </>
                                 )}

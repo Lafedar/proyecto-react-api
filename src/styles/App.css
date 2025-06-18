@@ -114,3 +114,35 @@ input[type=number]::-webkit-outer-spin-button {
 
 
 }
+
+/*Spinner*/
+@keyframes loading {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+.custom-spinner {
+  border: 6px dotted rgba(15, 79, 141, 0.83);
+  border-radius: 100%;
+  width: 30px;
+  height: 30px;
+  animation: loading 2s infinite linear;
+}
+
+.loading-text {
+  color: rgba(15, 79, 141, 0.83);
+}
+
+@media (prefers-color-scheme: dark) and (max-width: 768px) {
+  .custom-spinner {
+    border-color: white;
+  }
+
+  .loading-text {
+    color: white;
+  }
+}

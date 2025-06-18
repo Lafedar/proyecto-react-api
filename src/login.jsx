@@ -201,35 +201,12 @@ function Login() {
     return (
         <>
             {loadingToast && (
-                <>
-                    <style>{`
-      @keyframes loading {
-        0% {
-          transform: rotate(0deg);
-        }
-        100% {
-          transform: rotate(360deg);
-        }
-      }
-      .custom-spinner {
-        border: 6px dotted rgba(15, 79, 141, 0.83);
-        border-radius: 100%;
-        width: 30px;
-        height: 30px;
-        animation: loading 2s infinite linear;
-      }
-    `}</style>
-
-                    <div className="fixed bottom-15 left-1/2 transform -translate-x-1/2 bg-transparent px-4 py-2 rounded flex items-center gap-2 z-50">
-                        <div className="custom-spinner"></div>
-                        <span
-                            className="font-semibold text-lg"
-                            style={{ color: "rgba(15, 79, 141, 0.83)" }}
-                        >
-                            Procesando...
-                        </span>
-                    </div>
-                </>
+                <div className="fixed bottom-25 left-1/2 transform -translate-x-1/2 bg-transparent px-4 py-2 rounded flex items-center gap-2 z-50">
+                    <div className="custom-spinner"></div>
+                    <span className="font-semibold text-lg loading-text">
+                        Procesando...
+                    </span>
+                </div>
             )}
 
 
@@ -276,7 +253,7 @@ function Login() {
 }
 
 
-function InputUser({ value, onChange, disabled}) {
+function InputUser({ value, onChange, disabled }) {
     return (
         <input
             type="text"
@@ -287,7 +264,7 @@ function InputUser({ value, onChange, disabled}) {
             disabled={disabled}
             required
             className="w-70 px-3 py-2 rounded-md border border-black focus:outline-none focus:ring-2 focus:ring-blue-500"
-            autoComplete="username"  
+            autoComplete="username"
         />
     )
 }
@@ -303,7 +280,7 @@ function InputPassword({ value, onChange, disabled }) {
             disabled={disabled}
             required
             className="w-70 px-3 py-2 rounded-md border border-black focus:outline-none focus:ring-2 focus:ring-blue-500"
-            autoComplete="current-password" 
+            autoComplete="current-password"
         />
     )
 }
