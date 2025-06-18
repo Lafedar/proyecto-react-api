@@ -68,8 +68,8 @@ function MyRequests() {
     }
     return (
         <Layout>
-            <div className="w-full md:w-[95%] lg:w-[80%] mx-auto mt-1">
-                <div className="overflow-y-auto max-h-[calc(100vh-220px)] min-h-[40vh]">
+            <div className="w-full md:w-[95%] lg:w-[80%] mx-auto mt-1 mb-24">
+                <div className="overflow-y-auto max-h-[calc(100vh-220px)] min-h-[50vh]">
 
                     <table className="w-full table-fixed rounded-md border-separate border-spacing-y-2">
                         <thead style={{ backgroundColor: 'rgba(15, 79, 141, 0.83)' }}>
