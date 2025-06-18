@@ -159,7 +159,7 @@ tr.responsive-row td {
 /*Color de filas de la tabla en celular con modo oscuro*/
 @media (prefers-color-scheme: dark) and (max-width: 768px) {
   tr.responsive-row {
-    background-color: #000 !important;
+    background-color: #313030 !important;
   }
   tr.responsive-row td {
     color: #fff !important;
