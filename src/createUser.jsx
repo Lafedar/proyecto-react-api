@@ -1,12 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useSession } from './contexts/SessionContext';
-import { arrayBufferToBase64 } from './cryptoUtils';
 import Toast from './components/Toast';
 import Layout from './components/Layout';
 import './styles/App.css';
 import { encryptData, decryptData } from './cryptoUtils';
-import { useSearchParams } from 'react-router-dom';
 
 function CreateUser() {
     const [dni, setDni] = useState('')
@@ -19,14 +16,11 @@ function CreateUser() {
     const [personName, setPersonName] = useState('')
     const [error, setError] = useState(null)
     const navigate = useNavigate();
-    const { updateSessionKey } = useSession();
     const [toastMessage, setToastMessage] = useState('');
     const [showToast, setShowToast] = useState(false);
     const [loading, setLoading] = useState(false);
-    const { sessionKey } = useSession();
-    const [searchParams] = useSearchParams();
-    const message = searchParams.get('message');
     const [aesKey, setAesKey] = useState(null);
+    const [loadingToast, setLoadingToast] = useState(false);
 
 
 
@@ -81,7 +75,7 @@ function CreateUser() {
         if (!aesKey) return;
 
         if (!dni) {
-            
+
             setDniError(null);
             setDniValid(false);
             setPersonName('');
@@ -143,6 +137,7 @@ function CreateUser() {
         event.preventDefault();
         setError(null);
         setLoading(true);
+        setLoadingToast(true);
 
         if (!aesKey) {
             throw new Error('No se pudo obtener la clave AES, no se puede encriptar');
@@ -180,7 +175,7 @@ function CreateUser() {
 
 
             const data = await response.json();
-
+            setLoadingToast(false);
             if (response.ok) {
                 setToastMessage(data.message);
                 setShowToast(true);
@@ -205,7 +200,14 @@ function CreateUser() {
 
     return (
         <>
-            {message ? <p>{message}</p> : null}
+            {loadingToast && (
+                <div className="fixed bottom-15 left-1/2 transform -translate-x-1/2 bg-transparent px-4 py-2 rounded flex items-center gap-2 z-50">
+                    <div className="custom-spinner"></div>
+                    <span className="font-semibold text-lg loading-text">
+                        Procesando...
+                    </span>
+                </div>
+            )}
             <Layout>
                 <div>
                     {showToast && (
