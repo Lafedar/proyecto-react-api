@@ -18,6 +18,7 @@ function VerifyEmail() {
     const [loading, setLoading] = useState(false);
     const [searchParams] = useSearchParams();
     const message = searchParams.get('message');
+    
 
 
 
@@ -75,7 +76,7 @@ function VerifyEmail() {
         event.preventDefault();
         setError(null);
         setLoading(true);
-        setLoadingToast(true);
+        
 
         // Asegurarse de tener la clave AES lista
         await fetchKey();
@@ -83,7 +84,7 @@ function VerifyEmail() {
             setToastMessage('No se pudo obtener la clave para encriptar');
             setShowToast(true);
             setLoading(false);
-            setLoadingToast(false);
+            
             return;
         }
 
@@ -97,7 +98,7 @@ function VerifyEmail() {
                 setToastMessage('Error al encriptar los datos.');
                 setShowToast(true);
                 setLoading(false);
-                setLoadingToast(false);
+                
                 return;
             }
 
@@ -127,7 +128,7 @@ function VerifyEmail() {
             setShowToast(true);
         } finally {
             setLoading(false);
-            setLoadingToast(false);
+            
         }
     }
 
