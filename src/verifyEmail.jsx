@@ -72,6 +72,7 @@ function VerifyEmail() {
 
 
     async function reenviarMailVerificacion() {
+        event.preventDefault();
         setError(null);
         setLoading(true);
         setLoadingToast(true);
