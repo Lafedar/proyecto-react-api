@@ -17,14 +17,13 @@ function VerifyEmail() {
     const [showToast, setShowToast] = useState(false);
     const [loading, setLoading] = useState(false);
     const [searchParams] = useSearchParams();
-    const message = searchParams.get('message');
+   
 
 
     useEffect(() => {
         const ciphertextB64 = searchParams.get('ciphertext');
         const ivB64 = searchParams.get('iv');
         const keyB64 = searchParams.get('key');
-        console.log('Params recibidos:', { ciphertextB64, ivB64, keyB64 });
         if (ciphertextB64 && ivB64 && keyB64) {
             decryptData(ciphertextB64, ivB64, keyB64);
         }
@@ -60,9 +59,7 @@ function VerifyEmail() {
             );
 
             const decodedText = new TextDecoder().decode(decrypted);
-            console.log('Texto descifrado:', decodedText);
             const data = JSON.parse(decodedText);
-            console.log('Datos parseados:', data);
 
             setDni(data.dni);
             setEmail(data.email);
@@ -108,7 +105,7 @@ function VerifyEmail() {
                 ['encrypt', 'decrypt']
 
             );
-            updateSessionKey(aesKey); // Actualiza la clave en el contexto de sesión
+            updateSessionKey(aesKey); 
         } catch (err) {
             console.error(err.message);
             aesKey = null;
@@ -119,23 +116,21 @@ function VerifyEmail() {
 
 
     async function reenviarMailVerificacion() {
-        event.preventDefault();
-        setError(null);
-        setLoading(true);
-
-
-        // Asegurarse de tener la clave AES lista
-        await fetchKey();
-        if (!aesKey) {
-            setToastMessage('No se pudo obtener la clave para encriptar');
-            setShowToast(true);
-            setLoading(false);
-
-            return;
-        }
-
         try {
-            // El payload debe tener la estructura esperada
+            event.preventDefault();
+            setError(null);
+            setLoading(true);
+
+
+            await fetchKey();
+            if (!aesKey) {
+                setToastMessage('No se pudo obtener la clave para encriptar');
+                setShowToast(true);
+                setLoading(false);
+
+                return;
+            }
+
             const payload = { dni, email };
 
             // Encriptar datos
@@ -148,7 +143,6 @@ function VerifyEmail() {
                 return;
             }
 
-            // Enviar POST al endpoint de backend
             const response = await fetch('https://geology-optimum-soldiers-phone.trycloudflare.com/api/generateNewVerificationEmail', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
@@ -182,7 +176,6 @@ function VerifyEmail() {
 
     return (
         <>
-            {message ? <p>{message}</p> : null}
             <Layout>
                 <div>
                     {showToast && (
@@ -256,53 +249,6 @@ function InputUser({ value, onChange, disabled }) {
         />
     )
 }
-function InputUser2({ value, onChange, disabled }) {
-    return (
-        <input
-            type="text"
-            id="email2"
-            name="email2"
-            value={value}
-            onChange={onChange}
-            disabled={disabled}
-            required
-            className="w-70 px-3 py-2 rounded-md border border-black focus:outline-none focus:ring-2 focus:ring-blue-500"
-            autoComplete="username"
-        />
-    )
-}
-
-function InputPassword({ value, onChange, disabled }) {
-    return (
-        <input
-            type="password"
-            id="password"
-            name="password"
-            value={value}
-            onChange={onChange}
-            disabled={disabled}
-            required
-            className="w-70 px-3 py-2 rounded-md border border-black focus:outline-none focus:ring-2 focus:ring-blue-500"
-            autoComplete="current-password"
-        />
-    )
-}
-
-function InputPassword2({ value, onChange, disabled }) {
-    return (
-        <input
-            type="password"
-            id="password2"
-            name="password2"
-            value={value}
-            onChange={onChange}
-            disabled={disabled}
-            required
-            className="w-70 px-3 py-2 rounded-md border border-black focus:outline-none focus:ring-2 focus:ring-blue-500"
-            autoComplete="current-password"
-        />
-    )
-}
 
 
 function MyButton({ type = 'button', children, disabled = false }) {
@@ -325,7 +271,7 @@ function BackButton({ disabled = false }) {
             document.activeElement.blur();
         }
 
-        navigate('/links');
+        navigate('/');
     };
 
     return (

@@ -17,13 +17,15 @@ export default function App() {
             <BrowserRouter>
                 <Routes>
                     <Route path="/" element={<Login />} />
-                    
+                    <Route element={<ProtectedRoute />}>
                         <Route path="/links" element={<Links />} />
                         <Route path="/medications" element={<Medications />} />
                         <Route path="/myRequests" element={<MyRequests />} />
-                        <Route path="/createUser" element={<CreateUser />} />
-                        <Route path="/verifyEmail" element={<VerifyEmail />} />
-                  
+                    </Route>
+
+                    <Route path="/createUser" element={<CreateUser />} />
+                    <Route path="/verifyEmail" element={<VerifyEmail />} />
+
                 </Routes>
             </BrowserRouter>
         </SessionProvider>

@@ -5,7 +5,7 @@ import { arrayBufferToBase64 } from './cryptoUtils';
 import Toast from './components/Toast';
 import Layout from './components/Layout';
 import './styles/App.css';
-import { encryptData } from './cryptoUtils';
+import { encryptData, decryptData } from './cryptoUtils';
 import { useSearchParams } from 'react-router-dom';
 
 function CreateUser() {
@@ -23,21 +23,14 @@ function CreateUser() {
     const [toastMessage, setToastMessage] = useState('');
     const [showToast, setShowToast] = useState(false);
     const [loading, setLoading] = useState(false);
-    const { updateUsuario } = useSession();
-    const [loadingToast, setLoadingToast] = useState(false);
     const { sessionKey } = useSession();
     const [searchParams] = useSearchParams();
     const message = searchParams.get('message');
+    const [aesKey, setAesKey] = useState(null);
 
 
 
 
-
-
-
-
-
-    let aesKey = null;
     async function fetchKey() {
         try {
             const response = await fetch(`https://geology-optimum-soldiers-phone.trycloudflare.com/api/get-key`, {
@@ -57,7 +50,7 @@ function CreateUser() {
             const keyBuffer = new Uint8Array([...keyRaw].map(c => c.charCodeAt(0))); // Texto binario → bytes
 
 
-            aesKey = await crypto.subtle.importKey(
+            const importedKey = await crypto.subtle.importKey(
 
                 'raw',
 
@@ -70,26 +63,39 @@ function CreateUser() {
                 ['encrypt', 'decrypt']
 
             );
-            updateSessionKey(aesKey); // Actualiza la clave en el contexto de sesión
+            setAesKey(importedKey);
         } catch (err) {
             console.error(err.message);
-            aesKey = null;
             setAesKey(null);
+
         }
 
     }
 
     useEffect(() => {
-        if (dni.length !== 8 || !sessionKey) return;
+        fetchKey();
+    }, []);
 
-        // Reinicio de estado
+
+    useEffect(() => {
+        if (!aesKey) return;
+
+        if (!dni) {
+            
+            setDniError(null);
+            setDniValid(false);
+            setPersonName('');
+            return;
+        }
+        if (dni.length !== 8) return;
+
         setDniError(null);
         setDniValid(false);
         setPersonName('');
 
         const fetchPerson = async () => {
             try {
-                const encrypted = await encryptData({ dni }, sessionKey);
+                const encrypted = await encryptData({ dni }, aesKey);
 
                 if (!encrypted) {
                     console.error("Falló la encriptación en medications");
@@ -109,12 +115,10 @@ function CreateUser() {
                     }
                 );
 
-
                 const data = await res.json();
 
                 if (res.ok) {
-
-                    const decrypted = await decryptData(data, sessionKey);
+                    const decrypted = await decryptData(data, aesKey);
                     const persona = JSON.parse(decrypted);
                     setPersonName(`${persona.nombre_p} ${persona.apellido}`);
                     setDniValid(true);
@@ -125,20 +129,20 @@ function CreateUser() {
                 }
             } catch (e) {
                 console.error(e);
+                alert(e.message);
                 setDniError('No se pudo contactar al servidor');
             }
         };
 
         fetchPerson();
-    }, [dni, sessionKey]);
+    }, [dni, aesKey]);
+
 
 
     async function crearUsuario(event) {
         event.preventDefault();
         setError(null);
         setLoading(true);
-        setLoadingToast(true);
-        await fetchKey();
 
         if (!aesKey) {
             throw new Error('No se pudo obtener la clave AES, no se puede encriptar');
@@ -151,6 +155,8 @@ function CreateUser() {
             setLoadingToast(false);
             return;
         }
+
+
 
         try {
             const payload = { dni, email, password };
