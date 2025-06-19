@@ -19,13 +19,17 @@ function Login() {
     const [loading, setLoading] = useState(false);
     const { updateUsuario } = useSession();
     const [searchParams] = useSearchParams();
-     const [loadingToast, setLoadingToast] = useState(false);
+    const [loadingToast, setLoadingToast] = useState(false);
 
     useEffect(() => {
         const message = searchParams.get('message');
         let timer;
-        if (message === 'Usuario validado correctamente') {
+        if (message === 'success') {
             setToastMessage('La verificación ha sido exitosa!');
+            setShowToast(true);
+            timer = setTimeout(() => setShowToast(false), 3000);
+        } else if(message === 'token'){
+            setToastMessage('Su mail ya fue verificado anteriormente.');
             setShowToast(true);
             timer = setTimeout(() => setShowToast(false), 3000);
         }
