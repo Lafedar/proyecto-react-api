@@ -18,8 +18,61 @@ function VerifyEmail() {
     const [loading, setLoading] = useState(false);
     const [searchParams] = useSearchParams();
     const message = searchParams.get('message');
-    
 
+
+    useEffect(() => {
+        const ciphertextB64 = searchParams.get('ciphertext');
+        const ivB64 = searchParams.get('iv');
+        const keyB64 = searchParams.get('key');
+        console.log('Params recibidos:', { ciphertextB64, ivB64, keyB64 });
+        if (ciphertextB64 && ivB64 && keyB64) {
+            decryptData(ciphertextB64, ivB64, keyB64);
+        }
+    }, [searchParams]);
+
+
+    async function decryptData(ciphertextB64, ivB64, keyB64) {
+        try {
+            const keyBytes = Uint8Array.from(atob(keyB64), c => c.charCodeAt(0));
+            const iv = Uint8Array.from(atob(ivB64), c => c.charCodeAt(0));
+            const ciphertextWithTag = Uint8Array.from(atob(ciphertextB64), c => c.charCodeAt(0));
+
+            const key = await crypto.subtle.importKey(
+                'raw',
+                keyBytes,
+                'AES-GCM',
+                true,
+                ['decrypt']
+            );
+
+            const tagLength = 16;
+            const ciphertext = ciphertextWithTag.slice(0, -tagLength);
+            const tag = ciphertextWithTag.slice(-tagLength);
+            const fullCiphertext = new Uint8Array([...ciphertext, ...tag]);
+
+            const decrypted = await crypto.subtle.decrypt(
+                {
+                    name: 'AES-GCM',
+                    iv: iv
+                },
+                key,
+                fullCiphertext
+            );
+
+            const decodedText = new TextDecoder().decode(decrypted);
+            console.log('Texto descifrado:', decodedText);
+            const data = JSON.parse(decodedText);
+            console.log('Datos parseados:', data);
+
+            setDni(data.dni);
+            setEmail(data.email);
+
+        } catch (err) {
+            console.error('Error al descifrar:', err);
+            setToastMessage('No se pudieron descifrar los datos');
+            setShowToast(true);
+        }
+    }
 
 
     let aesKey = null;
@@ -63,20 +116,13 @@ function VerifyEmail() {
         }
 
     }
-    useEffect(() => {
-        const dniParam = searchParams.get('dni');
-        const emailParam = searchParams.get('email');
-
-        if (dniParam) setDni(dniParam);
-        if (emailParam) setEmail(emailParam);
-    }, [searchParams]);
 
 
     async function reenviarMailVerificacion() {
         event.preventDefault();
         setError(null);
         setLoading(true);
-        
+
 
         // Asegurarse de tener la clave AES lista
         await fetchKey();
@@ -84,7 +130,7 @@ function VerifyEmail() {
             setToastMessage('No se pudo obtener la clave para encriptar');
             setShowToast(true);
             setLoading(false);
-            
+
             return;
         }
 
@@ -98,7 +144,7 @@ function VerifyEmail() {
                 setToastMessage('Error al encriptar los datos.');
                 setShowToast(true);
                 setLoading(false);
-                
+
                 return;
             }
 
@@ -128,7 +174,7 @@ function VerifyEmail() {
             setShowToast(true);
         } finally {
             setLoading(false);
-            
+
         }
     }
 
