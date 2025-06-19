@@ -1,10 +1,11 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useSession } from './contexts/SessionContext';
 import { arrayBufferToBase64 } from './cryptoUtils';
 import Toast from './components/Toast';
 import Layout from './components/Layout';
 import './styles/App.css';
+import { useSearchParams } from 'react-router-dom';
 
 function Login() {
     //const API_BASE = process.env.REACT_APP_API_BASE_URL;
@@ -17,7 +18,21 @@ function Login() {
     const [showToast, setShowToast] = useState(false);
     const [loading, setLoading] = useState(false);
     const { updateUsuario } = useSession();
-    const [loadingToast, setLoadingToast] = useState(false);
+    const [searchParams] = useSearchParams();
+     const [loadingToast, setLoadingToast] = useState(false);
+
+    useEffect(() => {
+        const message = searchParams.get('message');
+        let timer;
+        if (message === 'Usuario validado correctamente') {
+            setToastMessage('La verificación ha sido exitosa!');
+            setShowToast(true);
+            timer = setTimeout(() => setShowToast(false), 3000);
+        }
+        return () => clearTimeout(timer);
+    }, [searchParams]);
+
+
 
     let aesKey = null;
     async function fetchKey() {
@@ -234,12 +249,12 @@ function Login() {
                         <div className="form-group flex flex-col items-center mb-4">
                             <label htmlFor="password" className="font-bold">Contraseña</label>
                             <InputPassword value={password} onChange={e => setPassword(e.target.value)} disabled={loading} />
-                             <a href="" className="mt-[-5px] text-blue-600 hover:underline">¿Olvidaste tu contraseña?</a>
+                            <a href="" className="mt-[-5px] text-blue-600 hover:underline">¿Olvidaste tu contraseña?</a>
                         </div>
 
                         <div className="flex flex-col items-center">
                             <MyButton type="submit" disabled={loading}>Ingresar</MyButton>
-                             <CreateUserLink to="/createUser">Registrar nuevo Usuario</CreateUserLink>
+                            <CreateUserLink to="/createUser">Registrar nuevo Usuario</CreateUserLink>
                         </div>
 
 
@@ -301,20 +316,20 @@ function MyButton({ type = 'button', children, disabled = false }) {
 }
 
 function CreateUserLink({ children, to, className = '' }) {
-  const navigate = useNavigate();
+    const navigate = useNavigate();
 
-  const handleClick = (e) => {
-    e.preventDefault(); // evita el comportamiento por defecto del <a>
-    if (to) {
-      navigate(to);
-    }
-  };
+    const handleClick = (e) => {
+        e.preventDefault(); // evita el comportamiento por defecto del <a>
+        if (to) {
+            navigate(to);
+        }
+    };
 
-  return (
-    <a href={to} onClick={handleClick} className={className}>
-      {children}
-    </a>
-  );
+    return (
+        <a href={to} onClick={handleClick} className={className}>
+            {children}
+        </a>
+    );
 }
 
 export default Login;

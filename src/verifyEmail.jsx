@@ -20,6 +20,16 @@ function VerifyEmail() {
     const [loadingToast, setLoadingToast] = useState(false);
     const navigate = useNavigate();
 
+    useEffect(() => {
+        setToastMessage('El enlace para verificar su correo electrónico ha expirado o ya no es válido. Por favor, reenvíe el correo de verificación para continuar.');
+        setShowToast(true);
+
+        const timer = setTimeout(() => {
+            setShowToast(false);
+        }, 5000); // Toast visible 3 segundos, ajustá si querés
+
+        return () => clearTimeout(timer);
+    }, []);
 
 
     useEffect(() => {
@@ -162,12 +172,12 @@ function VerifyEmail() {
             if (response.ok) {
                 setToastMessage(data.message || 'Mail reenviado correctamente');
                 setShowToast(true);
-                
+
                 setTimeout(() => {
                     setShowToast(false);
                     navigate('/')
                 }, 2000);
-            
+
             } else {
                 setToastMessage(data.message || 'Error al reenviar mail');
                 setShowToast(true);
@@ -175,68 +185,68 @@ function VerifyEmail() {
                     setShowToast(false);
                 }, 2000);
             }
-    } catch (error) {
-        console.error(error);
-        setToastMessage('Error de red o del servidor.');
-        setShowToast(true);
-    } finally {
-        setLoading(false);
+        } catch (error) {
+            console.error(error);
+            setToastMessage('Error de red o del servidor.');
+            setShowToast(true);
+        } finally {
+            setLoading(false);
 
+        }
     }
-}
 
 
 
-return (
-    <>
-        {loadingToast && (
-            <div className="fixed bottom-15 left-1/2 transform -translate-x-1/2 bg-transparent px-4 py-2 rounded flex items-center gap-2 z-50">
-                <div className="custom-spinner"></div>
-                <span className="font-semibold text-lg loading-text">
-                    Procesando...
-                </span>
-            </div>
-        )}
-        <Layout>
-            <div>
-                {showToast && (
-                    <Toast
-                        message={toastMessage}
-                        onClose={() => setShowToast(false)}
-                    />
-                )}
+    return (
+        <>
+            {loadingToast && (
+                <div className="fixed bottom-15 left-1/2 transform -translate-x-1/2 bg-transparent px-4 py-2 rounded flex items-center gap-2 z-50">
+                    <div className="custom-spinner"></div>
+                    <span className="font-semibold text-lg loading-text">
+                        Procesando...
+                    </span>
+                </div>
+            )}
+            <Layout>
+                <div>
+                    {showToast && (
+                        <Toast
+                            message={toastMessage}
+                            onClose={() => setShowToast(false)}
+                        />
+                    )}
 
-                <form className="login-form" onSubmit={reenviarMailVerificacion}>
+                    <form className="login-form" onSubmit={reenviarMailVerificacion}>
 
-                    <h1 className="text-x1 font-bold text-white-600">Verificar Email</h1>
-                    {error && <div className="error">{error}</div>}
+                        <h1 className="text-x1 font-bold text-white-600">Verificar Email</h1>
+                        {error && <div className="error">{error}</div>}
 
-                    <div className="form-group flex flex-col items-center mt-6">
+                        <div className="form-group flex flex-col items-center mt-6">
 
-                        <label htmlFor="dni" id="input_dni" className="font-bold">Dni</label>
-                        <InputDni value={dni} onChange={e => setDni(e.target.value)} disabled={loading} />
+                            <label htmlFor="dni" id="input_dni" className="font-bold">Dni</label>
+                            <InputDni value={dni} onChange={e => setDni(e.target.value)} disabled={loading} />
 
-                        <label htmlFor="email" id="input_email" className="font-bold">Email</label>
-                        <InputUser value={email} onChange={e => setEmail(e.target.value)} disabled={loading} />
+                            <label htmlFor="email" id="input_email" className="font-bold">Email</label>
+                            <InputUser value={email} onChange={e => setEmail(e.target.value)} disabled={loading} />
 
-                    </div>
+                        </div>
 
-                    <div className="flex justify-center gap-2 my-5 mt-10 mb-1">
-                        <BackButton disabled={loading} />
-                        <MyButton type="submit" disabled={loading}>Enviar Mail de Verificación</MyButton>
+                        <div className="flex justify-center gap-2 my-5 mt-10 mb-1">
+                            <BackButton disabled={loading} />
+                            <MyButton type="submit" disabled={loading}>Enviar Mail de Verificación</MyButton>
 
-                    </div>
-
-
-
-                </form>
-            </div>
-        </Layout>
+                        </div>
 
 
 
-    </>
-)
+                    </form>
+                </div>
+            </Layout>
+
+
+
+        </>
+    )
 
 }
 function InputDni({ value, onChange, disabled }) {
