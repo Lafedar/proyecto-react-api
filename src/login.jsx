@@ -253,12 +253,12 @@ function Login() {
                         <div className="form-group flex flex-col items-center mb-4">
                             <label htmlFor="password" className="font-bold">Contraseña</label>
                             <InputPassword value={password} onChange={e => setPassword(e.target.value)} disabled={loading} />
-                            <a href="" className="mt-[-5px] text-blue-600 hover:underline">¿Olvidaste tu contraseña?</a>
+                            <a href="" className="mt-[-10px]" style={{ color: 'rgba(15, 79, 141, 0.83)'}}>¿Olvidaste tu contraseña?</a>
                         </div>
 
                         <div className="flex flex-col items-center">
                             <MyButton type="submit" disabled={loading}>Ingresar</MyButton>
-                            <CreateUserLink to="/createUser">Registrar nuevo Usuario</CreateUserLink>
+                            <CreateUserLink to="/createUser">¿No tienes cuenta? <b>Registrate</b></CreateUserLink>
                         </div>
 
 
@@ -319,7 +319,7 @@ function MyButton({ type = 'button', children, disabled = false }) {
     )
 }
 
-function CreateUserLink({ children, to, className = '' }) {
+function CreateUserLink({ children, to}) {
     const navigate = useNavigate();
 
     const handleClick = (e) => {
@@ -330,7 +330,8 @@ function CreateUserLink({ children, to, className = '' }) {
     };
 
     return (
-        <a href={to} onClick={handleClick} className={className}>
+        <a href={to} onClick={handleClick} className={'mt-2'} style={{ color: 'rgba(15, 79, 141, 0.83)'}}
+>
             {children}
         </a>
     );

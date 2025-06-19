@@ -231,7 +231,7 @@ function CreateUser() {
                             )}
                             {dniValid && personName && (
                                 <p className="text-green-600 text-sm mt-1">
-                                    Persona encontrada: <strong>{personName}</strong>
+                                    Hola: <strong>{personName}</strong>
                                 </p>
                             )}
                             <label htmlFor="email" id="input_email" className="font-bold">Email</label>
