@@ -5,6 +5,7 @@ import Login from "./login";
 import Links from "./links";
 import Medications from "./medications";
 import MyRequests from "./myRequests";
+import CreateUser from './createUser';
 import ProtectedRoute from './ProtectedRoute';
 import { SessionProvider } from './contexts/SessionContext';
 
@@ -15,11 +16,12 @@ export default function App() {
             <BrowserRouter>
                 <Routes>
                     <Route path="/" element={<Login />} />
-                    <Route element={<ProtectedRoute />}>
+                    
                         <Route path="/links" element={<Links />} />
                         <Route path="/medications" element={<Medications />} />
                         <Route path="/myRequests" element={<MyRequests />} />
-                    </Route>
+                        <Route path="/createUser" element={<CreateUser />} />
+                  
                 </Routes>
             </BrowserRouter>
         </SessionProvider>

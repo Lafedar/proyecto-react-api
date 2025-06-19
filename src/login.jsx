@@ -22,7 +22,7 @@ function Login() {
     let aesKey = null;
     async function fetchKey() {
         try {
-            const response = await fetch(`https://test-values-una-toy.trycloudflare.com/api/get-key`, {
+            const response = await fetch(`https://geology-optimum-soldiers-phone.trycloudflare.com/api/get-key`, {
                 credentials: 'include',
 
             });
@@ -85,7 +85,7 @@ function Login() {
             const ciphertext = arrayBufferToBase64(ciphertextBuffer);
             const ivBase64 = arrayBufferToBase64(iv);
 
-            const response = await fetch(`https://test-values-una-toy.trycloudflare.com/api/loginApi`, {
+            const response = await fetch(`https://geology-optimum-soldiers-phone.trycloudflare.com/api/loginApi`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
@@ -234,12 +234,15 @@ function Login() {
                         <div className="form-group flex flex-col items-center mb-4">
                             <label htmlFor="password" className="font-bold">Contraseña</label>
                             <InputPassword value={password} onChange={e => setPassword(e.target.value)} disabled={loading} />
+                             <a href="" className="mt-[-5px] text-blue-600 hover:underline">¿Olvidaste tu contraseña?</a>
                         </div>
 
-                        <div className="flex justify-center">
+                        <div className="flex flex-col items-center">
                             <MyButton type="submit" disabled={loading}>Ingresar</MyButton>
-
+                             <CreateUserLink to="/createUser">Registrar nuevo Usuario</CreateUserLink>
                         </div>
+
+
 
                     </form>
                 </div>
@@ -295,6 +298,23 @@ function MyButton({ type = 'button', children, disabled = false }) {
             {children}
         </button>
     )
+}
+
+function CreateUserLink({ children, to, className = '' }) {
+  const navigate = useNavigate();
+
+  const handleClick = (e) => {
+    e.preventDefault(); // evita el comportamiento por defecto del <a>
+    if (to) {
+      navigate(to);
+    }
+  };
+
+  return (
+    <a href={to} onClick={handleClick} className={className}>
+      {children}
+    </a>
+  );
 }
 
 export default Login;

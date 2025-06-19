@@ -120,7 +120,7 @@ function Medications() {
             }
 
 
-            const response = await fetch(`https://test-values-una-toy.trycloudflare.com/api/medications`, {
+            const response = await fetch(`https://geology-optimum-soldiers-phone.trycloudflare.com/api/medications`, {
 
                 method: 'POST',
                 headers: {
@@ -136,7 +136,6 @@ function Medications() {
 
 
             const isOk = response.ok;
-            const status = response.status;
             const data = await response.json();
             setLoadingToast(false);
 
