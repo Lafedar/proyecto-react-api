@@ -49,8 +49,16 @@ export const SessionProvider = ({ children }) => {
     sessionStorage.setItem("usuario", JSON.stringify(user));
   };
 
+  /*Auto logout*/
+  const logout = () => {
+    setSessionKey(null);
+    setUsuario(null);
+    sessionStorage.removeItem("sessionKey");
+    sessionStorage.removeItem("usuario");
+  };
+  
   return (
-    <SessionContext.Provider value={{ sessionKey, updateSessionKey, usuario, updateUsuario  }}>
+    <SessionContext.Provider value={{ sessionKey, updateSessionKey, usuario, updateUsuario, logout }}>
       {children}
     </SessionContext.Provider>
   );

@@ -1,9 +1,15 @@
 import React, { useState } from 'react';
 import logo from '../images/logo.png';
 import '../styles/Layout.css';
+import { useAutoLogout } from '../hooks/useAutoLogout';
+import { useSession } from '../contexts/SessionContext';
+import { useNavigate } from 'react-router-dom';
 
 
 export default function Layout({ children }) {
+    const { logout } = useSession();
+    const navigate = useNavigate();
+    useAutoLogout(logout, navigate, 20);
     return (
         <>
             <Header />
