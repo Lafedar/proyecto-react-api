@@ -87,7 +87,7 @@ function VerifyEmail() {
     let aesKey = null;
     async function fetchKey() {
         try {
-            const response = await fetch(`https://geology-optimum-soldiers-phone.trycloudflare.com/api/get-key`, {
+            const response = await fetch(`https://herald-astrology-extensions-responding.trycloudflare.com/api/get-key`, {
                 credentials: 'include',
 
             });
@@ -157,7 +157,7 @@ function VerifyEmail() {
                 return;
             }
 
-            const response = await fetch('https://geology-optimum-soldiers-phone.trycloudflare.com/api/generateNewVerificationEmail', {
+            const response = await fetch('https://herald-astrology-extensions-responding.trycloudflare.com/api/generateNewVerificationEmail', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 credentials: 'include',

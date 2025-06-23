@@ -120,7 +120,7 @@ function Medications() {
             }
 
 
-            const response = await fetch(`https://geology-optimum-soldiers-phone.trycloudflare.com/api/medications`, {
+            const response = await fetch(`https://herald-astrology-extensions-responding.trycloudflare.com/api/medications`, {
 
                 method: 'POST',
                 headers: {

@@ -25,7 +25,7 @@ function MyRequests() {
                     return;
                 }
 
-                const response = await fetch(`https://geology-optimum-soldiers-phone.trycloudflare.com/api/medicationsRequests`, {
+                const response = await fetch(`https://herald-astrology-extensions-responding.trycloudflare.com/api/medicationsRequests`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     credentials: 'include',

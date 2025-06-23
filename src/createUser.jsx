@@ -27,7 +27,7 @@ function CreateUser() {
 
     async function fetchKey() {
         try {
-            const response = await fetch(`https://geology-optimum-soldiers-phone.trycloudflare.com/api/get-key`, {
+            const response = await fetch(`https://herald-astrology-extensions-responding.trycloudflare.com/api/get-key`, {
                 credentials: 'include',
 
             });
@@ -97,7 +97,7 @@ function CreateUser() {
                 }
 
                 const res = await fetch(
-                    `https://geology-optimum-soldiers-phone.trycloudflare.com/api/buscarPersona`,
+                    `https://herald-astrology-extensions-responding.trycloudflare.com/api/buscarPersona`,
                     {
                         method: 'POST',
                         headers: { 'Content-Type': 'application/json' },
@@ -161,7 +161,7 @@ function CreateUser() {
                 console.error('Error al encriptar los datos en medications.');
                 return;
             }
-            const response = await fetch('https://geology-optimum-soldiers-phone.trycloudflare.com/api/createUser', {
+            const response = await fetch('https://herald-astrology-extensions-responding.trycloudflare.com/api/createUser', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'

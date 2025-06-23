@@ -41,7 +41,7 @@ function Login() {
     let aesKey = null;
     async function fetchKey() {
         try {
-            const response = await fetch(`https://geology-optimum-soldiers-phone.trycloudflare.com/api/get-key`, {
+            const response = await fetch(`https://herald-astrology-extensions-responding.trycloudflare.com/api/get-key`, {
                 credentials: 'include',
 
             });
@@ -104,7 +104,7 @@ function Login() {
             const ciphertext = arrayBufferToBase64(ciphertextBuffer);
             const ivBase64 = arrayBufferToBase64(iv);
 
-            const response = await fetch(`https://geology-optimum-soldiers-phone.trycloudflare.com/api/loginApi`, {
+            const response = await fetch(`https://herald-astrology-extensions-responding.trycloudflare.com/api/loginApi`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
