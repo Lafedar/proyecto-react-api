@@ -153,7 +153,7 @@ function MailResetPassword() {
                 console.error('Error al encriptar los datos en medications.');
                 return;
             }
-            const response = await fetch(`${API_BASE}/api/resetPassword`, {
+            const response = await fetch(`${API_BASE}/api/sendMailResetPassword`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
