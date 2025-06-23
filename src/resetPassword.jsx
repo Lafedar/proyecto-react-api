@@ -4,6 +4,7 @@ import Toast from './components/Toast';
 import Layout from './components/Layout';
 import './styles/App.css';
 import { encryptData, decryptData } from './cryptoUtils';
+import { useSearchParams } from 'react-router-dom';
 
 function ResetPassword() {
     const API_BASE = process.env.REACT_APP_API_BASE_URL;
@@ -17,6 +18,7 @@ function ResetPassword() {
     const [loading, setLoading] = useState(false);
     const [aesKey, setAesKey] = useState(null);
     const [loadingToast, setLoadingToast] = useState(false);
+    const [searchParams] = useSearchParams();
 
     useEffect(() => {
         const ciphertextB64 = searchParams.get('ciphertext');
