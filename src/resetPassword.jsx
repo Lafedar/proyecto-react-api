@@ -8,7 +8,6 @@ import { encryptData, decryptData } from './cryptoUtils';
 function ResetPassword() {
     const API_BASE = process.env.REACT_APP_API_BASE_URL;
     const [dni, setDni] = useState('')
-    const [email, setEmail] = useState('')
     const [password, setPassword] = useState('')
     const [password2, setPassword2] = useState('')
     const [error, setError] = useState(null)
@@ -19,7 +18,56 @@ function ResetPassword() {
     const [aesKey, setAesKey] = useState(null);
     const [loadingToast, setLoadingToast] = useState(false);
 
+    useEffect(() => {
+        const ciphertextB64 = searchParams.get('ciphertext');
+        const ivB64 = searchParams.get('iv');
+        const keyB64 = searchParams.get('key');
+        if (ciphertextB64 && ivB64 && keyB64) {
+            decryptData(ciphertextB64, ivB64, keyB64);
+        }
+    }, [searchParams]);
 
+
+    async function decryptData(ciphertextB64, ivB64, keyB64) {
+        try {
+            const keyBytes = Uint8Array.from(atob(keyB64), c => c.charCodeAt(0));
+            const iv = Uint8Array.from(atob(ivB64), c => c.charCodeAt(0));
+            const ciphertextWithTag = Uint8Array.from(atob(ciphertextB64), c => c.charCodeAt(0));
+
+            const key = await crypto.subtle.importKey(
+                'raw',
+                keyBytes,
+                'AES-GCM',
+                true,
+                ['decrypt']
+            );
+
+            const tagLength = 16;
+            const ciphertext = ciphertextWithTag.slice(0, -tagLength);
+            const tag = ciphertextWithTag.slice(-tagLength);
+            const fullCiphertext = new Uint8Array([...ciphertext, ...tag]);
+
+            const decrypted = await crypto.subtle.decrypt(
+                {
+                    name: 'AES-GCM',
+                    iv: iv
+                },
+                key,
+                fullCiphertext
+            );
+
+            const decodedText = new TextDecoder().decode(decrypted);
+            const data = JSON.parse(decodedText);
+
+            setDni(data.dni);
+            
+
+        } catch (err) {
+            console.error('Error al descifrar:', err);
+            setToastMessage('No se pudieron descifrar los datos');
+            setShowToast(true);
+        }
+    }
 
 
     async function fetchKey() {
