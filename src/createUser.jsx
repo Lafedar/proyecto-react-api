@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Toast from './components/Toast';
 import Layout from './components/Layout';
-import './styles/App.css';
+
 import { encryptData, decryptData } from './cryptoUtils';
 
 function CreateUser() {
@@ -205,73 +205,84 @@ function CreateUser() {
 
     return (
         <>
-            {loadingToast && (
-                <div className="fixed bottom-15 left-1/2 transform -translate-x-1/2 bg-transparent px-4 py-2 rounded flex items-center gap-2 z-50">
-                    <div className="custom-spinner"></div>
-                    <span className="font-semibold text-lg loading-text">
-                        Procesando...
-                    </span>
-                </div>
-            )}
-            <Layout>
-                <div className="max-sm:h-screen max-sm:overflow-y-auto px-4">
-                    {showToast && (
-                        <Toast
-                            message={toastMessage}
-                            onClose={() => setShowToast(false)}
-                        />
-                    )}
+            <div className="scroll-wrapper">
+                {loadingToast && (
+                    <div className="fixed bottom-15 left-1/2 transform -translate-x-1/2 bg-transparent px-4 py-2 rounded flex items-center gap-2 z-50">
+                        <div className="custom-spinner"></div>
+                        <span className="font-semibold text-lg loading-text">Procesando...</span>
+                    </div>
+                )}
 
-                    <form className="login-form" onSubmit={crearUsuario}>
+                <Layout>
+                    <div>
+                        {showToast && (
+                            <Toast message={toastMessage} onClose={() => setShowToast(false)} />
+                        )}
 
-                        <h1 className="text-x1 font-bold text-white-600 text-center sm:text-left">Registro de Usuario</h1>
-                        {error && <div className="error">{error}</div>}
+                        <form className="login-form" onSubmit={crearUsuario}>
+                            <h1 className="text-x1 font-bold text-white-600 text-center sm:text-left">
+                                Registro de Usuario
+                            </h1>
 
-                        <div className="form-group flex flex-col items-center mt-4">
+                            {error && <div className="error">{error}</div>}
 
-                            <label htmlFor="dni" id="input_dni" className="font-bold mb-[-10px]">Dni</label>
-                            <InputDni value={dni} onChange={e => setDni(e.target.value)} disabled={loading} />
-                            {dniError && (
-                                <p className="text-red-500 text-sm mt-1">{dniError}</p>
-                            )}
-                            {dniValid && personName && (
-                                <p className="text-green-600 text-sm mt-1">
-                                    Hola: <strong>{personName}</strong>
-                                </p>
-                            )}
-                            <label htmlFor="email" id="input_email" className="font-bold mb-[-10px]">Email</label>
-                            <InputUser value={email} onChange={e => setEmail(e.target.value)} disabled={loading} />
+                            <div className="form-group flex flex-col items-center mt-4">
+                                <label htmlFor="dni" className="font-bold mb-[-15px]">Dni</label>
+                                <InputDni value={dni} onChange={e => setDni(e.target.value)} disabled={loading} />
+                                {dniError && <p className="text-red-500 text-sm mt-1">{dniError}</p>}
+                                {dniValid && personName && (
+                                    <p className="text-green-600 text-sm mt-1">Hola: <strong>{personName}</strong></p>
+                                )}
 
-                            <label htmlFor="email2" id="input_email2" className="font-bold mb-[-10px]">Reingrese su email</label>
-                            <InputUser2 value={email2} onChange={e => setEmail2(e.target.value)} disabled={loading} />
-                        </div>
+                                <label htmlFor="email" className="font-bold mb-[-15px]">Email</label>
+                                <InputUser value={email} onChange={e => setEmail(e.target.value)} disabled={loading} />
 
-                        <div className="form-group flex flex-col items-center mb-4">
-                            <label htmlFor="password" className="font-bold mb-[-10px]">Contraseña</label>
-                            <InputPassword value={password} onChange={e => setPassword(e.target.value)} disabled={loading} />
+                                <label htmlFor="email2" className="font-bold mb-[-10px]">Reingrese su email</label>
+                                <InputUser2 value={email2} onChange={e => setEmail2(e.target.value)} disabled={loading} />
+                            </div>
 
+                            <div className="form-group flex flex-col items-center mb-4">
+                                <label htmlFor="password" className="font-bold mb-[-15px]">Contraseña</label>
+                                <InputPassword value={password} onChange={e => setPassword(e.target.value)} disabled={loading} />
 
-                            <label htmlFor="password2" className="font-bold mb-[-10px]">Reingrese su contraseña</label>
-                            <InputPassword2 value={password2} onChange={e => setPassword2(e.target.value)} disabled={loading} />
+                                <label htmlFor="password2" className="font-bold mb-[-15px]">Reingrese su contraseña</label>
+                                <InputPassword2 value={password2} onChange={e => setPassword2(e.target.value)} disabled={loading} />
+                            </div>
 
-                        </div>
+                            <div className="flex justify-center gap-2 my-5 mt-7 mb-1">
+                                <BackButton disabled={loading} />
+                                <MyButton type="submit" disabled={loading}>Crear</MyButton>
+                            </div>
+                        </form>
+                    </div>
+                </Layout>
+            </div>
 
-                        <div className="flex justify-center gap-2 my-5 mt-7 mb-1">
-                            <BackButton disabled={loading} />
-                            <MyButton type="submit" disabled={loading}>Crear</MyButton>
+            <style>{`
+      .scroll-wrapper {
+        padding: 4rem;
+      }
 
-                        </div>
+      @media (max-height: 700px) {
+        .scroll-wrapper {
+          height: 100vh;
+          overflow-y: auto;
+        }
+          /* Ocultamos la barra de scroll en todos los navegadores */
+  .scroll-wrapper::-webkit-scrollbar {
+    display: none;
+  }
 
-
-
-                    </form>
-                </div>
-            </Layout>
-
-
-
+  .scroll-wrapper {
+    -ms-overflow-style: none; /* IE y Edge */
+    scrollbar-width: none; /* Firefox */
+  }
+      }
+    `}</style>
         </>
-    )
+    );
+
+
 
 }
 function InputDni({ value, onChange, disabled }) {
@@ -284,7 +295,7 @@ function InputDni({ value, onChange, disabled }) {
             onChange={onChange}
             disabled={disabled}
             required
-            className="w-70 px-3 py-2 rounded-md border border-black focus:outline-none focus:ring-2 focus:ring-blue-500 mt-0"
+            className="w-70 px-3 py-2 rounded-md border border-black focus:outline-none focus:ring-2 focus:ring-blue-500"
 
         />
     )
