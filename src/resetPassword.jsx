@@ -19,6 +19,7 @@ function ResetPassword() {
     const [aesKey, setAesKey] = useState(null);
     const [loadingToast, setLoadingToast] = useState(false);
     const [searchParams] = useSearchParams();
+   
 
     useEffect(() => {
         const ciphertextB64 = searchParams.get('ciphertext');
@@ -203,7 +204,7 @@ function ResetPassword() {
 
                     <form className="login-form" onSubmit={resetPassword}>
 
-                        <h1 className="text-x1 font-bold text-white-600">Restablecer contraseña</h1>
+                        <h1 className="text-x1 font-bold text-white-600 text-center sm:text-left">Restablecer contraseña</h1>
                         {error && <div className="error">{error}</div>}
 
                         <div className="form-group flex flex-col items-center mt-6">
@@ -225,7 +226,7 @@ function ResetPassword() {
                                 API_BASE={API_BASE}
                             />
 
-                            <MyButton type="submit" disabled={loading}>Restablecer contraseña</MyButton>
+                            <MyButton type="submit" disabled={loading}>Restablecer</MyButton>
 
                         </div>
 
@@ -277,7 +278,7 @@ function InputPassword2({ value, onChange, disabled }) {
 function MyButton({ type = 'button', children, disabled = false }) {
     return (
         <button type={type} disabled={disabled}
-            className={`w-full max-w-[120px] sm:max-w-[160px] px-2 py-2 bg-blue-500 rounded text-white text-sm transition delay-700 
+            className={`w-full max-w-[120px] sm:max-w-[135px] px-2 py-2 bg-blue-500 rounded text-white text-sm transition delay-700 
             duration-700 ease-in-out hover:-translate-y-1 hover:scale-101 hover:bg-indigo-500 
             ${disabled ? 'opacity-50 cursor-not-allowed' : ''}`}>
 
@@ -334,7 +335,7 @@ function BackButton({ disabled = false, dni, aesKey, encryptData, API_BASE }) {
             type="button"
             onClick={handleClick}
             disabled={disabled}
-            className={`w-full max-w-[120px] sm:max-w-[160px] px-2 py-2 bg-blue-500 rounded text-white text-sm transition delay-700 
+            className={`w-full max-w-[120px] sm:max-w-[135px] px-2 py-2 bg-blue-500 rounded text-white text-sm transition delay-700 
             duration-700 ease-in-out hover:-translate-y-1 hover:scale-101 hover:bg-indigo-500 
             ${disabled ? 'opacity-50 cursor-not-allowed' : ''}`}
         >
