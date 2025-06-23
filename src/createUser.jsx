@@ -263,7 +263,7 @@ function CreateUser() {
         padding: 4rem;
       }
 
-      @media (max-height: 700px) {
+      @media (max-height: 800px) {
         .scroll-wrapper {
           height: 100vh;
           overflow-y: auto;
