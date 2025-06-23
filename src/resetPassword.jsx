@@ -62,7 +62,7 @@ function ResetPassword() {
             const data = JSON.parse(decodedText);
 
             setDni(data.dni);
-            
+
 
         } catch (err) {
             console.error('Error al descifrar:', err);
@@ -217,7 +217,14 @@ function ResetPassword() {
                         </div>
 
                         <div className="flex justify-center gap-2 my-5 mt-10 mb-1">
-                            <BackButton disabled={loading} />
+                            <BackButton
+                                disabled={loading}
+                                dni={dni}
+                                aesKey={aesKey}
+                                encryptData={encryptData}
+                                API_BASE={API_BASE}
+                            />
+
                             <MyButton type="submit" disabled={loading}>Restablecer contraseña</MyButton>
 
                         </div>
@@ -278,16 +285,48 @@ function MyButton({ type = 'button', children, disabled = false }) {
         </button>
     )
 }
-function BackButton({ disabled = false }) {
+
+function BackButton({ disabled = false, dni, aesKey, encryptData, API_BASE }) {
     const navigate = useNavigate();
 
-    const handleClick = () => {
-        // Forzar pérdida de foco
+    const handleClick = async () => {
         if (document.activeElement instanceof HTMLElement) {
             document.activeElement.blur();
         }
 
-        navigate('/');
+        try {
+            const payload = { dni };
+
+            const encrypted = await encryptData(payload, aesKey);
+            if (!encrypted) {
+                console.error('Error al encriptar los datos en resetPassword.');
+                return;
+            }
+
+            const response = await fetch(`${API_BASE}/api/cleanTokens`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                credentials: 'include',
+                body: JSON.stringify({
+                    ciphertext: encrypted.ciphertext,
+                    iv: encrypted.iv
+                })
+            });
+
+            if (!response.ok) {
+                throw new Error('Error en la llamada a la API');
+            }
+
+            const data = await response.json();
+            console.log('Respuesta API:', data);
+
+            navigate('/');
+
+        } catch (error) {
+            console.error('Error al llamar la API:', error);
+        }
     };
 
     return (
@@ -302,6 +341,8 @@ function BackButton({ disabled = false }) {
         </button>
     );
 }
+
+
 
 export default ResetPassword;
 
