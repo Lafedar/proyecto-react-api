@@ -8,7 +8,7 @@ import './styles/App.css';
 import { useSearchParams } from 'react-router-dom';
 
 function Login() {
-    //const API_BASE = process.env.REACT_APP_API_BASE_URL;
+    const API_BASE = process.env.REACT_APP_API_BASE_URL;
     const [email, setEmail] = useState('')
     const [password, setPassword] = useState('')
     const [error, setError] = useState(null)
@@ -41,7 +41,7 @@ function Login() {
     let aesKey = null;
     async function fetchKey() {
         try {
-            const response = await fetch(`https://herald-astrology-extensions-responding.trycloudflare.com/api/get-key`, {
+            const response = await fetch(`${API_BASE}/api/get-key`, {
                 credentials: 'include',
 
             });
@@ -104,7 +104,7 @@ function Login() {
             const ciphertext = arrayBufferToBase64(ciphertextBuffer);
             const ivBase64 = arrayBufferToBase64(iv);
 
-            const response = await fetch(`https://herald-astrology-extensions-responding.trycloudflare.com/api/loginApi`, {
+            const response = await fetch(`${API_BASE}/api/loginApi`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'

@@ -10,7 +10,6 @@ import Layout from './components/Layout';
 
 function Medications() {
     const API_BASE = process.env.REACT_APP_API_BASE_URL;
-
     const [dni, setDni] = useState('');
     const [medication, setMedication] = useState('');
     const [amount, setAmount] = useState('');
@@ -120,7 +119,7 @@ function Medications() {
             }
 
 
-            const response = await fetch(`https://herald-astrology-extensions-responding.trycloudflare.com/api/medications`, {
+            const response = await fetch(`${API_BASE}/api/medications`, {
 
                 method: 'POST',
                 headers: {

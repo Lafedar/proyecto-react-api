@@ -9,6 +9,7 @@ import { encryptData } from './cryptoUtils';
 import { useSearchParams } from 'react-router-dom';
 
 function VerifyEmail() {
+    const API_BASE = process.env.REACT_APP_API_BASE_URL;
     const [dni, setDni] = useState('')
     const [email, setEmail] = useState('')
     const [error, setError] = useState(null)
@@ -87,7 +88,7 @@ function VerifyEmail() {
     let aesKey = null;
     async function fetchKey() {
         try {
-            const response = await fetch(`https://herald-astrology-extensions-responding.trycloudflare.com/api/get-key`, {
+            const response = await fetch(`${API_BASE}/api/get-key`, {
                 credentials: 'include',
 
             });
@@ -157,7 +158,7 @@ function VerifyEmail() {
                 return;
             }
 
-            const response = await fetch('https://herald-astrology-extensions-responding.trycloudflare.com/api/generateNewVerificationEmail', {
+            const response = await fetch(`${API_BASE}/api/generateNewVerificationEmail`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 credentials: 'include',

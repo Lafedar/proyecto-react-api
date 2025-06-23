@@ -6,6 +6,7 @@ import './styles/App.css';
 import { encryptData, decryptData } from './cryptoUtils';
 
 function CreateUser() {
+    const API_BASE = process.env.REACT_APP_API_BASE_URL;
     const [dni, setDni] = useState('')
     const [dniError, setDniError] = useState('')
     const [dniValid, setDniValid] = useState('')
@@ -27,7 +28,7 @@ function CreateUser() {
 
     async function fetchKey() {
         try {
-            const response = await fetch(`https://herald-astrology-extensions-responding.trycloudflare.com/api/get-key`, {
+            const response = await fetch(`${API_BASE}/api/get-key`, {
                 credentials: 'include',
 
             });
@@ -97,7 +98,7 @@ function CreateUser() {
                 }
 
                 const res = await fetch(
-                    `https://herald-astrology-extensions-responding.trycloudflare.com/api/buscarPersona`,
+                    `${API_BASE}/api/buscarPersona`,
                     {
                         method: 'POST',
                         headers: { 'Content-Type': 'application/json' },

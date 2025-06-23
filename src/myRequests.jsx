@@ -6,6 +6,7 @@ import { useSession } from './contexts/SessionContext';
 import { encryptData, decryptData } from './cryptoUtils';
 
 function MyRequests() {
+    const API_BASE = process.env.REACT_APP_API_BASE_URL;
     const { sessionKey } = useSession();
     const { usuario } = useSession();
     const [requests, setRequests] = useState([]);
@@ -25,7 +26,7 @@ function MyRequests() {
                     return;
                 }
 
-                const response = await fetch(`https://herald-astrology-extensions-responding.trycloudflare.com/api/medicationsRequests`, {
+                const response = await fetch(`${API_BASE}/api/medicationsRequests`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     credentials: 'include',
