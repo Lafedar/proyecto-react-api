@@ -120,6 +120,7 @@ input[type=number]::-webkit-outer-spin-button {
   0% {
     transform: rotate(0deg);
   }
+
   100% {
     transform: rotate(360deg);
   }
@@ -150,10 +151,11 @@ input[type=number]::-webkit-outer-spin-button {
 
 /*Color de filas de la tabla*/
 tr.responsive-row {
-  background-color: #f3f4f6; 
+  background-color: #f3f4f6;
 }
+
 tr.responsive-row td {
-  color: #1e3a8a; 
+  color: #1e3a8a;
 }
 
 /*Color de filas de la tabla en celular con modo oscuro*/
@@ -161,7 +163,33 @@ tr.responsive-row td {
   tr.responsive-row {
     background-color: #313030 !important;
   }
+
   tr.responsive-row td {
     color: #fff !important;
+  }
+}
+
+
+/*Create User*/
+.scroll-wrapper {
+  padding: 4rem;
+}
+
+@media (max-height: 800px) {
+  .scroll-wrapper {
+    height: 100vh;
+    overflow-y: auto;
+  }
+
+  /* Oculto la barra de scroll en todos los navegadores */
+  .scroll-wrapper::-webkit-scrollbar {
+    display: none;
+  }
+
+  .scroll-wrapper {
+    -ms-overflow-style: none;
+    /* IE y Edge */
+    scrollbar-width: none;
+    /* Firefox */
   }
 }

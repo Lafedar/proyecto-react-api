@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Toast from './components/Toast';
 import Layout from './components/Layout';
-
 import { encryptData, decryptData } from './cryptoUtils';
 
 function CreateUser() {
@@ -258,27 +257,7 @@ function CreateUser() {
                 </Layout>
             </div>
 
-            <style>{`
-      .scroll-wrapper {
-        padding: 4rem;
-      }
-
-      @media (max-height: 800px) {
-        .scroll-wrapper {
-          height: 100vh;
-          overflow-y: auto;
-        }
-          /* Ocultamos la barra de scroll en todos los navegadores */
-  .scroll-wrapper::-webkit-scrollbar {
-    display: none;
-  }
-
-  .scroll-wrapper {
-    -ms-overflow-style: none; /* IE y Edge */
-    scrollbar-width: none; /* Firefox */
-  }
-      }
-    `}</style>
+           
         </>
     );
 
