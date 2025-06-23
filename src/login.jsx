@@ -41,7 +41,8 @@ function Login() {
     let aesKey = null;
     async function fetchKey() {
         try {
-            alert("API BASE:", process.env.REACT_APP_API_BASE_URL);
+            alert("API BASE: " + process.env.REACT_APP_API_BASE_URL);
+
             const response = await fetch(`${API_BASE}/api/get-key`, {
                 credentials: 'include',
 
@@ -105,7 +106,8 @@ function Login() {
             const ciphertext = arrayBufferToBase64(ciphertextBuffer);
             const ivBase64 = arrayBufferToBase64(iv);
 
-            alert("API BASE:", process.env.REACT_APP_API_BASE_URL);
+            alert("API BASE: " + process.env.REACT_APP_API_BASE_URL);
+
             const response = await fetch(`${API_BASE}/api/loginApi`, {
                 method: 'POST',
                 headers: {
