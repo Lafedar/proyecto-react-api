@@ -368,7 +368,7 @@ function InputPassword2({ value, onChange, disabled }) {
 function MyButton({ type = 'button', children, disabled = false }) {
     return (
         <button type={type} disabled={disabled}
-            className={`w-full max-w-[130px] sm:max-w-[140px] px-2 py-2 bg-blue-500 rounded text-white text-sm transition delay-700 
+            className={`w-full max-w-[140alapx] sm:max-w-[140px] px-2 py-2 bg-blue-500 rounded text-white text-sm transition delay-700 
             duration-700 ease-in-out hover:-translate-y-1 hover:scale-101 hover:bg-indigo-500 
             ${disabled ? 'opacity-50 cursor-not-allowed' : ''}`}>
 
@@ -392,7 +392,7 @@ function BackButton({ disabled = false }) {
         <button
             onClick={handleClick}
             disabled={disabled}
-            className={`w-full max-w-[130px] sm:max-w-[140px] px-2 py-2 bg-blue-500 rounded text-white text-sm transition delay-700 
+            className={`w-full max-w-[140px] sm:max-w-[140px] px-2 py-2 bg-blue-500 rounded text-white text-sm transition delay-700 
             duration-700 ease-in-out hover:-translate-y-1 hover:scale-101 hover:bg-indigo-500 
             ${disabled ? 'opacity-50 cursor-not-allowed' : ''}`}
         >
