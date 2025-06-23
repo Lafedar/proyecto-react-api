@@ -249,7 +249,7 @@ function CreateUser() {
                                 <InputPassword2 value={password2} onChange={e => setPassword2(e.target.value)} disabled={loading} />
                             </div>
 
-                            <div className="flex justify-center gap-2 my-5 mt-7 mb-1">
+                            <div className="flex justify-center gap-2 my-5 mt-7 mb-5">
                                 <BackButton disabled={loading} />
                                 <MyButton type="submit" disabled={loading}>Crear</MyButton>
                             </div>

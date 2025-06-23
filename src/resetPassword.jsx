@@ -209,10 +209,10 @@ function ResetPassword() {
 
                         <div className="form-group flex flex-col items-center mt-6">
 
-                            <label htmlFor="password" className="font-bold">Contraseña</label>
+                            <label htmlFor="password" className="font-bold mb-[-15px]">Contraseña</label>
                             <InputPassword value={password} onChange={e => setPassword(e.target.value)} disabled={loading} />
 
-                            <label htmlFor="password2" className="font-bold">Repita su Contraseña</label>
+                            <label htmlFor="password2" className="font-bold mb-[-15px]">Repita su Contraseña</label>
                             <InputPassword2 value={password2} onChange={e => setPassword2(e.target.value)} disabled={loading} />
 
                         </div>

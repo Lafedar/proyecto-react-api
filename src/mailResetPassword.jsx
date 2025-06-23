@@ -216,7 +216,7 @@ function MailResetPassword() {
 
                         <div className="form-group flex flex-col items-center mt-6">
 
-                            <label htmlFor="dni" id="input_dni" className="font-bold">Dni</label>
+                            <label htmlFor="dni" id="input_dni" className="font-bold mb-[-15px]">Dni</label>
                             <InputDni value={dni} onChange={e => setDni(e.target.value)} disabled={loading} />
                             {dniError && (
                                 <p className="text-red-500 text-sm mt-1">{dniError}</p>
@@ -226,7 +226,7 @@ function MailResetPassword() {
                                     Hola: <strong>{personName}</strong>
                                 </p>
                             )}
-                            <label htmlFor="email" id="input_email" className="font-bold">Email</label>
+                            <label htmlFor="email" id="input_email" className="font-bold mb-[-15px]">Email</label>
                             <InputUser value={email} onChange={e => setEmail(e.target.value)} disabled={loading} />
 
                         </div>
