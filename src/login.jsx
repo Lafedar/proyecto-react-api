@@ -28,7 +28,7 @@ function Login() {
             setToastMessage('La verificación ha sido exitosa!');
             setShowToast(true);
             timer = setTimeout(() => setShowToast(false), 3000);
-        } else if(message === 'token'){
+        } else if (message === 'token') {
             setToastMessage('Su mail ya fue verificado anteriormente.');
             setShowToast(true);
             timer = setTimeout(() => setShowToast(false), 3000);
@@ -41,6 +41,7 @@ function Login() {
     let aesKey = null;
     async function fetchKey() {
         try {
+            console.log("API BASE:", process.env.REACT_APP_API_BASE_URL);
             const response = await fetch(`${API_BASE}/api/get-key`, {
                 credentials: 'include',
 
@@ -104,6 +105,7 @@ function Login() {
             const ciphertext = arrayBufferToBase64(ciphertextBuffer);
             const ivBase64 = arrayBufferToBase64(iv);
 
+            console.log("API BASE:", process.env.REACT_APP_API_BASE_URL);
             const response = await fetch(`${API_BASE}/api/loginApi`, {
                 method: 'POST',
                 headers: {
@@ -253,7 +255,7 @@ function Login() {
                         <div className="form-group flex flex-col items-center mb-4">
                             <label htmlFor="password" className="font-bold">Contraseña</label>
                             <InputPassword value={password} onChange={e => setPassword(e.target.value)} disabled={loading} />
-                            <a href="" className="mt-[-10px]" style={{ color: 'rgba(15, 79, 141, 0.83)'}}>¿Olvidaste tu contraseña?</a>
+                            <a href="" className="mt-[-10px]" style={{ color: 'rgba(15, 79, 141, 0.83)' }}>¿Olvidaste tu contraseña?</a>
                         </div>
 
                         <div className="flex flex-col items-center">
@@ -319,7 +321,7 @@ function MyButton({ type = 'button', children, disabled = false }) {
     )
 }
 
-function CreateUserLink({ children, to}) {
+function CreateUserLink({ children, to }) {
     const navigate = useNavigate();
 
     const handleClick = (e) => {
@@ -330,8 +332,8 @@ function CreateUserLink({ children, to}) {
     };
 
     return (
-        <a href={to} onClick={handleClick} className={'mt-2'} style={{ color: 'rgba(15, 79, 141, 0.83)'}}
->
+        <a href={to} onClick={handleClick} className={'mt-2'} style={{ color: 'rgba(15, 79, 141, 0.83)' }}
+        >
             {children}
         </a>
     );
