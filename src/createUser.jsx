@@ -214,7 +214,7 @@ function CreateUser() {
                 </div>
             )}
             <Layout>
-                <div className="max-sm:h-screen max-sm:overflow-y-auto">
+                <div className="max-sm:h-screen max-sm:overflow-y-auto px-4">
                     {showToast && (
                         <Toast
                             message={toastMessage}
