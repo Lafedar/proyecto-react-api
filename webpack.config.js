@@ -49,6 +49,7 @@ module.exports = {
 
     new Dotenv({
       path: './.env',
-    }),  // cargará tu .env y expondrá process.env.VAR en tu código
+      systemvars: true, // <--- ESTA LÍNEA HACE QUE FUNCIONE EN NETLIFY
+    }),
   ],
 };
