@@ -5,16 +5,12 @@ import Layout from './components/Layout';
 import './styles/App.css';
 import { encryptData, decryptData } from './cryptoUtils';
 
-function CreateUser() {
+function ResetPassword() {
     const API_BASE = process.env.REACT_APP_API_BASE_URL;
     const [dni, setDni] = useState('')
-    const [dniError, setDniError] = useState('')
-    const [dniValid, setDniValid] = useState('')
     const [email, setEmail] = useState('')
     const [password, setPassword] = useState('')
-    const [email2, setEmail2] = useState('')
     const [password2, setPassword2] = useState('')
-    const [personName, setPersonName] = useState('')
     const [error, setError] = useState(null)
     const navigate = useNavigate();
     const [toastMessage, setToastMessage] = useState('');
@@ -72,69 +68,9 @@ function CreateUser() {
     }, []);
 
 
-    useEffect(() => {
-        if (!aesKey) return;
-
-        if (!dni) {
-
-            setDniError(null);
-            setDniValid(false);
-            setPersonName('');
-            return;
-        }
-        if (dni.length !== 8) return;
-
-        setDniError(null);
-        setDniValid(false);
-        setPersonName('');
-
-        const fetchPerson = async () => {
-            try {
-                const encrypted = await encryptData({ dni }, aesKey);
-
-                if (!encrypted) {
-                    console.error("Falló la encriptación en medications");
-                    return;
-                }
-
-                const res = await fetch(
-                    `${API_BASE}/api/buscarPersona`,
-                    {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        credentials: 'include',
-                        body: JSON.stringify({
-                            ciphertext: encrypted.ciphertext,
-                            iv: encrypted.iv,
-                        }),
-                    }
-                );
-
-                const data = await res.json();
-
-                if (res.ok) {
-                    const decrypted = await decryptData(data, aesKey);
-                    const persona = JSON.parse(decrypted);
-                    setPersonName(`${persona.nombre_p} ${persona.apellido}`);
-                    setDniValid(true);
-                } else if (res.status === 404) {
-                    setDniError('Persona no encontrada');
-                } else {
-                    setDniError('Error validando DNI');
-                }
-            } catch (e) {
-                console.error(e);
-                alert(e.message);
-                setDniError('No se pudo contactar al servidor');
-            }
-        };
-
-        fetchPerson();
-    }, [dni, aesKey]);
 
 
-
-    async function crearUsuario(event) {
+    async function resetPassword(event) {
         event.preventDefault();
         setError(null);
         setLoading(true);
@@ -143,26 +79,23 @@ function CreateUser() {
         if (!aesKey) {
             throw new Error('No se pudo obtener la clave AES, no se puede encriptar');
         }
-
-        if (email !== email2 || password !== password2) {
-            setToastMessage('Los emails o las contraseñas no coinciden.');
+        if (password !== password2) {
+            setToastMessage('Las contraseñas no coinciden.');
             setShowToast(true);
             setLoading(false);
             setLoadingToast(false);
             return;
         }
 
-
-
         try {
-            const payload = { dni, email, password };
+            const payload = { dni, password };
 
             const encrypted = await encryptData(payload, aesKey);
             if (!encrypted) {
                 console.error('Error al encriptar los datos en medications.');
                 return;
             }
-            const response = await fetch(`${API_BASE}/api/createUser`, {
+            const response = await fetch(`${API_BASE}/api/resetPassword`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
@@ -218,43 +151,24 @@ function CreateUser() {
                         />
                     )}
 
-                    <form className="login-form" onSubmit={crearUsuario}>
+                    <form className="login-form" onSubmit={resetPassword}>
 
-                        <h1 className="text-x1 font-bold text-white-600">Registro de Usuario</h1>
+                        <h1 className="text-x1 font-bold text-white-600">Restablecer contraseña</h1>
                         {error && <div className="error">{error}</div>}
 
                         <div className="form-group flex flex-col items-center mt-6">
 
-                            <label htmlFor="dni" id="input_dni" className="font-bold">Dni</label>
-                            <InputDni value={dni} onChange={e => setDni(e.target.value)} disabled={loading} />
-                            {dniError && (
-                                <p className="text-red-500 text-sm mt-1">{dniError}</p>
-                            )}
-                            {dniValid && personName && (
-                                <p className="text-green-600 text-sm mt-1">
-                                    Hola: <strong>{personName}</strong>
-                                </p>
-                            )}
-                            <label htmlFor="email" id="input_email" className="font-bold">Email</label>
-                            <InputUser value={email} onChange={e => setEmail(e.target.value)} disabled={loading} />
-
-                            <label htmlFor="email2" id="input_email2" className="font-bold">Reingrese su email</label>
-                            <InputUser2 value={email2} onChange={e => setEmail2(e.target.value)} disabled={loading} />
-                        </div>
-
-                        <div className="form-group flex flex-col items-center mb-4">
                             <label htmlFor="password" className="font-bold">Contraseña</label>
                             <InputPassword value={password} onChange={e => setPassword(e.target.value)} disabled={loading} />
 
-
-                            <label htmlFor="password2" className="font-bold">Reingrese su contraseña</label>
+                            <label htmlFor="password2" className="font-bold">Repita su Contraseña</label>
                             <InputPassword2 value={password2} onChange={e => setPassword2(e.target.value)} disabled={loading} />
 
                         </div>
 
                         <div className="flex justify-center gap-2 my-5 mt-10 mb-1">
                             <BackButton disabled={loading} />
-                            <MyButton type="submit" disabled={loading}>Crear</MyButton>
+                            <MyButton type="submit" disabled={loading}>Restablecer contraseña</MyButton>
 
                         </div>
 
@@ -269,52 +183,6 @@ function CreateUser() {
         </>
     )
 
-}
-function InputDni({ value, onChange, disabled }) {
-    return (
-        <input
-            type="number"
-            id="dni"
-            name="dni"
-            value={value}
-            onChange={onChange}
-            disabled={disabled}
-            required
-            className="w-70 px-3 py-2 rounded-md border border-black focus:outline-none focus:ring-2 focus:ring-blue-500"
-
-        />
-    )
-}
-
-function InputUser({ value, onChange, disabled }) {
-    return (
-        <input
-            type="text"
-            id="email"
-            name="email"
-            value={value}
-            onChange={onChange}
-            disabled={disabled}
-            required
-            className="w-70 px-3 py-2 rounded-md border border-black focus:outline-none focus:ring-2 focus:ring-blue-500"
-            autoComplete="username"
-        />
-    )
-}
-function InputUser2({ value, onChange, disabled }) {
-    return (
-        <input
-            type="text"
-            id="email2"
-            name="email2"
-            value={value}
-            onChange={onChange}
-            disabled={disabled}
-            required
-            className="w-70 px-3 py-2 rounded-md border border-black focus:outline-none focus:ring-2 focus:ring-blue-500"
-            autoComplete="username"
-        />
-    )
 }
 
 function InputPassword({ value, onChange, disabled }) {
@@ -348,7 +216,6 @@ function InputPassword2({ value, onChange, disabled }) {
         />
     )
 }
-
 
 function MyButton({ type = 'button', children, disabled = false }) {
     return (
@@ -386,5 +253,5 @@ function BackButton({ disabled = false }) {
     );
 }
 
-export default CreateUser;
+export default ResetPassword;
 

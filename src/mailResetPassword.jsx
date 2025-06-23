@@ -5,7 +5,7 @@ import Layout from './components/Layout';
 import './styles/App.css';
 import { encryptData, decryptData } from './cryptoUtils';
 
-function CreateUser() {
+function MailResetPassword() {
     const API_BASE = process.env.REACT_APP_API_BASE_URL;
     const [dni, setDni] = useState('')
     const [dniError, setDniError] = useState('')
@@ -134,7 +134,7 @@ function CreateUser() {
 
 
 
-    async function crearUsuario(event) {
+    async function mailResetPassword(event) {
         event.preventDefault();
         setError(null);
         setLoading(true);
@@ -144,25 +144,16 @@ function CreateUser() {
             throw new Error('No se pudo obtener la clave AES, no se puede encriptar');
         }
 
-        if (email !== email2 || password !== password2) {
-            setToastMessage('Los emails o las contraseñas no coinciden.');
-            setShowToast(true);
-            setLoading(false);
-            setLoadingToast(false);
-            return;
-        }
-
-
-
+    
         try {
-            const payload = { dni, email, password };
+            const payload = { dni, email };
 
             const encrypted = await encryptData(payload, aesKey);
             if (!encrypted) {
                 console.error('Error al encriptar los datos en medications.');
                 return;
             }
-            const response = await fetch(`${API_BASE}/api/createUser`, {
+            const response = await fetch(`${API_BASE}/api/resetPassword`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
@@ -218,9 +209,9 @@ function CreateUser() {
                         />
                     )}
 
-                    <form className="login-form" onSubmit={crearUsuario}>
+                    <form className="login-form" onSubmit={mailResetPassword}>
 
-                        <h1 className="text-x1 font-bold text-white-600">Registro de Usuario</h1>
+                        <h1 className="text-x1 font-bold text-white-600">Restablecer contraseña</h1>
                         {error && <div className="error">{error}</div>}
 
                         <div className="form-group flex flex-col items-center mt-6">
@@ -238,23 +229,11 @@ function CreateUser() {
                             <label htmlFor="email" id="input_email" className="font-bold">Email</label>
                             <InputUser value={email} onChange={e => setEmail(e.target.value)} disabled={loading} />
 
-                            <label htmlFor="email2" id="input_email2" className="font-bold">Reingrese su email</label>
-                            <InputUser2 value={email2} onChange={e => setEmail2(e.target.value)} disabled={loading} />
-                        </div>
-
-                        <div className="form-group flex flex-col items-center mb-4">
-                            <label htmlFor="password" className="font-bold">Contraseña</label>
-                            <InputPassword value={password} onChange={e => setPassword(e.target.value)} disabled={loading} />
-
-
-                            <label htmlFor="password2" className="font-bold">Reingrese su contraseña</label>
-                            <InputPassword2 value={password2} onChange={e => setPassword2(e.target.value)} disabled={loading} />
-
                         </div>
 
                         <div className="flex justify-center gap-2 my-5 mt-10 mb-1">
                             <BackButton disabled={loading} />
-                            <MyButton type="submit" disabled={loading}>Crear</MyButton>
+                            <MyButton type="submit" disabled={loading}>Enviar mail</MyButton>
 
                         </div>
 
@@ -301,53 +280,6 @@ function InputUser({ value, onChange, disabled }) {
         />
     )
 }
-function InputUser2({ value, onChange, disabled }) {
-    return (
-        <input
-            type="text"
-            id="email2"
-            name="email2"
-            value={value}
-            onChange={onChange}
-            disabled={disabled}
-            required
-            className="w-70 px-3 py-2 rounded-md border border-black focus:outline-none focus:ring-2 focus:ring-blue-500"
-            autoComplete="username"
-        />
-    )
-}
-
-function InputPassword({ value, onChange, disabled }) {
-    return (
-        <input
-            type="password"
-            id="password"
-            name="password"
-            value={value}
-            onChange={onChange}
-            disabled={disabled}
-            required
-            className="w-70 px-3 py-2 rounded-md border border-black focus:outline-none focus:ring-2 focus:ring-blue-500"
-            autoComplete="current-password"
-        />
-    )
-}
-
-function InputPassword2({ value, onChange, disabled }) {
-    return (
-        <input
-            type="password"
-            id="password2"
-            name="password2"
-            value={value}
-            onChange={onChange}
-            disabled={disabled}
-            required
-            className="w-70 px-3 py-2 rounded-md border border-black focus:outline-none focus:ring-2 focus:ring-blue-500"
-            autoComplete="current-password"
-        />
-    )
-}
 
 
 function MyButton({ type = 'button', children, disabled = false }) {
@@ -386,5 +318,5 @@ function BackButton({ disabled = false }) {
     );
 }
 
-export default CreateUser;
+export default MailResetPassword;
 

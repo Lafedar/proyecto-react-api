@@ -32,7 +32,12 @@ function Login() {
             setToastMessage('Su mail ya fue verificado anteriormente.');
             setShowToast(true);
             timer = setTimeout(() => setShowToast(false), 3000);
+        } else if (message === 'expired') {
+            setToastMessage('El token ha expirado.');
+            setShowToast(true);
+            timer = setTimeout(() => setShowToast(false), 3000);
         }
+        
         return () => clearTimeout(timer);
     }, [searchParams]);
 
@@ -257,7 +262,7 @@ function Login() {
                         <div className="form-group flex flex-col items-center mb-4">
                             <label htmlFor="password" className="font-bold">Contraseña</label>
                             <InputPassword value={password} onChange={e => setPassword(e.target.value)} disabled={loading} />
-                            <a href="" className="mt-[-10px]" style={{ color: 'rgba(15, 79, 141, 0.83)' }}>¿Olvidaste tu contraseña?</a>
+                            <a href="/resetPassword" className="mt-[-10px]" style={{ color: 'rgba(15, 79, 141, 0.83)' }}>¿Olvidaste tu contraseña?</a>
                         </div>
 
                         <div className="flex flex-col items-center">

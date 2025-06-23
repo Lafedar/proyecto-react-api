@@ -7,6 +7,8 @@ import Medications from "./medications";
 import MyRequests from "./myRequests";
 import CreateUser from './createUser';
 import VerifyEmail from './verifyEmail';
+import MailResetPassword from './mailResetPassword';
+import ResetPassword from './resetPassword';
 import ProtectedRoute from './ProtectedRoute';
 import { SessionProvider } from './contexts/SessionContext';
 
@@ -25,6 +27,8 @@ export default function App() {
 
                     <Route path="/createUser" element={<CreateUser />} />
                     <Route path="/verifyEmail" element={<VerifyEmail />} />
+                    <Route path="/mailResetPassword" element={<MailResetPassword />} />
+                    <Route path="/resetPassword" element={<ResetPassword />} />
 
                 </Routes>
             </BrowserRouter>
