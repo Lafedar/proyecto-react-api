@@ -227,9 +227,9 @@ function CreateUser() {
                         <h1 className="text-x1 font-bold text-white-600 text-center sm:text-left">Registro de Usuario</h1>
                         {error && <div className="error">{error}</div>}
 
-                        <div className="form-group flex flex-col items-center mt-6">
+                        <div className="form-group flex flex-col items-center mt-4">
 
-                            <label htmlFor="dni" id="input_dni" className="font-bold">Dni</label>
+                            <label htmlFor="dni" id="input_dni" className="font-bold mb-[-10px]">Dni</label>
                             <InputDni value={dni} onChange={e => setDni(e.target.value)} disabled={loading} />
                             {dniError && (
                                 <p className="text-red-500 text-sm mt-1">{dniError}</p>
@@ -239,24 +239,24 @@ function CreateUser() {
                                     Hola: <strong>{personName}</strong>
                                 </p>
                             )}
-                            <label htmlFor="email" id="input_email" className="font-bold">Email</label>
+                            <label htmlFor="email" id="input_email" className="font-bold mb-[-10px]">Email</label>
                             <InputUser value={email} onChange={e => setEmail(e.target.value)} disabled={loading} />
 
-                            <label htmlFor="email2" id="input_email2" className="font-bold">Reingrese su email</label>
+                            <label htmlFor="email2" id="input_email2" className="font-bold mb-[-10px]">Reingrese su email</label>
                             <InputUser2 value={email2} onChange={e => setEmail2(e.target.value)} disabled={loading} />
                         </div>
 
                         <div className="form-group flex flex-col items-center mb-4">
-                            <label htmlFor="password" className="font-bold">Contraseña</label>
+                            <label htmlFor="password" className="font-bold mb-[-10px]">Contraseña</label>
                             <InputPassword value={password} onChange={e => setPassword(e.target.value)} disabled={loading} />
 
 
-                            <label htmlFor="password2" className="font-bold">Reingrese su contraseña</label>
+                            <label htmlFor="password2" className="font-bold mb-[-10px]">Reingrese su contraseña</label>
                             <InputPassword2 value={password2} onChange={e => setPassword2(e.target.value)} disabled={loading} />
 
                         </div>
 
-                        <div className="flex justify-center gap-2 my-5 mt-10 mb-1">
+                        <div className="flex justify-center gap-2 my-5 mt-7 mb-1">
                             <BackButton disabled={loading} />
                             <MyButton type="submit" disabled={loading}>Crear</MyButton>
 
@@ -284,7 +284,7 @@ function InputDni({ value, onChange, disabled }) {
             onChange={onChange}
             disabled={disabled}
             required
-            className="w-70 px-3 py-2 rounded-md border border-black focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="w-70 px-3 py-2 rounded-md border border-black focus:outline-none focus:ring-2 focus:ring-blue-500 mt-0"
 
         />
     )
