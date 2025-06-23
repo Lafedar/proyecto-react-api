@@ -186,6 +186,9 @@ function CreateUser() {
             } else {
                 setToastMessage(data.error || data.message);
                 setShowToast(true);
+                setTimeout(() => {
+                    navigate('/');
+                }, 3000);
             }
 
         } catch (err) {
