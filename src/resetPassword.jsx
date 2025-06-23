@@ -320,13 +320,12 @@ function BackButton({ disabled = false, dni, aesKey, encryptData, API_BASE }) {
                 throw new Error('Error en la llamada a la API');
             }
 
-            const data = await response.json();
-            console.log('Respuesta API:', data);
-            console.log('Antes de volver');
             navigate('/');
 
         } catch (error) {
             console.error('Error al llamar la API:', error);
+            setToastMessage('Error de red o del servidor.');
+            setShowToast(true);
         }
     };
 
