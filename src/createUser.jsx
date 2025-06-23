@@ -226,7 +226,7 @@ function CreateUser() {
 
                             {error && <div className="error">{error}</div>}
 
-                            <div className="form-group flex flex-col items-center mt-4">
+                            <div className="form-group flex flex-col items-center mt-3">
                                 <label htmlFor="dni" className="font-bold mb-[-15px]">Dni</label>
                                 <InputDni value={dni} onChange={e => setDni(e.target.value)} disabled={loading} />
                                 {dniError && <p className="text-red-500 text-sm mt-1">{dniError}</p>}
@@ -237,11 +237,11 @@ function CreateUser() {
                                 <label htmlFor="email" className="font-bold mb-[-15px]">Email</label>
                                 <InputUser value={email} onChange={e => setEmail(e.target.value)} disabled={loading} />
 
-                                <label htmlFor="email2" className="font-bold mb-[-10px]">Reingrese su email</label>
+                                <label htmlFor="email2" className="font-bold mb-[-15px]">Reingrese su email</label>
                                 <InputUser2 value={email2} onChange={e => setEmail2(e.target.value)} disabled={loading} />
                             </div>
 
-                            <div className="form-group flex flex-col items-center mb-4">
+                            <div className="form-group flex flex-col items-center mb-2">
                                 <label htmlFor="password" className="font-bold mb-[-15px]">Contraseña</label>
                                 <InputPassword value={password} onChange={e => setPassword(e.target.value)} disabled={loading} />
 
