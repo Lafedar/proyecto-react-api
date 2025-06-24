@@ -213,7 +213,7 @@ function CreateUser() {
                 )}
 
                 <Layout>
-                    <div>
+                    <div className="mb-5">
                         {showToast && (
                             <Toast message={toastMessage} onClose={() => setShowToast(false)} />
                         )}
