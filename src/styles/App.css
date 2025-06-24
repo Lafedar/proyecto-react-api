@@ -102,7 +102,9 @@ input[type=number]::-webkit-outer-spin-button {
   #titulo-solicitudes,
   #label-dni,
   #label-medication,
-  #label-amount {
+  #label-amount, 
+  #forgot-password-link,
+  #create-user-link{
     color: white;
   }
 
