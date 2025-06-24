@@ -300,7 +300,6 @@ function BackButton({ disabled = false, dni, aesKey, encryptData, API_BASE }) {
     const navigate = useNavigate();
 
     const handleClick = async () => {
-        console.log('Click en BackButton');
         if (document.activeElement instanceof HTMLElement) {
             document.activeElement.blur();
         }

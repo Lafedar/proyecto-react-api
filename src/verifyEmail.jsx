@@ -122,7 +122,7 @@ function VerifyEmail() {
         } catch (err) {
             console.error(err.message);
             aesKey = null;
-            setAesKey(null);
+            updateSessionKey(aesKey);
         }
 
     }

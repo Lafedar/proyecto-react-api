@@ -89,17 +89,16 @@ function MyRequests() {
                                 <div
                                     key={index}
                                     className="w-full max-w-[2000px] bg-white shadow-md rounded-lg px-5 py-3 border border-gray-200"
-                                // aumenté max-w a 1200px, padding a px-6 py-4d
                                 >
-                                    <div className="flex items-center gap-3 mb-3">
+                                    <div className="flex items-center gap-3 mb-3"> 
                                         <div>
-                                            <h2 className="text-lg font-semibold text-gray-800">
+                                            <h2 className="text-lg font-semibold text-gray-800"> 
                                                 Solicitud #{req.request.id}
                                             </h2>
-                                            <h3 className="text-lg font-semibold text-gray-800">
+                                            <h3 className="text-lg font-semibold text-gray-800"> 
                                                 Estado: {req.request.estado}
                                             </h3>
-                                            <p className="text-sm text-gray-500">
+                                            <p className="text-sm text-gray-500"> 
                                                 Solicitado el {new Date(req.request.created_at).toLocaleDateString()}
                                             </p>
                                         </div>
@@ -123,11 +122,9 @@ function MyRequests() {
                                             <ul className="list-disc list-inside">
                                                 {req.items.map((item, i) => (
                                                     <p key={i}>
-                                                        {item.aprobado === 1 ? (
-                                                            `${item.medicamento} (x${item.cantidad_aprobada}) ✅`
-                                                        ) : (
-                                                            <div className="text-center">🕝</div>
-                                                        )}
+                                                        {item.aprobado === 1
+                                                            ? `${item.medicamento} (x${item.cantidad_aprobada}) ✅`
+                                                            : '🕝'}
                                                     </p>
                                                 ))}
                                             </ul>

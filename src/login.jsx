@@ -196,7 +196,6 @@ function Login() {
             setLoadingToast(false);
 
             if (user && user.email) {
-                console.log(user);
                 setToastMessage(`Bienvenido ${user.nombre}!`);
                 setShowToast(true);
                 setTimeout(() => {

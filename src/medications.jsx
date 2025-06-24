@@ -93,7 +93,6 @@ function Medications() {
             }
         } catch (error) {
             console.error('Error al enviar solicitud:', error);
-            console.error('Error al conectar con el servidor');
         }
         finally {
             setTimeout(() => {
