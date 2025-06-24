@@ -81,7 +81,7 @@ function MyRequests() {
             )}
 
             {!loading && (
-                <div className="w-full mx-auto mt-30 mb-[60px] md:mb-0">
+                <div className="w-full mx-auto mt-30 md:mb-0">
                     <div className="max-h-[calc(100vh-200px)] overflow-y-auto px-4 hide-scrollbar">
                         <div className="flex flex-col items-center gap-3" style={{ minWidth: '350px' }}>
 
@@ -91,29 +91,29 @@ function MyRequests() {
                                     className="w-full max-w-[2000px] bg-white shadow-md rounded-lg px-5 py-3 border border-gray-200"
                                 // aumenté max-w a 1200px, padding a px-6 py-4d
                                 >
-                                    <div className="flex items-center gap-3 mb-3"> {/* gap-2 a gap-3, mb-2 a mb-3 */}
+                                    <div className="flex items-center gap-3 mb-3">
                                         <div>
-                                            <h2 className="text-lg font-semibold text-gray-800"> {/* text-base a text-lg */}
+                                            <h2 className="text-lg font-semibold text-gray-800">
                                                 Solicitud #{req.request.id}
                                             </h2>
-                                            <h3 className="text-lg font-semibold text-gray-800"> {/* text-base a text-lg */}
+                                            <h3 className="text-lg font-semibold text-gray-800">
                                                 Estado: {req.request.estado}
                                             </h3>
-                                            <p className="text-sm text-gray-500"> {/* text-xs a text-sm */}
+                                            <p className="text-sm text-gray-500">
                                                 Solicitado el {new Date(req.request.created_at).toLocaleDateString()}
                                             </p>
                                         </div>
                                     </div>
 
                                     <div className="flex gap-6 text-base text-gray-700">
- {/* text-sm a text-base, gap-4 a gap-6 */}
+
                                         <div className="w-full sm:w-1/2">
                                             <p className="font-semibold">Solicitados:</p>
                                             <ul className="list-disc list-inside">
                                                 {req.items.map((item, i) => (
-                                                    <li key={i}>
+                                                    <p key={i}>
                                                         {item.medicamento} (x{item.cantidad_solicitada})
-                                                    </li>
+                                                    </p>
                                                 ))}
                                             </ul>
                                         </div>
@@ -122,11 +122,13 @@ function MyRequests() {
                                             <p className="font-semibold">Aprobados:</p>
                                             <ul className="list-disc list-inside">
                                                 {req.items.map((item, i) => (
-                                                    <li key={i}>
-                                                        {item.aprobado === 1
-                                                            ? `${item.medicamento} (x${item.cantidad_aprobada})`
-                                                            : '-'}
-                                                    </li>
+                                                    <p key={i}>
+                                                        {item.aprobado === 1 ? (
+                                                            `${item.medicamento} (x${item.cantidad_aprobada}) ✅`
+                                                        ) : (
+                                                            <div className="text-center">🕝</div>
+                                                        )}
+                                                    </p>
                                                 ))}
                                             </ul>
                                         </div>
@@ -135,7 +137,7 @@ function MyRequests() {
                             ))}
                         </div>
                     </div>
-                    <div className="flex justify-center mt-4 mb-20">
+                    <div className="flex justify-center mb-25 mt-[-5px]">
                         <BackButton />
                     </div>
                 </div>
