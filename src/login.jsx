@@ -37,7 +37,7 @@ function Login() {
             setShowToast(true);
             timer = setTimeout(() => setShowToast(false), 3000);
         }
-        
+
         return () => clearTimeout(timer);
     }, [searchParams]);
 
@@ -46,7 +46,7 @@ function Login() {
     let aesKey = null;
     async function fetchKey() {
         try {
-        
+
             const response = await fetch(`${API_BASE}/api/get-key`, {
                 credentials: 'include',
 
@@ -109,7 +109,7 @@ function Login() {
 
             const ciphertext = arrayBufferToBase64(ciphertextBuffer);
             const ivBase64 = arrayBufferToBase64(iv);
-            
+
             const response = await fetch(`${API_BASE}/api/loginApi`, {
                 method: 'POST',
                 headers: {
@@ -259,12 +259,21 @@ function Login() {
                         <div className="form-group flex flex-col items-center mb-4">
                             <label htmlFor="password" className="font-bold">Contraseña</label>
                             <InputPassword value={password} onChange={e => setPassword(e.target.value)} disabled={loading} />
-                            <a href="/mailResetPassword" className="mt-[-10px]" style={{ color: 'rgba(15, 79, 141, 0.83)' }}>¿Olvidaste tu contraseña?</a>
+                            <a
+                                href={loading ? undefined : "/mailResetPassword"}
+                                onClick={e => loading && e.preventDefault()}
+                                className={`mt-[-10px] ${loading ? 'pointer-events-none opacity-50 cursor-not-allowed' : ''}`}
+                                style={{ color: 'rgba(15, 79, 141, 0.83)' }}
+                                aria-disabled={loading}
+                            >
+                                ¿Olvidaste tu contraseña?
+                            </a>
+
                         </div>
 
                         <div className="flex flex-col items-center">
                             <MyButton type="submit" disabled={loading}>Ingresar</MyButton>
-                            <CreateUserLink to="/createUser">¿No tienes cuenta? <b>Registrate</b></CreateUserLink>
+                            <CreateUserLink to="/createUser" disabled={loading}>¿No tienes cuenta? <b>Registrate</b></CreateUserLink>
                         </div>
 
 
@@ -325,23 +334,29 @@ function MyButton({ type = 'button', children, disabled = false }) {
     )
 }
 
-function CreateUserLink({ children, to }) {
+function CreateUserLink({ children, to, disabled = false }) {
     const navigate = useNavigate();
 
     const handleClick = (e) => {
-        e.preventDefault(); // evita el comportamiento por defecto del <a>
-        if (to) {
+        e.preventDefault();
+        if (!disabled && to) {
             navigate(to);
         }
     };
 
     return (
-        <a href={to} onClick={handleClick} className={'mt-2'} style={{ color: 'rgba(15, 79, 141, 0.83)' }}
+        <a
+            href={disabled ? undefined : to}
+            onClick={handleClick}
+            className={`mt-2 ${disabled ? 'pointer-events-none opacity-50 cursor-not-allowed' : ''}`}
+            style={{ color: 'rgba(15, 79, 141, 0.83)' }}
+            aria-disabled={disabled} // accesibilidad
         >
             {children}
         </a>
     );
 }
+
 
 export default Login;
 
