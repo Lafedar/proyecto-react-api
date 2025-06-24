@@ -17,80 +17,19 @@ function Medications() {
     const [amount2, setAmount2] = useState('');
     const [medication3, setMedication3] = useState('');
     const [amount3, setAmount3] = useState('');
-
     const [error, setError] = useState(null);
     const navigate = useNavigate();
-
-    const [dniValid, setDniValid] = useState(false);
-    const [dniError, setDniError] = useState(false);
-    const [personName, setPersonName] = useState('');
-
     const [showMed2, setShowMed2] = useState(false);
     const [showMed3, setShowMed3] = useState(false);
     const { sessionKey } = useSession();
     const { usuario } = useSession();
-
     const [toastMessage, setToastMessage] = useState('');
     const [showToast, setShowToast] = useState(false);
     const [loading, setLoading] = useState(false);
-
     const [loadingToast, setLoadingToast] = useState(false);
 
 
 
-
-    /*useEffect(() => {
-        if (dni.length !== 8 || !sessionKey) return;
-
-        // Reinicio de estado
-        setDniError(null);
-        setDniValid(false);
-        setPersonName('');
-
-        const fetchPerson = async () => {
-            try {
-                const encrypted = await encryptData({ dni }, sessionKey);
-
-                if (!encrypted) {
-                    console.error("Falló la encriptación en medications");
-                    return;
-                }
-
-                const res = await fetch(
-                    `https://fees-lamps-exist-seat.trycloudflare.com/api/buscarPersona`,
-                    {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        credentials: 'include',
-                        body: JSON.stringify({
-                            ciphertext: encrypted.ciphertext,
-                            iv: encrypted.iv,
-                        }),
-                    }
-                );
-
-
-                const data = await res.json();
-
-                if (res.ok) {
-
-                    const decrypted = await decryptData(data, sessionKey);
-                    const persona = JSON.parse(decrypted);
-                    setPersonName(`${persona.nombre_p} ${persona.apellido}`);
-                    setDniValid(true);
-                } else if (res.status === 404) {
-                    setDniError('Persona no encontrada');
-                } else {
-                    setDniError('Error validando DNI');
-                }
-            } catch (e) {
-                console.error(e);
-                setDniError('No se pudo contactar al servidor');
-            }
-        };
-
-        fetchPerson();
-    }, [dni, sessionKey]);*/
     if (!usuario) {
         return <div className="text-center mt-10">Cargando sesión...</div>;
     }
