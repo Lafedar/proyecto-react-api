@@ -252,7 +252,7 @@ function Login() {
 
                         <div className="form-group flex flex-col items-center mt-6">
 
-                            <label htmlFor="email" id="input_email" className="font-bold">Usuario</label>
+                            <label htmlFor="email" id="input_email" className="font-bold">Email</label>
                             <InputUser value={email} onChange={e => setEmail(e.target.value)} disabled={loading} />
                         </div>
 

@@ -42,11 +42,14 @@ export default function Toast({ message, onClose }) {
             color: "#fff",
             background: "none",
             border: "none",
-            fontSize: "16px",
+            fontSize: "12px",
             cursor: "pointer",
           }}
         >
-          ✖
+
+          <span style={{ fontSize: "15px", color: "#8A2BE2" }}>
+            X
+          </span>
         </button>
       </div>
     </>

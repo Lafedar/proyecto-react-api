@@ -19,7 +19,7 @@ function ResetPassword() {
     const [aesKey, setAesKey] = useState(null);
     const [loadingToast, setLoadingToast] = useState(false);
     const [searchParams] = useSearchParams();
-   
+
 
     useEffect(() => {
         const ciphertextB64 = searchParams.get('ciphertext');
@@ -135,6 +135,9 @@ function ResetPassword() {
             setShowToast(true);
             setLoading(false);
             setLoadingToast(false);
+            setTimeout(() => {
+                setShowToast(false);
+            }, 2000);
             return;
         }
 
@@ -170,12 +173,18 @@ function ResetPassword() {
             } else {
                 setToastMessage(data.error || data.message);
                 setShowToast(true);
+                setTimeout(() => {
+                    setShowToast(false);
+                }, 2000);
             }
 
         } catch (err) {
             console.error('Error:', err);
             setToastMessage('Error de red o del servidor.');
             setShowToast(true);
+            setTimeout(() => {
+                setShowToast(false);
+            }, 2000);
         } finally {
             setLoading(false);
             setLoadingToast(false);

@@ -22,6 +22,7 @@ function MailResetPassword() {
     const [loading, setLoading] = useState(false);
     const [aesKey, setAesKey] = useState(null);
     const [loadingToast, setLoadingToast] = useState(false);
+    const [personActive, setPersonActive] = useState(false);
 
 
 
@@ -80,6 +81,7 @@ function MailResetPassword() {
             setDniError(null);
             setDniValid(false);
             setPersonName('');
+            setPersonActive(0);
             return;
         }
         if (dni.length !== 8) return;
@@ -87,6 +89,7 @@ function MailResetPassword() {
         setDniError(null);
         setDniValid(false);
         setPersonName('');
+        setPersonActive(0);
 
         const fetchPerson = async () => {
             try {
@@ -115,6 +118,7 @@ function MailResetPassword() {
                 if (res.ok) {
                     const decrypted = await decryptData(data, aesKey);
                     const persona = JSON.parse(decrypted);
+                    setPersonActive(persona.activo);
                     setPersonName(`${persona.nombre_p} ${persona.apellido}`);
                     setDniValid(true);
                 } else if (res.status === 404) {
@@ -144,7 +148,7 @@ function MailResetPassword() {
             throw new Error('No se pudo obtener la clave AES, no se puede encriptar');
         }
 
-    
+
         try {
             const payload = { dni, email };
 
@@ -218,22 +222,27 @@ function MailResetPassword() {
 
                             <label htmlFor="dni" id="input_dni" className="font-bold mb-[-15px]">Dni</label>
                             <InputDni value={dni} onChange={e => setDni(e.target.value)} disabled={loading} />
-                            {dniError && (
-                                <p className="text-red-500 text-sm mt-1">{dniError}</p>
-                            )}
+                            {dniError && <p className="text-red-500 text-sm mt-1">{dniError}</p>}
+
                             {dniValid && personName && (
-                                <p className="text-green-600 text-sm mt-1">
-                                    Hola: <strong>{personName}</strong>
-                                </p>
+                                personActive === 0 ? (
+                                    <p className="text-red-500 text-sm mt-1">
+                                        La persona no está activa en la empresa
+                                    </p>
+                                ) : (
+                                    <p className="text-green-600 text-sm mt-1">
+                                        Hola: <strong>{personName}</strong>
+                                    </p>
+                                )
                             )}
                             <label htmlFor="email" id="input_email" className="font-bold mb-[-15px]">Email</label>
-                            <InputUser value={email} onChange={e => setEmail(e.target.value)} disabled={loading} />
+                            <InputUser value={email} onChange={e => setEmail(e.target.value)} disabled={loading || personActive === 0} />
 
                         </div>
 
                         <div className="flex justify-center gap-2 my-5 mt-10 mb-1">
                             <BackButton disabled={loading} />
-                            <MyButton type="submit" disabled={loading}>Enviar mail</MyButton>
+                            <MyButton type="submit" disabled={loading || personActive !== 1}>Enviar mail</MyButton>
 
                         </div>
 
