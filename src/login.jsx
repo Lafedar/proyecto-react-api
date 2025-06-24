@@ -33,7 +33,7 @@ function Login() {
             setShowToast(true);
             timer = setTimeout(() => setShowToast(false), 3000);
         } else if (message === 'expired') {
-            setToastMessage('El token ha expirado.');
+            setToastMessage('El token ha expirado. Por favor, solicite un nuevo enlace de verificación.');
             setShowToast(true);
             timer = setTimeout(() => setShowToast(false), 3000);
         }
