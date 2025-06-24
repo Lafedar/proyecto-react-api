@@ -73,7 +73,7 @@ function MyRequests() {
                 <div className="fixed inset-0 flex items-center justify-center bg-transparent z-50">
                     <div className="flex items-center gap-3 bg-transparent px-4 py-2 rounded">
                         <div className="custom-spinner"></div>
-                        <span className="font-semibold text-lg loading-text">
+                        <span className="font-semibold text-xl loading-text"> {/* text-lg a text-xl */}
                             Procesando...
                         </span>
                     </div>
@@ -81,45 +81,46 @@ function MyRequests() {
             )}
 
             {!loading && (
-                <div className="w-full md:w-[95%] lg:w-[80%] mx-auto mt-1 mb-[60px] md:mb-0">
-                    <div className="overflow-y-auto max-h-[calc(100vh-275px)] md:max-h-[calc(100vh-220px)] min-h-[50vh]">
-                        <table className="w-full table-fixed rounded-md border-separate border-spacing-y-2">
-                            <thead style={{ backgroundColor: 'rgba(15, 79, 141, 0.83)' }}>
-                                <tr>
-                                    <th className="sticky top-0 z-10 bg-[rgba(15,79,141,0.83)] w-1/3 px-2 py-1 text-[10px] sm:text-xs md:text-sm text-center font-bold text-white">
-                                        Estado
-                                    </th>
-                                    <th className="sticky top-0 z-10 bg-[rgba(15,79,141,0.83)] w-1/3 px-2 py-1 text-[10px] sm:text-xs md:text-sm text-center font-bold text-white">
-                                        Fecha
-                                    </th>
-                                    <th className="sticky top-0 z-10 bg-[rgba(15,79,141,0.83)] w-1/3 px-2 py-1 text-[10px] sm:text-xs md:text-sm text-center font-bold text-white">
-                                        Items Solicitados
-                                    </th>
-                                    <th className="sticky top-0 z-10 bg-[rgba(15,79,141,0.83)] w-1/3 px-2 py-1 text-[10px] sm:text-xs md:text-sm text-center font-bold text-white">
-                                        Items Aprobados
-                                    </th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {requests.map((req, index) => (
-                                    <tr key={index} className="responsive-row rounded-md">
-                                        <td className="px-2 py-1 text-[8px] sm:text-xs md:text-sm text-center break-words">
-                                            {req.request.estado}
-                                        </td>
-                                        <td className="px-2 py-1 text-[8px] sm:text-xs md:text-sm text-center break-words">
-                                            {new Date(req.request.created_at).toLocaleDateString()}
-                                        </td>
-                                        <td className="px-2 py-1 text-[8px] sm:text-xs md:text-sm text-center break-words">
-                                            <ul className="list-disc ml-4">
+                <div className="w-full mx-auto mt-30 mb-[60px] md:mb-0">
+                    <div className="max-h-[calc(100vh-200px)] overflow-y-auto px-4 hide-scrollbar">
+                        <div className="flex flex-col items-center gap-3" style={{ minWidth: '350px' }}>
+
+                            {requests.map((req, index) => (
+                                <div
+                                    key={index}
+                                    className="w-full max-w-[2000px] bg-white shadow-md rounded-lg px-5 py-3 border border-gray-200"
+                                // aumenté max-w a 1200px, padding a px-6 py-4d
+                                >
+                                    <div className="flex items-center gap-3 mb-3"> {/* gap-2 a gap-3, mb-2 a mb-3 */}
+                                        <div>
+                                            <h2 className="text-lg font-semibold text-gray-800"> {/* text-base a text-lg */}
+                                                Solicitud #{req.request.id}
+                                            </h2>
+                                            <h3 className="text-lg font-semibold text-gray-800"> {/* text-base a text-lg */}
+                                                Estado: {req.request.estado}
+                                            </h3>
+                                            <p className="text-sm text-gray-500"> {/* text-xs a text-sm */}
+                                                Solicitado el {new Date(req.request.created_at).toLocaleDateString()}
+                                            </p>
+                                        </div>
+                                    </div>
+
+                                    <div className="flex gap-6 text-base text-gray-700">
+ {/* text-sm a text-base, gap-4 a gap-6 */}
+                                        <div className="w-full sm:w-1/2">
+                                            <p className="font-semibold">Solicitados:</p>
+                                            <ul className="list-disc list-inside">
                                                 {req.items.map((item, i) => (
                                                     <li key={i}>
                                                         {item.medicamento} (x{item.cantidad_solicitada})
                                                     </li>
                                                 ))}
                                             </ul>
-                                        </td>
-                                        <td className="px-2 py-1 text-[8px] sm:text-xs md:text-sm text-center break-words">
-                                            <ul className="list-disc ml-4">
+                                        </div>
+
+                                        <div className="w-full sm:w-1/2">
+                                            <p className="font-semibold">Aprobados:</p>
+                                            <ul className="list-disc list-inside">
                                                 {req.items.map((item, i) => (
                                                     <li key={i}>
                                                         {item.aprobado === 1
@@ -128,19 +129,19 @@ function MyRequests() {
                                                     </li>
                                                 ))}
                                             </ul>
-                                        </td>
-                                    </tr>
-                                ))}
-                            </tbody>
-
-                        </table>
+                                        </div>
+                                    </div>
+                                </div>
+                            ))}
+                        </div>
                     </div>
-                    <BackButton to="/" />
+                    <div className="flex justify-center mt-4 mb-20">
+                        <BackButton />
+                    </div>
                 </div>
             )}
         </Layout>
     );
-
 
 
 

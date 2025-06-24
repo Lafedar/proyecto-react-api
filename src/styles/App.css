@@ -205,3 +205,13 @@ tr.responsive-row td {
     /* Firefox */
   }
 }
+/* Ocultar scrollbar para Chrome, Safari y Opera */
+.hide-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
+/* Ocultar scrollbar para IE, Edge */
+.hide-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none; /* Firefox */
+}
