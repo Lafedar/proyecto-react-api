@@ -265,7 +265,6 @@ function Login() {
                                 className={`mt-[-10px] ${loading ? 'pointer-events-none opacity-50 cursor-not-allowed' : ''}`}
                                 style={{ color: 'rgba(15, 79, 141, 0.83)' }}
                                 aria-disabled={loading}
-                                id="forgot-password-link"
                             >
                                 ¿Olvidaste tu contraseña?
                             </a>
@@ -352,7 +351,6 @@ function CreateUserLink({ children, to, disabled = false }) {
             className={`mt-2 ${disabled ? 'pointer-events-none opacity-50 cursor-not-allowed' : ''}`}
             style={{ color: 'rgba(15, 79, 141, 0.83)' }}
             aria-disabled={disabled} // accesibilidad
-            id="create-user-link"
         >
             {children}
         </a>

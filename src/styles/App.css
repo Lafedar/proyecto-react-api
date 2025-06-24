@@ -87,6 +87,10 @@ input[type=number]::-webkit-outer-spin-button {
     -webkit-text-fill-color: white !important;
   }
 
+  a {
+    color: white !important;
+  }
+
   #dni,
   #medication,
   #amount,
@@ -102,9 +106,7 @@ input[type=number]::-webkit-outer-spin-button {
   #titulo-solicitudes,
   #label-dni,
   #label-medication,
-  #label-amount, 
-  #forgot-password-link,
-  #create-user-link{
+  #label-amount {
     color: white;
   }
 
@@ -149,9 +151,11 @@ input[type=number]::-webkit-outer-spin-button {
     color: white;
   }
 }
+
 @media (min-height: 0px) and (max-height: 768px) and (min-width: 1024px) {
   .spinner-wrapper {
-    bottom: 50px !important; /* o el valor que necesites */
+    bottom: 50px !important;
+    /* o el valor que necesites */
   }
 }
 
