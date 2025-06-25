@@ -81,7 +81,7 @@ function MyRequests() {
             )}
 
             {!loading && (
-                <div className="w-full mx-auto mt-30 md:mb-0">
+                <div className="w-full mx-auto mt-40 md:mb-0">
                     <div className="max-h-[calc(100vh-200px)] overflow-y-auto px-4 hide-scrollbar">
                         <div className="flex flex-col items-center gap-3" style={{ minWidth: '350px' }}>
 
@@ -134,7 +134,7 @@ function MyRequests() {
                             ))}
                         </div>
                     </div>
-                    <div className="flex justify-center">
+                    <div className="flex justify-center mb-25 mt-[-5px]">
                         <BackButton />
                     </div>
                 </div>
