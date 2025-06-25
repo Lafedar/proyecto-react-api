@@ -81,67 +81,73 @@ function MyRequests() {
             )}
 
             {!loading && (
-                <div className="w-full mx-auto mt-30 md:mb-50">
-                    <div className="max-h-[calc(100vh-200px)] overflow-y-auto px-4 hide-scrollbar">
+                <div className="w-full mx-auto mt-30 md:mb-0">
+                    <div className="md:max-h-[calc(100vh-200px)] md:overflow-y-auto px-4 hide-scrollbar">
+
                         <div className="flex flex-col items-center gap-3" style={{ minWidth: '350px' }}>
 
-                            {requests.map((req, index) => (
-                                <div
-                                    key={index}
-                                    className="w-full max-w-[2000px] bg-white shadow-md rounded-lg px-5 py-3 border border-gray-200"
-                                >
-                                    <div className="flex items-center gap-3 mb-3">
-                                        <div>
-                                            <h2 className="text-lg font-semibold text-gray-800">
-                                                Solicitud #{req.request.id}
-                                            </h2>
-                                            <h3 className="text-lg font-semibold text-gray-800">
-                                                Estado: {req.request.estado}
-                                            </h3>
-                                            <p className="text-sm text-gray-500">
-                                                Solicitado el {new Date(req.request.created_at).toLocaleDateString()}
-                                            </p>
+                            {requests.length === 0 ? (
+                                <p className="text-center text-gray-600 text-lg font-semibold mt-10">
+                                    No tienes Solicitudes de Medicamentos.
+                                </p>
+                            ) : (
+                                requests.map((req, index) => (
+                                    <div
+                                        key={index}
+                                        className="w-full max-w-[2000px] bg-white shadow-md rounded-lg px-5 py-3 border border-gray-200"
+                                    >
+                                        <div className="flex items-center gap-3 mb-3">
+                                            <div>
+                                                <h2 className="text-lg font-semibold text-gray-800">
+                                                    Solicitud #{req.request.id}
+                                                </h2>
+                                                <h3 className="text-lg font-semibold text-gray-800">
+                                                    Estado: {req.request.estado}
+                                                </h3>
+                                                <p className="text-sm text-gray-500">
+                                                    Solicitado el {new Date(req.request.created_at).toLocaleDateString()}
+                                                </p>
+                                            </div>
+                                        </div>
+
+                                        <div className="flex gap-6 text-base text-gray-700">
+                                            <div className="w-full sm:w-1/2">
+                                                <p className="font-semibold">Solicitados:</p>
+                                                <ul className="list-disc list-inside">
+                                                    {req.items.map((item, i) => (
+                                                        <p key={i}>
+                                                            {item.medicamento} (x{item.cantidad_solicitada})
+                                                        </p>
+                                                    ))}
+                                                </ul>
+                                            </div>
+
+                                            <div className="w-full sm:w-1/2">
+                                                <p className="font-semibold">Aprobados:</p>
+                                                <ul className="list-disc list-inside">
+                                                    {req.items.map((item, i) => (
+                                                        <p key={i}>
+                                                            {item.aprobado === 1
+                                                                ? `${item.medicamento} (x${item.cantidad_aprobada}) ✅`
+                                                                : '🕝'}
+                                                        </p>
+                                                    ))}
+                                                </ul>
+                                            </div>
                                         </div>
                                     </div>
-
-                                    <div className="flex gap-6 text-base text-gray-700">
-
-                                        <div className="w-full sm:w-1/2">
-                                            <p className="font-semibold">Solicitados:</p>
-                                            <ul className="list-disc list-inside">
-                                                {req.items.map((item, i) => (
-                                                    <p key={i}>
-                                                        {item.medicamento} (x{item.cantidad_solicitada})
-                                                    </p>
-                                                ))}
-                                            </ul>
-                                        </div>
-
-                                        <div className="w-full sm:w-1/2">
-                                            <p className="font-semibold">Aprobados:</p>
-                                            <ul className="list-disc list-inside">
-                                                {req.items.map((item, i) => (
-                                                    <p key={i}>
-                                                        {item.aprobado === 1
-                                                            ? `${item.medicamento} (x${item.cantidad_aprobada}) ✅`
-                                                            : '🕝'}
-                                                    </p>
-                                                ))}
-                                            </ul>
-                                        </div>
-                                    </div>
-                                </div>
-                            ))}
+                                ))
+                            )}
                         </div>
                     </div>
                     <div className="flex justify-center mb-25 mt-[-5px]">
                         <BackButton />
                     </div>
                 </div>
-
             )}
         </Layout>
     );
+
 
 
 
