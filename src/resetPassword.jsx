@@ -263,7 +263,7 @@ function InputPassword({ value, onChange, disabled }) {
             disabled={disabled}
             required
             className="w-70 px-3 py-2 rounded-md border border-black focus:outline-none focus:ring-2 focus:ring-blue-500"
-            autoComplete="current-password"
+            autoComplete="current-password" minLength="8" maxLength="25"
         />
     )
 }
@@ -279,7 +279,7 @@ function InputPassword2({ value, onChange, disabled }) {
             disabled={disabled}
             required
             className="w-70 px-3 py-2 rounded-md border border-black focus:outline-none focus:ring-2 focus:ring-blue-500"
-            autoComplete="current-password"
+            autoComplete="current-password" minLength="8" maxLength="25"
         />
     )
 }

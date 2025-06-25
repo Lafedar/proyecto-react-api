@@ -73,7 +73,7 @@ function MyRequests() {
                 <div className="fixed inset-0 flex items-center justify-center bg-transparent z-50">
                     <div className="flex items-center gap-3 bg-transparent px-4 py-2 rounded">
                         <div className="custom-spinner"></div>
-                        <span className="font-semibold text-xl loading-text">
+                        <span className="font-semibold text-xl loading-text"> 
                             Procesando...
                         </span>
                     </div>
@@ -81,30 +81,31 @@ function MyRequests() {
             )}
 
             {!loading && (
-                <div className="w-full mx-auto mt-45 md:mb-0 flex flex-col min-h-screen">
-                    {/* Contenedor scrollable */}
-                    <div className="flex-1 max-h-[calc(100vh-200px)] overflow-y-auto px-4 hide-scrollbar">
+                <div className="w-full mx-auto mt-30 md:mb-0">
+                    <div className="max-h-[calc(100vh-200px)] overflow-y-auto px-4 hide-scrollbar">
                         <div className="flex flex-col items-center gap-3" style={{ minWidth: '350px' }}>
+
                             {requests.map((req, index) => (
                                 <div
                                     key={index}
                                     className="w-full max-w-[2000px] bg-white shadow-md rounded-lg px-5 py-3 border border-gray-200"
                                 >
-                                    <div className="flex items-center gap-3 mb-3">
+                                    <div className="flex items-center gap-3 mb-3"> 
                                         <div>
-                                            <h2 className="text-lg font-semibold text-gray-800">
+                                            <h2 className="text-lg font-semibold text-gray-800"> 
                                                 Solicitud #{req.request.id}
                                             </h2>
-                                            <h3 className="text-lg font-semibold text-gray-800">
+                                            <h3 className="text-lg font-semibold text-gray-800"> 
                                                 Estado: {req.request.estado}
                                             </h3>
-                                            <p className="text-sm text-gray-500">
+                                            <p className="text-sm text-gray-500"> 
                                                 Solicitado el {new Date(req.request.created_at).toLocaleDateString()}
                                             </p>
                                         </div>
                                     </div>
 
                                     <div className="flex gap-6 text-base text-gray-700">
+
                                         <div className="w-full sm:w-1/2">
                                             <p className="font-semibold">Solicitados:</p>
                                             <ul className="list-disc list-inside">
@@ -133,15 +134,14 @@ function MyRequests() {
                             ))}
                         </div>
                     </div>
-
-                    {/* Botón fuera del scroll */}
-                    <div className="flex justify-center mt-[-15px] mb-10">
+                    <div className="flex justify-center mb-25 mt-[-5px]">
                         <BackButton />
                     </div>
                 </div>
             )}
         </Layout>
     );
+
 
 
 
