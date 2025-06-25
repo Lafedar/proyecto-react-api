@@ -135,7 +135,7 @@ function MyRequests() {
                     </div>
 
                     {/* Botón fuera del scroll */}
-                    <div className="flex justify-center mt-2 mb-6">
+                    <div className="flex justify-center mt-[-15px] mb-10">
                         <BackButton />
                     </div>
                 </div>
