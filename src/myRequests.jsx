@@ -81,9 +81,9 @@ function MyRequests() {
             )}
 
             {!loading && (
-                <div className="w-full mx-auto mt-30 md:mb-10">
-                    <div className="max-h-[calc(100vh-200px)] overflow-y-auto px-4 hide-scrollbar">
-                        <div className="flex flex-col items-center gap-3" style={{ minWidth: '350px' }}>
+                <div className="w-full mx-auto mt-20 md:mb-0">
+                    <div className="max-h-[calc(100vh-200px)] overflow-y-auto px-4 hide-scrollbar mt-10">
+                        <div className="flex flex-col items-center gap-2" style={{ minWidth: '350px' }}>
 
                             {requests.length === 0 ? (
                                 <p className="text-center text-gray-600 text-lg font-semibold mt-10">
