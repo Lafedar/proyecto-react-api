@@ -81,8 +81,8 @@ function MyRequests() {
             )}
 
             {!loading && (
-                <div className="w-full mx-auto mt-30 md:mb-0">
-                    <div className="max-h-[calc(100vh-180px)] overflow-y-auto px-4 hide-scrollbar">
+                <div className="w-full mx-auto mt-30 md:mb-10">
+                    <div className="max-h-[calc(100vh-200px)] overflow-y-auto px-4 hide-scrollbar">
                         <div className="flex flex-col items-center gap-3" style={{ minWidth: '350px' }}>
 
                             {requests.length === 0 ? (
@@ -139,7 +139,7 @@ function MyRequests() {
                             )}
                         </div>
                     </div>
-                    <div className="flex justify-center mb-25 mt-[-5px]">
+                    <div className="flex justify-center mb-20">
                         <BackButton />
                     </div>
                 </div>
