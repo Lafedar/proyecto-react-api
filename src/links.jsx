@@ -9,7 +9,10 @@ function Links() {
         <Layout>
             <div id="links-container">
                 <h1>Links</h1>
-
+                <LunchButton to="https://forms.office.com/Pages/ResponsePage.aspx?id=3zlyfmyFe0ObLZamOIhIW0Tb2ozw6d1Fu5JeRkE3OUtUMTlDTUNFUUVEQ1hRTlkwV0ZTVzZUMFRSVS4u">
+                    Almuerzos
+                </LunchButton>
+                <MedicalCertificatesButton to="/medicalCertificates">Certificados Médicos</MedicalCertificatesButton>
                 <MedicationButton to="/medications">Solicitudes de Medicamentos</MedicationButton>
                 <MyRequestsButton to="/myRequests">Mis Solicitudes de Medicamentos</MyRequestsButton>
                 <ExitButton to="/">Salir</ExitButton>
@@ -20,6 +23,49 @@ function Links() {
     )
 
 
+}
+
+function LunchButton({ type = 'button', children, to }) {
+    const handleClick = () => {
+        if (to) {
+            if (to.startsWith('http')) {
+                // Es una URL externa
+                window.location.href = to;
+            } else {
+                // Si querés mantener soporte para rutas internas también:
+                navigate(to);
+            }
+        }
+    };
+
+    return (
+        <button
+            type={type}
+            onClick={handleClick}
+            className="w-[300px] bg-blue-500 transition delay-700 duration-700 ease-in-out hover:-translate-y-1 hover:scale-110 hover:bg-indigo-500"
+        >
+            {children}
+        </button>
+    );
+}
+function MedicalCertificatesButton({ type = 'button', children, to }) {
+    const navigate = useNavigate();
+
+    const handleClick = () => {
+        if (to) {
+            navigate(to);
+        }
+    };
+
+    return (
+        <button
+            type={type}
+            onClick={handleClick}
+            className="w-[300px] bg-blue-500 transition delay-700 duration-700 ease-in-out hover:-translate-y-1 hover:scale-110 hover:bg-indigo-500"
+        >
+            {children}
+        </button>
+    );
 }
 
 function MedicationButton({ type = 'button', children, to }) {

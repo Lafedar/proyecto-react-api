@@ -29,6 +29,35 @@ export async function encryptData(data, aesKey) {
     }
 
 }
+export async function encryptFile(file, aesKey) {
+    try {
+        // Leer el archivo como ArrayBuffer
+        const fileBuffer = await file.arrayBuffer();
+
+        // Crear IV aleatorio de 12 bytes para AES-GCM
+        const iv = window.crypto.getRandomValues(new Uint8Array(12));
+
+        // Encriptar con AES-GCM
+        const ciphertextBuffer = await crypto.subtle.encrypt(
+            {
+                name: "AES-GCM",
+                iv: iv,
+            },
+            aesKey,
+            fileBuffer
+        );
+
+        return {
+            ciphertext: arrayBufferToBase64(ciphertextBuffer),
+            iv: arrayBufferToBase64(iv),
+            originalName: file.name,
+            type: file.type,
+        };
+    } catch (err) {
+        console.error("Error al encriptar archivo:", err);
+        return null;
+    }
+}
 
 
 export async function decryptData(data, aesKey) {
@@ -71,11 +100,11 @@ export function arrayBufferToBase64(buffer) {  // Convierte un ArrayBuffer a una
         const bytes = new Uint8Array(buffer);
         bytes.forEach(b => binary += String.fromCharCode(b));
         return btoa(binary);
-    }catch(err) {
+    } catch (err) {
         console.error("Error al convertir ArrayBuffer a Base64:", err);
         return null;
     }
-   
+
 }
 
 

@@ -181,6 +181,10 @@ function MailResetPassword() {
             } else {
                 setToastMessage(data.error || data.message);
                 setShowToast(true);
+                setTimeout(() => {
+                    setShowToast(false);
+                    navigate('/');
+                }, 3000);
             }
 
         } catch (err) {

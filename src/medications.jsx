@@ -5,6 +5,7 @@ import { encryptData } from './cryptoUtils';
 import { useSession } from './contexts/SessionContext';
 import Toast from './components/Toast';
 import './styles/App.css';
+import { useSearchParams } from 'react-router-dom';
 import Layout from './components/Layout';
 
 
@@ -89,6 +90,7 @@ function Medications() {
                 setShowToast(true);
                 setTimeout(() => {
                     setShowToast(false);
+                    navigate("/links");
                 }, 3000);
             }
         } catch (error) {
