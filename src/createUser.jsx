@@ -22,7 +22,7 @@ function CreateUser() {
     const [loading, setLoading] = useState(false);
     const [aesKey, setAesKey] = useState(null);
     const [loadingToast, setLoadingToast] = useState(false);
-
+    const [search, setSearch] = useState(false);
 
 
 
@@ -92,6 +92,7 @@ function CreateUser() {
 
         const fetchPerson = async () => {
             try {
+                setSearch(true);
                 const encrypted = await encryptData({ dni }, aesKey);
 
                 if (!encrypted) {
@@ -113,6 +114,7 @@ function CreateUser() {
                 );
 
                 const data = await res.json();
+                setSearch(false);
 
                 if (res.ok) {
                     const decrypted = await decryptData(data, aesKey);
@@ -232,18 +234,26 @@ function CreateUser() {
                             <div className="form-group flex flex-col items-center mt-3">
                                 <label htmlFor="dni" className="font-bold mb-[-15px]">Dni</label>
                                 <InputDni value={dni} onChange={e => setDni(e.target.value)} disabled={loading} />
-                                {dniError && <p className="text-red-500 text-sm mt-1">{dniError}</p>}
+                                {search ? (
+                                    <p className="text-green-500 text-sm mt-[-5px]"><strong>Buscando...</strong></p>
+                                ) : (
+                                    <>
+                                        {dniError && (
+                                            <p className="text-red-500 text-sm mt-1">{dniError}</p>
+                                        )}
 
-                                {dniValid && personName && (
-                                    personActive === 0 ? (
-                                        <p className="text-red-500 text-sm mt-1">
-                                            La persona no está activa en la empresa
-                                        </p>
-                                    ) : (
-                                        <p className="text-green-600 text-sm mt-1">
-                                            Hola: <strong>{personName}</strong>
-                                        </p>
-                                    )
+                                        {dniValid && personName && (
+                                            personActive === 0 ? (
+                                                <p className="text-red-500 text-sm mt-1">
+                                                    La persona no está activa en la empresa
+                                                </p>
+                                            ) : (
+                                                <p className="text-green-600 text-sm mt-[-5px]">
+                                                    Hola: <strong>{personName}</strong>
+                                                </p>
+                                            )
+                                        )}
+                                    </>
                                 )}
 
                                 <label htmlFor="email" className="font-bold mb-[-15px]">Email</label>

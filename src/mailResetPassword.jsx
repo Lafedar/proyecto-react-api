@@ -23,6 +23,7 @@ function MailResetPassword() {
     const [aesKey, setAesKey] = useState(null);
     const [loadingToast, setLoadingToast] = useState(false);
     const [personActive, setPersonActive] = useState(false);
+    const [search, setSearch] = useState(false);
 
 
 
@@ -93,6 +94,7 @@ function MailResetPassword() {
 
         const fetchPerson = async () => {
             try {
+                setSearch(true);
                 const encrypted = await encryptData({ dni }, aesKey);
 
                 if (!encrypted) {
@@ -114,7 +116,7 @@ function MailResetPassword() {
                 );
 
                 const data = await res.json();
-
+                setSearch(false);
                 if (res.ok) {
                     const decrypted = await decryptData(data, aesKey);
                     const persona = JSON.parse(decrypted);
@@ -226,19 +228,29 @@ function MailResetPassword() {
 
                             <label htmlFor="dni" id="input_dni" className="font-bold mb-[-15px]">Dni</label>
                             <InputDni value={dni} onChange={e => setDni(e.target.value)} disabled={loading} />
-                            {dniError && <p className="text-red-500 text-sm mt-1">{dniError}</p>}
 
-                            {dniValid && personName && (
-                                personActive === 0 ? (
-                                    <p className="text-red-500 text-sm mt-1">
-                                        La persona no está activa en la empresa
-                                    </p>
-                                ) : (
-                                    <p className="text-green-600 text-sm mt-1">
-                                        Hola: <strong>{personName}</strong>
-                                    </p>
-                                )
+                            {search ? (
+                                <p className="text-green-500 text-sm mt-[-5px]"><strong>Buscando...</strong></p>
+                            ) : (
+                                <>
+                                    {dniError && (
+                                        <p className="text-red-500 text-sm mt-1">{dniError}</p>
+                                    )}
+
+                                    {dniValid && personName && (
+                                        personActive === 0 ? (
+                                            <p className="text-red-500 text-sm mt-1">
+                                                La persona no está activa en la empresa
+                                            </p>
+                                        ) : (
+                                            <p className="text-green-600 text-sm mt-[-5px]">
+                                                Hola: <strong>{personName}</strong>
+                                            </p>
+                                        )
+                                    )}
+                                </>
                             )}
+
                             <label htmlFor="email" id="input_email" className="font-bold mb-[-15px]">Email</label>
                             <InputUser value={email} onChange={e => setEmail(e.target.value)} disabled={loading || personActive === 0} />
 
