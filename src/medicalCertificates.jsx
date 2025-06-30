@@ -62,8 +62,7 @@ function MedicalCertificates() {
 
 
         try {
-            const response = await fetch(
-                "https://pour-inquiry-spyware-soldier.trycloudflare.com/api/medicalCertificate",
+            const response = await fetch(`${API_BASE}/api/medicalCertificate`,
                 {
                     method: "POST",
                     headers: {
