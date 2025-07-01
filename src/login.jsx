@@ -25,7 +25,7 @@ function Login() {
         const message = searchParams.get('message');
         let timer;
         if (message === 'success') {
-            setToastMessage('La verificación ha sido exitosa!');
+            setToastMessage('Tu usuario fue creado correctamente y el mail está verificado.!');
             setShowToast(true);
             timer = setTimeout(() => setShowToast(false), 3000);
         } else if (message === 'token') {
