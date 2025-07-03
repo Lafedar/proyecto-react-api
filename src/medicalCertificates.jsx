@@ -25,6 +25,36 @@ function MedicalCertificates() {
     const [selectedFile, setSelectedFile] = useState(null);
     const { sessionKey } = useSession();
 
+    const handleFileChange = (e) => {
+        const file = e.target.files[0];
+
+        if (!file) return;
+
+        const allowedExtensions = ['pdf', 'jpg', 'jpeg'];
+        const allowedMimeTypes = ['application/pdf', 'image/jpeg'];
+        const maxSizeInMB = 10;
+        const maxSizeInBytes = maxSizeInMB * 1024 * 1024;
+
+        const extension = file.name.split('.').pop().toLowerCase();
+
+        if (!allowedExtensions.includes(extension) || !allowedMimeTypes.includes(file.type)) {
+            setToastMessage("Solo se permiten archivos PDF o imágenes JPG/JPEG.");
+            setShowToast(true);
+            setTimeout(() => setShowToast(false), 3000);
+            e.target.value = null;
+            return;
+        }
+
+        if (file.size > maxSizeInBytes) {
+            setToastMessage(`El archivo no puede superar los ${maxSizeInMB} MB.`);
+            setShowToast(true);
+            setTimeout(() => setShowToast(false), 3000);
+            e.target.value = null;
+            return;
+        }
+
+        setSelectedFile(file);
+    };
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -168,11 +198,12 @@ function MedicalCertificates() {
                                             id="archivo"
                                             name="archivo"
                                             accept=".jpg,.jpeg,.pdf"
-                                            onChange={(e) => setSelectedFile(e.target.files[0])}
+                                            onChange={handleFileChange}
                                             disabled={loading}
                                             required
                                             className="w-70 px-3 py-2 rounded-md border border-black focus:outline-none focus:ring-2 focus:ring-blue-500"
                                         />
+
 
                                     </div>
 
