@@ -5,6 +5,7 @@ body {
   overflow-y: hidden;
   background-color: white;
   color: black;
+  width: auto;
 }
 
 h1 {

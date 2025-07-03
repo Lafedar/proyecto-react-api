@@ -151,7 +151,7 @@ function MedicalCertificates() {
             <Layout>
                 <div
                     className={`
-                    mt-[-110px]       
+                    mt-[-30px]       
                     sm:mt-10         
                     w-11/12            
                     sm:w-3/4            
