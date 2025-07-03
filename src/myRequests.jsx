@@ -127,7 +127,7 @@ function MyRequests() {
                                                     {req.items.map((item, i) => (
                                                         <p key={i}>
                                                             {item.aprobado === 1
-                                                                ? `${item.medicamento} (x${item.cantidad_aprobada}) ✅`
+                                                                ? `✅ ${item.medicamento} (x${item.cantidad_aprobada})`
                                                                 : '🕝'}
                                                         </p>
                                                     ))}
