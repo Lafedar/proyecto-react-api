@@ -29,10 +29,8 @@ function LunchButton({ type = 'button', children, to }) {
     const handleClick = () => {
         if (to) {
             if (to.startsWith('http')) {
-                // Es una URL externa
                 window.location.href = to;
             } else {
-                // Si querés mantener soporte para rutas internas también:
                 navigate(to);
             }
         }
@@ -93,7 +91,7 @@ function MyRequestsButton({ type = 'button', children, to }) {
 
     const handleClick = () => {
         if (to) {
-            navigate(to); // navegación interna sin recargar
+            navigate(to); 
         }
     };
 
