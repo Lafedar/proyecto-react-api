@@ -36,6 +36,10 @@ function Login() {
             setToastMessage('El token ha expirado. Por favor, solicite un nuevo enlace de verificación.');
             setShowToast(true);
             timer = setTimeout(() => setShowToast(false), 3000);
+        }else if (message === 'error') {
+            setToastMessage('La validación no se pudo completar. Por favor reintente crear el usuario.');
+            setShowToast(true);
+            timer = setTimeout(() => setShowToast(false), 3000);
         }
 
         return () => clearTimeout(timer);
