@@ -91,7 +91,7 @@ function Login() {
         }
 
     }
- 
+
     async function encryptLoginAndSend(email, password) {
         try {
             if (!aesKey) {
@@ -128,11 +128,14 @@ function Login() {
                 })
 
             });*/
+            const rawKey = await crypto.subtle.exportKey('raw', aesKey);
+            const base64Key = arrayBufferToBase64(rawKey);
+            
             const response = await fetch(`${API_BASE}/api/loginApi`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
-                    'X-AES-Key': aesKey,
+                    'X-AES-Key': base64Key,
                 },
                 credentials: 'include',
                 body: JSON.stringify({
