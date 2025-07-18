@@ -91,7 +91,7 @@ function Login() {
         }
 
     }
-
+ 
     async function encryptLoginAndSend(email, password) {
         try {
             if (!aesKey) {
@@ -132,7 +132,7 @@ function Login() {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
-                    'X-AES-Key': base64ClaveAES,  
+                    'X-AES-Key': aesKey,
                 },
                 credentials: 'include',
                 body: JSON.stringify({
