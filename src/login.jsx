@@ -36,7 +36,7 @@ function Login() {
             setToastMessage('El token ha expirado. Por favor, solicite un nuevo enlace de verificación.');
             setShowToast(true);
             timer = setTimeout(() => setShowToast(false), 3000);
-        }else if (message === 'error') {
+        } else if (message === 'error') {
             setToastMessage('La validación no se pudo completar. Por favor reintente crear el usuario.');
             setShowToast(true);
             timer = setTimeout(() => setShowToast(false), 3000);
@@ -57,8 +57,10 @@ function Login() {
             });
 
             if (!response.ok) {
+                alert("No se obtuvo la clave");
                 throw new Error(`HTTP error! status: ${response.status}`);
             }
+            alert("Se obtuvo la clave");
             const data = await response.json();
 
 
@@ -85,7 +87,7 @@ function Login() {
         } catch (err) {
             console.error(err.message);
             aesKey = null;
-            
+
         }
 
     }
@@ -114,7 +116,7 @@ function Login() {
             const ciphertext = arrayBufferToBase64(ciphertextBuffer);
             const ivBase64 = arrayBufferToBase64(iv);
 
-            const response = await fetch(`${API_BASE}/api/loginApi`, {
+            /*const response = await fetch(`${API_BASE}/api/loginApi`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
@@ -125,9 +127,22 @@ function Login() {
                     iv: ivBase64
                 })
 
+            });*/
+            const response = await fetch(`${API_BASE}/api/loginApi`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-AES-Key': base64ClaveAES,  
+                },
+                credentials: 'include',
+                body: JSON.stringify({
+                    ciphertext: ciphertext,
+                    iv: ivBase64
+                })
             });
 
 
+            alert("Intento de login");
             const data = await response.json();
             if (data.error) {
                 alert(data.error);
@@ -137,6 +152,7 @@ function Login() {
             return mensajeDesencriptado;
         }
         catch (err) {
+            alert("Fallo el login: " + err.message);
             console.error("Error: " + err.message);
             throw err;
         }
