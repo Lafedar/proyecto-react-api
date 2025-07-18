@@ -129,13 +129,15 @@ function Login() {
 
             });*/
             const rawKey = await crypto.subtle.exportKey('raw', aesKey);
+
             const base64Key = arrayBufferToBase64(rawKey);
-            
+            const base64UrlKey = base64ToBase64URL(base64Key);
+
             const response = await fetch(`${API_BASE}/api/loginApi`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
-                    'X-AES-Key': base64Key,
+                    'X-AES-Key': base64UrlKey,
                 },
                 credentials: 'include',
                 body: JSON.stringify({
@@ -160,6 +162,17 @@ function Login() {
             throw err;
         }
 
+    }
+    function arrayBufferToBase64(buffer) {
+        const bytes = new Uint8Array(buffer);
+        let binary = '';
+        for (let i = 0; i < bytes.byteLength; i++) {
+            binary += String.fromCharCode(bytes[i]);
+        }
+        return btoa(binary); // btoa lanza error si hay caracteres fuera del rango Latin1
+    }
+    function base64ToBase64URL(base64) {
+        return base64.replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '');
     }
 
 
