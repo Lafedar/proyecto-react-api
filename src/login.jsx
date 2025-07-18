@@ -132,7 +132,7 @@ function Login() {
 
             const base64Key = arrayBufferToBase64(rawKey);
             const base64UrlKey = base64ToBase64URL(base64Key);
-
+            console.log("X-AES-Key:", base64UrlKey);
             const response = await fetch(`${API_BASE}/api/loginApi`, {
                 method: 'POST',
                 headers: {
