@@ -20,6 +20,7 @@ build/
 
 # Ignorar imágenes
 *.png
+!apple-touch-icon.png
 *.jpg
 *.jpeg
 *.gif
