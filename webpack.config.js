@@ -49,6 +49,7 @@ module.exports = {
     new CopyPlugin({
       patterns: [
         { from: path.resolve(__dirname, '_redirects'), to: '' },
+        { from: 'public/favicon.ico', to: 'favicon.ico' },
       
       ],
     }),
