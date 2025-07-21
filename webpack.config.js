@@ -50,6 +50,7 @@ module.exports = {
       patterns: [
         { from: path.resolve(__dirname, '_redirects'), to: '' },
         { from: 'public/favicon.ico', to: 'favicon.ico' },
+        { from: "public/apple-touch-icon.png", to: "apple-touch-icon.png" },
       
       ],
     }),
