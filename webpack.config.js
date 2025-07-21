@@ -15,10 +15,14 @@ module.exports = {
     extensions: ['.js', '.jsx'],
   },
   devServer: {
-    static: './dist',
+    static: {
+      directory: path.join(__dirname, 'public'), // Sirve archivos estáticos desde /public
+      publicPath: '/',
+    },
     port: 3000,
     open: true,
     historyApiFallback: true,
+    hot: true, // Opcional: activa Hot Module Replacement
   },
   module: {
     rules: [
@@ -40,10 +44,12 @@ module.exports = {
   plugins: [
     new HtmlWebpackPlugin({
       template: './public/index.html',
+      
     }),
     new CopyPlugin({
       patterns: [
         { from: path.resolve(__dirname, '_redirects'), to: '' },
+      
       ],
     }),
 
