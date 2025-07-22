@@ -91,7 +91,7 @@ function MyRequestsButton({ type = 'button', children, to }) {
 
     const handleClick = () => {
         if (to) {
-            navigate(to); 
+            navigate(to);
         }
     };
 
@@ -112,6 +112,8 @@ function ExitButton({ type = 'button', children, to }) {
     const handleClick = () => {
         sessionStorage.removeItem('authToken');
         sessionStorage.removeItem('sessionKey');
+        clearInterval(window.refreshTokenInterval); //Detener el refresh automático del token
+
         if (to) {
             window.location.href = to;
 

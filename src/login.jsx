@@ -130,7 +130,6 @@ function Login() {
 
 
 
-
             if (!response.ok) {
                 const errorText = await response.text();
                 console.error('Error en login:', errorText);
@@ -219,6 +218,33 @@ function Login() {
 
 
     }
+    async function refreshAccessToken() {
+        try {
+            const response = await fetch(`${API_BASE}/api/refresh-token`, {
+                method: 'POST',
+                credentials: 'include', // ⬅️ MUY IMPORTANTE: permite enviar cookies (HttpOnly)
+                headers: {
+                    'Accept': 'application/json'
+                }
+            });
+
+            if (!response.ok) {
+                throw new Error('No se pudo refrescar el token');
+            }
+
+            const data = await response.json();
+            const nuevoAccessToken = data.access_token;
+
+            // Guardalo donde lo uses (state, localStorage, etc.)
+            localStorage.setItem('access_token', nuevoAccessToken);
+
+            return nuevoAccessToken;
+        } catch (error) {
+            console.error('Error al refrescar el token:', error);
+            // Podés redirigir al login
+            return null;
+        }
+    }
 
 
 
@@ -244,6 +270,11 @@ function Login() {
             if (user && user.email) {
                 setToastMessage(`Bienvenido ${user.nombre}!`);
                 setShowToast(true);
+
+                setInterval(() => {
+                    refreshAccessToken();
+                }, 25 * 60 * 1000);
+
                 setTimeout(() => {
                     sessionStorage.setItem('authToken', 'logged_in');
                     navigate("/links");
