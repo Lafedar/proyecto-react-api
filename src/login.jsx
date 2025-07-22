@@ -48,17 +48,46 @@ function Login() {
 
 
     let aesKey = null;
+    async function fetchKey() {
+        try {
 
-    async function generateAESKey() {
-        aesKey = await crypto.subtle.generateKey(
-            {
-                name: 'AES-GCM',
-                length: 256
-            },
-            true,
-            ['encrypt', 'decrypt']
-        );
-        updateSessionKey(aesKey);
+            const response = await fetch(`${API_BASE}/api/get-key`, {
+                credentials: 'include',
+
+            });
+
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+            const data = await response.json();
+
+
+            const base64Key = data.key.trim().replace(/\s+/g, '');
+            const keyRaw = atob(base64Key); // Base64 → texto binario
+
+            const keyBuffer = new Uint8Array([...keyRaw].map(c => c.charCodeAt(0))); // Texto binario → bytes
+
+
+            aesKey = await crypto.subtle.importKey(
+
+                'raw',
+
+                keyBuffer,
+
+                'AES-GCM',
+
+                true,
+
+                ['encrypt', 'decrypt']
+
+            );
+            updateSessionKey(aesKey); // Actualiza la clave en el contexto de sesión
+        } catch (err) {
+            console.error(err.message);
+            aesKey = null;
+
+        }
+
     }
 
 
@@ -85,7 +114,7 @@ function Login() {
             // 🔐 Exportar clave AES a Base64URL
             const rawKey = await crypto.subtle.exportKey('raw', aesKey);
             const base64Key = arrayBufferToBase64(rawKey);
-            //const base64UrlKey = base64ToBase64URL(base64Key);
+
 
             const response = await fetch(`${API_BASE}/api/loginApi`, {
                 method: 'POST',
@@ -98,9 +127,12 @@ function Login() {
                     iv: ivBase64
                 })
             });
-            
+
+
+
+
             if (!response.ok) {
-                const errorText = await response.text(); 
+                const errorText = await response.text();
                 console.error('Error en login:', errorText);
                 return;
             }
@@ -124,6 +156,7 @@ function Login() {
             throw err;
         }
     }
+    /*
     async function secureFetch(url, options = {}) {
         const jwt = localStorage.getItem('jwt');
         if (!jwt) throw new Error("JWT no disponible");
@@ -146,7 +179,7 @@ function Login() {
         };
 
         return await fetch(`${API_BASE}${url}`, finalOptions);
-    }
+    }*/
 
 
     function base64ToBase64URL(base64) {
@@ -195,7 +228,7 @@ function Login() {
         setLoading(true);
         setLoadingToast(true);
         try {
-            await generateAESKey();
+            await fetchKey();
 
             if (!aesKey) {
                 throw new Error('No se pudo obtener la clave AES, no se puede encriptar');
