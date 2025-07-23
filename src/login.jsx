@@ -124,11 +124,7 @@ function Login() {
                     'X-AES-Key': base64Key,
                 },
                 credentials: 'include',
-                body: JSON.stringify({
-                    ciphertext: encrypted.ciphertext,
-                    iv: encrypted.iv,
-                    tag: encrypted.tag
-                })
+                body: JSON.stringify(encrypted),
             });
 
 
