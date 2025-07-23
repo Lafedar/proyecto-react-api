@@ -61,14 +61,15 @@ function Medications() {
                 return;
             }
 
-           
+            const rawKey = await crypto.subtle.exportKey('raw', sessionKey);
+            const base64Key = arrayBufferToBase64(rawKey);
             const response = await fetch(`${API_BASE}/api/medications`, {
 
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
                     "Authorization": `Bearer ${accessToken}`,
-                    'X-AES-Key': sessionKey,
+                    'X-AES-Key': base64Key,
 
                 },
                 credentials: 'include',
