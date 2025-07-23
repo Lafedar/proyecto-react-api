@@ -1,7 +1,10 @@
+import { useSession } from './contexts/SessionContext';
+
 const API_BASE = process.env.REACT_APP_API_BASE_URL;
 
-export async function refreshAccessToken(updateAccessToken) {
+export async function refreshAccessToken() {
     try {
+        const { updateAccessToken } = useSession();
         const response = await fetch(`${API_BASE}/api/refresh-token`, {
             method: 'POST',
             headers: {

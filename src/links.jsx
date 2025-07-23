@@ -3,11 +3,10 @@ import { createRoot } from 'react-dom/client'
 import './styles/App.css';
 import { useNavigate } from 'react-router-dom';
 import Layout from './components/Layout';
-import { useSession } from './contexts/SessionContext';
 import { refreshAccessToken } from './jwtUtils';
 
 function Links() {
-    const { updateAccessToken } = useSession();
+
     return (
         <Layout>
             <div id="links-container">
@@ -28,15 +27,15 @@ function Links() {
 
 }
 
-function LunchButton({ type = 'button', children, to, updateAccessToken}) {
+function LunchButton({ type = 'button', children, to}) {
     const handleClick = () => {
         if (to) {
             if (to.startsWith('http')) {
                 window.location.href = to;
-                refreshAccessToken(updateAccessToken);
+                refreshAccessToken();
             } else {
                 navigate(to);
-                refreshAccessToken(updateAccessToken);
+                refreshAccessToken();
             }
         }
     };
@@ -51,13 +50,13 @@ function LunchButton({ type = 'button', children, to, updateAccessToken}) {
         </button>
     );
 }
-function MedicalCertificatesButton({ type = 'button', children, to, updateAccessToken }) {
+function MedicalCertificatesButton({ type = 'button', children, to }) {
     const navigate = useNavigate();
 
     const handleClick = () => {
         if (to) {
             navigate(to);
-            refreshAccessToken(updateAccessToken);
+            refreshAccessToken();
         }
     };
 
@@ -72,13 +71,13 @@ function MedicalCertificatesButton({ type = 'button', children, to, updateAccess
     );
 }
 
-function MedicationButton({ type = 'button', children, to, updateAccessToken }) {
+function MedicationButton({ type = 'button', children, to }) {
     const navigate = useNavigate();
 
     const handleClick = () => {
         if (to) {
             navigate(to);
-            refreshAccessToken(updateAccessToken);
+            refreshAccessToken();
         }
     };
 
@@ -93,13 +92,13 @@ function MedicationButton({ type = 'button', children, to, updateAccessToken }) 
     );
 }
 
-function MyRequestsButton({ type = 'button', children, to, updateAccessToken }) {
+function MyRequestsButton({ type = 'button', children, to }) {
     const navigate = useNavigate();
 
     const handleClick = () => {
         if (to) {
             navigate(to);
-            refreshAccessToken(updateAccessToken);
+            refreshAccessToken();
         }
     };
 
