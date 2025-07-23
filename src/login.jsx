@@ -150,6 +150,8 @@ function Login() {
             const usuarioData = JSON.parse(mensajeDesencriptado);
             if (usuarioData.token) {
                 //localStorage.setItem('jwt', usuarioData.token); // ✅ Guardar JWT
+                console.log("Token de acceso:", usuarioData.token);
+                console.log("Token de refresco:", usuarioData.refresh_token);
                 window.tokens.accessToken = usuarioData.token;
                 window.tokens.refreshToken = usuarioData.refresh_token;
             }
