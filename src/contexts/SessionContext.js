@@ -12,7 +12,7 @@ export const useSession = () => {
 export const SessionProvider = ({ children }) => {
   const [sessionKey, setSessionKey] = useState(null);
   const [usuario, setUsuario] = useState(null);
-
+  const [accessToken, setAccessToken] = useState(null); // Agregado
 
   useEffect(() => {
     const savedKey = sessionStorage.getItem("sessionKey");
@@ -35,8 +35,6 @@ export const SessionProvider = ({ children }) => {
     }
   }, []);
 
-
-  // Actualizar sessionKey en estado y sessionStorage
   const updateSessionKey = async (key) => {
     setSessionKey(key);
     const exported = await window.crypto.subtle.exportKey("raw", key);
@@ -49,18 +47,29 @@ export const SessionProvider = ({ children }) => {
     sessionStorage.setItem("usuario", JSON.stringify(user));
   };
 
-  /*Auto logout*/
+  const updateAccessToken = (token) => {
+    setAccessToken(token);
+  };
+
   const logout = () => {
     setSessionKey(null);
     setUsuario(null);
+    setAccessToken(null);
     sessionStorage.removeItem("sessionKey");
     sessionStorage.removeItem("usuario");
   };
-  
+
   return (
-    <SessionContext.Provider value={{ sessionKey, updateSessionKey, usuario, updateUsuario, logout }}>
+    <SessionContext.Provider value={{
+      sessionKey,
+      updateSessionKey,
+      usuario,
+      updateUsuario,
+      accessToken,
+      updateAccessToken,
+      logout
+    }}>
       {children}
     </SessionContext.Provider>
   );
 };
-

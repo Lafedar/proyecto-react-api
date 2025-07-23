@@ -3,8 +3,11 @@ import { createRoot } from 'react-dom/client'
 import './styles/App.css';
 import { useNavigate } from 'react-router-dom';
 import Layout from './components/Layout';
+import { useSession } from '../contexts/SessionContext';
+import { refreshAccessToken } from './jwtUtils';
 
 function Links() {
+    const { updateAccessToken } = useSession();
     return (
         <Layout>
             <div id="links-container">
@@ -25,13 +28,15 @@ function Links() {
 
 }
 
-function LunchButton({ type = 'button', children, to }) {
+function LunchButton({ type = 'button', children, to, updateAccessToken}) {
     const handleClick = () => {
         if (to) {
             if (to.startsWith('http')) {
                 window.location.href = to;
+                refreshAccessToken(updateAccessToken);
             } else {
                 navigate(to);
+                refreshAccessToken(updateAccessToken);
             }
         }
     };
@@ -46,12 +51,13 @@ function LunchButton({ type = 'button', children, to }) {
         </button>
     );
 }
-function MedicalCertificatesButton({ type = 'button', children, to }) {
+function MedicalCertificatesButton({ type = 'button', children, to, updateAccessToken }) {
     const navigate = useNavigate();
 
     const handleClick = () => {
         if (to) {
             navigate(to);
+            refreshAccessToken(updateAccessToken);
         }
     };
 
@@ -66,12 +72,13 @@ function MedicalCertificatesButton({ type = 'button', children, to }) {
     );
 }
 
-function MedicationButton({ type = 'button', children, to }) {
+function MedicationButton({ type = 'button', children, to, updateAccessToken }) {
     const navigate = useNavigate();
 
     const handleClick = () => {
         if (to) {
             navigate(to);
+            refreshAccessToken(updateAccessToken);
         }
     };
 
@@ -86,12 +93,13 @@ function MedicationButton({ type = 'button', children, to }) {
     );
 }
 
-function MyRequestsButton({ type = 'button', children, to }) {
+function MyRequestsButton({ type = 'button', children, to, updateAccessToken }) {
     const navigate = useNavigate();
 
     const handleClick = () => {
         if (to) {
             navigate(to);
+            refreshAccessToken(updateAccessToken);
         }
     };
 
@@ -113,13 +121,9 @@ function ExitButton({ type = 'button', children, to }) {
         sessionStorage.removeItem('authToken');
         sessionStorage.removeItem('sessionKey');
 
-        //limpiar tokens
-        sessionStorage.removeItem('accessToken');
-        sessionStorage.removeItem('refreshToken');
-
         if (to) {
             window.location.href = to;
-
+            
         }
     };
 

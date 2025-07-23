@@ -6,6 +6,7 @@ import Toast from './components/Toast';
 import Layout from './components/Layout';
 import './styles/App.css';
 import { useSearchParams } from 'react-router-dom';
+import { refreshAccessToken } from './jwtUtils';
 
 
 function Login() {
@@ -21,6 +22,7 @@ function Login() {
     const { updateUsuario } = useSession();
     const [searchParams] = useSearchParams();
     const [loadingToast, setLoadingToast] = useState(false);
+    const { accessToken, updateAccessToken } = useSession();
 
 
     useEffect(() => {
@@ -93,7 +95,7 @@ function Login() {
     }
 
 
-    let accessToken = null;
+
     async function encryptLoginAndSend(email, password) {
         try {
             if (!aesKey) {
@@ -150,9 +152,8 @@ function Login() {
             const mensajeDesencriptado = await decryptResponseFromBackend(data);
             const usuarioData = JSON.parse(mensajeDesencriptado);
             if (usuarioData.token) {
-                //localStorage.setItem('jwt', usuarioData.token); // ✅ Guardar JWT
                 console.log("Token de acceso:", usuarioData.token);
-                accessToken = usuarioData.token;
+                updateAccessToken(usuarioData.token);
 
             }
 
@@ -200,38 +201,6 @@ function Login() {
 
 
     }
-    async function refreshAccessToken() {
-        try {
-
-            const response = await fetch(`${API_BASE}/api/refresh-token`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Accept': 'application/json'
-                },
-                credentials: 'include' // ✅ para que se envíe la cookie
-            });
-
-            if (!response.ok) {
-                throw new Error('No se pudo refrescar el token');
-            }
-
-            const data = await response.json();
-
-            if (data.access_token) {
-                accessToken = data.access_token;
-                console.log("Token de acceso refrescado:", accessToken);
-                return accessToken;
-            }
-
-            return null;
-        } catch (error) {
-            console.error('Error al refrescar el token:', error);
-            // Podés redirigir al login
-            return null;
-        }
-    }
-
 
 
     async function iniciar(event) {
@@ -258,13 +227,13 @@ function Login() {
                 setShowToast(true);
 
                 setInterval(() => {
-                    refreshAccessToken();
+                    refreshAccessToken(updateAccessToken);
                 }, 1 * 60 * 1000);
 
                 setTimeout(() => {
                     sessionStorage.setItem('authToken', 'logged_in');
                     navigate("/links");
-                    refreshAccessToken();
+                    refreshAccessToken(updateAccessToken);
                 }, 2000);
             } else {
 
