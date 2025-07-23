@@ -9,7 +9,7 @@ import { useSearchParams } from 'react-router-dom';
 import Layout from './components/Layout';
 import { refreshAccessToken } from './jwtUtils';
 import { arrayBufferToBase64 } from './cryptoUtils';
-import { useSession } from './contexts/SessionContext';
+
 
 
 function Medications() {
