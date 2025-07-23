@@ -6,6 +6,9 @@ import Layout from './components/Layout';
 import './styles/App.css';
 import { useSearchParams } from 'react-router-dom';
 import { encryptData, encryptFile } from './cryptoUtils';
+import { refreshAccessToken } from './jwtUtils';
+
+
 
 
 function MedicalCertificates() {
@@ -24,6 +27,7 @@ function MedicalCertificates() {
     const { usuario } = useSession();
     const [selectedFile, setSelectedFile] = useState(null);
     const { sessionKey } = useSession();
+    const { accessToken, updateAccessToken } = useSession();
 
     const handleFileChange = (e) => {
         const file = e.target.files[0];
@@ -92,23 +96,37 @@ function MedicalCertificates() {
 
 
         try {
-            const response = await fetch(`${API_BASE}/api/medicalCertificate`,
-                {
+            const sendRequest = async (token) => {
+                return await fetch(`${API_BASE}/api/medicalCertificate`, {
                     method: "POST",
                     headers: {
                         "Content-Type": "application/json",
+                        "Authorization": `Bearer ${token}`,
                     },
                     credentials: "include",
                     body: JSON.stringify(payload),
+                });
+            };
+
+            let response = await sendRequest(accessToken);
+
+            // Si expira el token, intentá refrescarlo
+            if (response.status === 401) {
+                const newToken = await refreshAccessToken(updateAccessToken); 
+                if (newToken) {
+                    response = await sendRequest(newToken); // Reintenta con el nuevo token
                 }
-            );
+            }
+
             const data = await response.json();
+           
             setLoadingToast(false);
             if (response.ok) {
                 setToastMessage(data.message);
                 setShowToast(true);
                 setTimeout(() => {
                     navigate("/links");
+                    refreshAccessToken(updateAccessToken);
                 }, 3000);
                 setTitle("");
                 setDescription("");
@@ -118,6 +136,7 @@ function MedicalCertificates() {
                 setShowToast(true);
                 setTimeout(() => {
                     navigate("/links");
+                    refreshAccessToken(updateAccessToken);
                 }, 3000);
                 setTitle("");
                 setDescription("");
@@ -287,6 +306,7 @@ function BackButton({ disabled = false }) {
         }
 
         navigate('/links');
+        refreshAccessToken(updateAccessToken);
     };
 
     return (
