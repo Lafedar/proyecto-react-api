@@ -53,17 +53,7 @@ function Medications() {
                 return;
             }
 
-            const payload = {
-                data: {
-                    dni_user,
-                    medication,
-                    amount,
-                    medication2,
-                    amount2,
-                    medication3,
-                    amount3
-                }
-            };
+            const payload = { dni_user, medication, amount, medication2, amount2, medication3, amount3 };
 
             const encrypted = await encryptData(payload, sessionKey);
             if (!encrypted) {
@@ -71,34 +61,22 @@ function Medications() {
                 return;
             }
 
-            const rawKey = await crypto.subtle.exportKey('raw', sessionKey);
-            const base64Key = arrayBufferToBase64(rawKey);
 
-            const sendRequest = async (token) => {
-                return await fetch(`${API_BASE}/api/medications`, {
-                    method: "POST",
-                    headers: {
-                        "Content-Type": "application/json",
-                        "Authorization": `Bearer ${token}`,
-                        'X-AES-Key': base64Key,
-                    },
-                    credentials: "include",
-                    body: JSON.stringify({
-                        ciphertext: encrypted.ciphertext,
-                        iv: encrypted.iv
-                    })
-                });
-            };
+            const response = await fetch(`${API_BASE}/api/medications`, {
 
-            let response = await sendRequest(accessToken);
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    "Authorization": `Bearer ${accessToken}`,
+                    'X-AES-Key': base64Key,
 
-            // Si expira el token, intentá refrescarlo
-            if (response.status === 401) {
-                const newToken = await refreshAccessToken(updateAccessToken);
-                if (newToken) {
-                    response = await sendRequest(newToken); // Reintenta con el nuevo token
-                }
-            }
+                },
+                credentials: 'include',
+                body: JSON.stringify({
+                    ciphertext: encrypted.ciphertext,
+                    iv: encrypted.iv
+                })
+            });
 
 
             const isOk = response.ok;
@@ -110,7 +88,6 @@ function Medications() {
                 setShowToast(true);
                 setTimeout(() => {
                     navigate("/links");
-                    refreshAccessToken(updateAccessToken);
                 }, 3000);
 
             } else {
@@ -119,7 +96,6 @@ function Medications() {
                 setTimeout(() => {
                     setShowToast(false);
                     navigate("/links");
-                    refreshAccessToken(updateAccessToken);
                 }, 3000);
             }
         } catch (error) {
@@ -145,6 +121,7 @@ function Medications() {
         setMedication3('');
         setAmount3('');
     };
+
 
     //Vista que voy a mostrar en el index.html
     return (
