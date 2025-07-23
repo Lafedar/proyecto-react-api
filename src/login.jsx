@@ -7,7 +7,6 @@ import Toast from './components/Toast';
 import Layout from './components/Layout';
 import './styles/App.css';
 import { useSearchParams } from 'react-router-dom';
-import { encryptData } from './cryptoUtils';
 
 
 
@@ -105,28 +104,36 @@ function Login() {
                 throw new Error('Clave AES faltante');
             }
 
-            const payload = {
-                data: {
-                    usuario: email,
-                    password: password
-                }
-            };
+            const loginPayload = JSON.stringify({ usuario: email, password: password });
+            const iv = window.crypto.getRandomValues(new Uint8Array(12));
+            const encodedMessage = new TextEncoder().encode(loginPayload);
 
-            const encrypted = await encryptData(payload, aesKey);
+            const ciphertextBuffer = await crypto.subtle.encrypt(
+                { name: "AES-GCM", iv: iv },
+                aesKey,
+                encodedMessage
+            );
 
+            const ciphertext = arrayBufferToBase64(ciphertextBuffer);
+            const ivBase64 = arrayBufferToBase64(iv);
+
+            // 🔐 Exportar clave AES a Base64URL
             const rawKey = await crypto.subtle.exportKey('raw', aesKey);
             const base64Key = arrayBufferToBase64(rawKey);
+
 
             const response = await fetch(`${API_BASE}/api/loginApi`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
-                    'X-AES-Key': base64Key,
+                    'X-AES-Key': base64Key, // 
                 },
                 credentials: 'include',
-                body: JSON.stringify(encrypted),
+                body: JSON.stringify({
+                    ciphertext: ciphertext,
+                    iv: ivBase64
+                })
             });
-
 
 
 
