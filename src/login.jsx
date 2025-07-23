@@ -130,7 +130,7 @@ function Login() {
 
 
 
-            if (!response.ok) {
+            if (!response.ok) {                
                 const errorText = await response.text();
                 console.error('Error en login:', errorText);
                 return;
@@ -155,32 +155,7 @@ function Login() {
             throw err;
         }
     }
-    /*
-    async function secureFetch(url, options = {}) {
-        const jwt = localStorage.getItem('jwt');
-        if (!jwt) throw new Error("JWT no disponible");
-
-        if (!aesKey) throw new Error("Clave AES no cargada");
-
-        const rawKey = await crypto.subtle.exportKey('raw', aesKey);
-        const base64Key = arrayBufferToBase64(rawKey);
-        const base64UrlKey = base64ToBase64URL(base64Key);
-
-        const headers = {
-            'Authorization': `Bearer ${jwt}`,      
-            'X-AES-Key': base64UrlKey,            
-            ...options.headers
-        };
-
-        const finalOptions = {
-            ...options,
-            headers
-        };
-
-        return await fetch(`${API_BASE}${url}`, finalOptions);
-    }*/
-
-
+    
     function base64ToBase64URL(base64) {
         return base64.replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '');
     }
@@ -222,7 +197,7 @@ function Login() {
         try {
             const response = await fetch(`${API_BASE}/api/refresh-token`, {
                 method: 'POST',
-                credentials: 'include', // ⬅️ MUY IMPORTANTE: permite enviar cookies (HttpOnly)
+                credentials: 'include', //la cookie se guarda en el navegador y se envía automáticamente
                 headers: {
                     'Accept': 'application/json'
                 }
@@ -273,7 +248,7 @@ function Login() {
 
                 setInterval(() => {
                     refreshAccessToken();
-                }, 25 * 60 * 1000);
+                }, 1 * 60 * 1000);
 
                 setTimeout(() => {
                     sessionStorage.setItem('authToken', 'logged_in');
