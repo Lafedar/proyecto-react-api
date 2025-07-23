@@ -7,6 +7,7 @@ import Layout from './components/Layout';
 import './styles/App.css';
 import { useSearchParams } from 'react-router-dom';
 
+
 function Login() {
     const API_BASE = process.env.REACT_APP_API_BASE_URL;
     const [email, setEmail] = useState('')
@@ -20,6 +21,7 @@ function Login() {
     const { updateUsuario } = useSession();
     const [searchParams] = useSearchParams();
     const [loadingToast, setLoadingToast] = useState(false);
+
 
     useEffect(() => {
         const message = searchParams.get('message');
@@ -89,10 +91,8 @@ function Login() {
         }
 
     }
-    window.tokens = {
-        accessToken: null,
-        refreshToken: null
-    };
+ 
+
 
     async function encryptLoginAndSend(email, password) {
         try {
@@ -152,8 +152,9 @@ function Login() {
                 //localStorage.setItem('jwt', usuarioData.token); // ✅ Guardar JWT
                 console.log("Token de acceso:", usuarioData.token);
                 console.log("Token de refresco:", usuarioData.refresh_token);
-                window.tokens.accessToken = usuarioData.token;
-                window.tokens.refreshToken = usuarioData.refresh_token;
+                
+                sessionStorage.setItem('accessToken', usuarioData.token);
+                sessionStorage.setItem('refreshToken', usuarioData.refresh_token);
             }
 
             return mensajeDesencriptado;
@@ -202,8 +203,9 @@ function Login() {
     }
     async function refreshAccessToken() {
         try {
+            const refreshToken = sessionStorage.getItem('refreshToken');
+            console.log("Token de refresco en refreshAccessToken:", refreshToken);
 
-            console.log("Token de refresco en refreshAccessToken:", window.tokens.refreshToken);
             const response = await fetch(`${API_BASE}/api/refresh-token`, {
                 method: 'POST',
                 headers: {
@@ -211,7 +213,7 @@ function Login() {
                     'Accept': 'application/json'
                 },
                 body: JSON.stringify({
-                    refresh_token: window.tokens.refreshToken
+                    refresh_token: refreshToken
                 })
             });
 
@@ -224,10 +226,12 @@ function Login() {
 
             // Guardalo donde lo uses (state, localStorage, etc.)
             //localStorage.setItem('access_token', nuevoAccessToken);
-            window.tokens.accessToken = data.access_token;
-            window.tokens.refreshToken = data.refresh_token;
+            //window.tokens.accessToken = data.access_token;
+            //window.tokens.refreshToken = data.refresh_token;
+            sessionStorage.setItem('accessToken', data.access_token);
+            sessionStorage.setItem('refreshToken', data.refresh_token);
 
-            return window.tokens.accessToken;
+            return data.access_token;
         } catch (error) {
             console.error('Error al refrescar el token:', error);
             // Podés redirigir al login
@@ -266,7 +270,6 @@ function Login() {
 
                 setTimeout(() => {
                     sessionStorage.setItem('authToken', 'logged_in');
-
                     navigate("/links");
                 }, 2000);
             } else {

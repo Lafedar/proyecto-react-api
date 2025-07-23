@@ -112,7 +112,10 @@ function ExitButton({ type = 'button', children, to }) {
     const handleClick = () => {
         sessionStorage.removeItem('authToken');
         sessionStorage.removeItem('sessionKey');
-        clearInterval(window.refreshTokenInterval); //Detener el refresh automático del token
+
+        //limpiar tokens
+        sessionStorage.removeItem('accessToken');
+        sessionStorage.removeItem('refreshToken');
 
         if (to) {
             window.location.href = to;
