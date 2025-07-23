@@ -91,9 +91,9 @@ function Login() {
         }
 
     }
- 
 
 
+    let accessToken = null;
     async function encryptLoginAndSend(email, password) {
         try {
             if (!aesKey) {
@@ -152,9 +152,8 @@ function Login() {
                 //localStorage.setItem('jwt', usuarioData.token); // ✅ Guardar JWT
                 console.log("Token de acceso:", usuarioData.token);
                 console.log("Token de refresco:", usuarioData.refresh_token);
-                
-                sessionStorage.setItem('accessToken', usuarioData.token);
-                sessionStorage.setItem('refreshToken', usuarioData.refresh_token);
+                accessToken = usuarioData.token;
+
             }
 
             return mensajeDesencriptado;
@@ -203,8 +202,6 @@ function Login() {
     }
     async function refreshAccessToken() {
         try {
-            const refreshToken = sessionStorage.getItem('refreshToken');
-            console.log("Token de refresco en refreshAccessToken:", refreshToken);
 
             const response = await fetch(`${API_BASE}/api/refresh-token`, {
                 method: 'POST',
@@ -212,9 +209,7 @@ function Login() {
                     'Content-Type': 'application/json',
                     'Accept': 'application/json'
                 },
-                body: JSON.stringify({
-                    refresh_token: refreshToken
-                })
+                credentials: 'include' // ✅ para que se envíe la cookie
             });
 
             if (!response.ok) {
@@ -223,15 +218,12 @@ function Login() {
 
             const data = await response.json();
 
+            if (data.access_token) {
+                accessToken = data.access_token;
+                return accessToken;
+            }
 
-            // Guardalo donde lo uses (state, localStorage, etc.)
-            //localStorage.setItem('access_token', nuevoAccessToken);
-            //window.tokens.accessToken = data.access_token;
-            //window.tokens.refreshToken = data.refresh_token;
-            sessionStorage.setItem('accessToken', data.access_token);
-            sessionStorage.setItem('refreshToken', data.refresh_token);
-
-            return data.access_token;
+            return null;
         } catch (error) {
             console.error('Error al refrescar el token:', error);
             // Podés redirigir al login
@@ -271,6 +263,7 @@ function Login() {
                 setTimeout(() => {
                     sessionStorage.setItem('authToken', 'logged_in');
                     navigate("/links");
+                    refreshAccessToken();
                 }, 2000);
             } else {
 
