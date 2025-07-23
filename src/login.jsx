@@ -220,6 +220,7 @@ function Login() {
 
             if (data.access_token) {
                 accessToken = data.access_token;
+                console.log("Token de acceso refrescado:", accessToken);
                 return accessToken;
             }
 
