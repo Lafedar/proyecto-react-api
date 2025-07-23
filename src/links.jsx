@@ -3,7 +3,7 @@ import { createRoot } from 'react-dom/client'
 import './styles/App.css';
 import { useNavigate } from 'react-router-dom';
 import Layout from './components/Layout';
-import { useSession } from '../contexts/SessionContext';
+import { useSession } from './contexts/SessionContext';
 import { refreshAccessToken } from './jwtUtils';
 
 function Links() {
