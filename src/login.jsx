@@ -7,6 +7,7 @@ import Toast from './components/Toast';
 import Layout from './components/Layout';
 import './styles/App.css';
 import { useSearchParams } from 'react-router-dom';
+import { encryptData } from './cryptoUtils';
 
 
 
