@@ -89,9 +89,10 @@ function Login() {
         }
 
     }
-    let accessToken = null;
-    let refreshToken = null;
-
+    window.tokens = {
+        accessToken: null,
+        refreshToken: null
+    };
 
     async function encryptLoginAndSend(email, password) {
         try {
@@ -149,8 +150,8 @@ function Login() {
             const usuarioData = JSON.parse(mensajeDesencriptado);
             if (usuarioData.token) {
                 //localStorage.setItem('jwt', usuarioData.token); // ✅ Guardar JWT
-                accessToken = usuarioData.token;
-                refreshToken = usuarioData.refresh_token;
+                window.tokens.accessToken = usuarioData.token;
+                window.tokens.refreshToken = usuarioData.refresh_token;
             }
 
             return mensajeDesencriptado;
@@ -206,7 +207,7 @@ function Login() {
                     'Accept': 'application/json'
                 },
                 body: JSON.stringify({
-                    refresh_token: refreshToken // ✅ enviar el token en el body
+                    refresh_token: window.tokens.refreshToken
                 })
             });
 
@@ -219,10 +220,10 @@ function Login() {
 
             // Guardalo donde lo uses (state, localStorage, etc.)
             //localStorage.setItem('access_token', nuevoAccessToken);
-            accessToken = data.access_token;
-            refreshToken = data.refresh_token;
+            window.tokens.accessToken = data.access_token;
+            window.tokens.refreshToken = data.refresh_token;
 
-            return accessToken;
+            return window.tokens.accessToken;
         } catch (error) {
             console.error('Error al refrescar el token:', error);
             // Podés redirigir al login
