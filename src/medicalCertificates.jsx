@@ -7,6 +7,7 @@ import './styles/App.css';
 import { useSearchParams } from 'react-router-dom';
 import { encryptData, encryptFile } from './cryptoUtils';
 import { refreshAccessToken } from './jwtUtils';
+import { arrayBufferToBase64 } from './cryptoUtils';
 
 
 
