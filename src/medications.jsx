@@ -7,6 +7,9 @@ import Toast from './components/Toast';
 import './styles/App.css';
 import { useSearchParams } from 'react-router-dom';
 import Layout from './components/Layout';
+import { refreshAccessToken } from './jwtUtils';
+import { arrayBufferToBase64 } from './cryptoUtils';
+import { useSession } from './contexts/SessionContext';
 
 
 function Medications() {
@@ -28,7 +31,7 @@ function Medications() {
     const [showToast, setShowToast] = useState(false);
     const [loading, setLoading] = useState(false);
     const [loadingToast, setLoadingToast] = useState(false);
-
+    const { accessToken, updateAccessToken } = useSession();
 
 
     if (!usuario) {
@@ -58,20 +61,34 @@ function Medications() {
                 return;
             }
 
+            const rawKey = await crypto.subtle.exportKey('raw', sessionKey);
+            const base64Key = arrayBufferToBase64(rawKey);
 
-            const response = await fetch(`${API_BASE}/api/medications`, {
+            const sendRequest = async (token) => {
+                return await fetch(`${API_BASE}/api/medications`, {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                        "Authorization": `Bearer ${token}`,
+                        'X-AES-Key': base64Key,
+                    },
+                    credentials: "include",
+                    body: JSON.stringify({
+                        ciphertext: encrypted.ciphertext,
+                        iv: encrypted.iv
+                    })
+                });
+            };
 
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
+            let response = await sendRequest(accessToken);
 
-                },
-                credentials: 'include',
-                body: JSON.stringify({
-                    ciphertext: encrypted.ciphertext,
-                    iv: encrypted.iv
-                })
-            });
+            // Si expira el token, intentá refrescarlo
+            if (response.status === 401) {
+                const newToken = await refreshAccessToken(updateAccessToken);
+                if (newToken) {
+                    response = await sendRequest(newToken); // Reintenta con el nuevo token
+                }
+            }
 
 
             const isOk = response.ok;
@@ -83,6 +100,7 @@ function Medications() {
                 setShowToast(true);
                 setTimeout(() => {
                     navigate("/links");
+                    refreshAccessToken(updateAccessToken);
                 }, 3000);
 
             } else {
@@ -91,6 +109,7 @@ function Medications() {
                 setTimeout(() => {
                     setShowToast(false);
                     navigate("/links");
+                    refreshAccessToken(updateAccessToken);
                 }, 3000);
             }
         } catch (error) {
