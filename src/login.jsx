@@ -227,13 +227,13 @@ function Login() {
                 setShowToast(true);
 
                 setInterval(() => {
-                    refreshAccessToken();
+                    refreshAccessToken(updateAccessToken);
                 }, 1 * 60 * 1000);
 
                 setTimeout(() => {
                     sessionStorage.setItem('authToken', 'logged_in');
                     navigate("/links");
-                    refreshAccessToken();
+                    refreshAccessToken(updateAccessToken);
                 }, 2000);
             } else {
 

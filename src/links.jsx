@@ -4,19 +4,22 @@ import './styles/App.css';
 import { useNavigate } from 'react-router-dom';
 import Layout from './components/Layout';
 import { refreshAccessToken } from './jwtUtils';
+import { useSession } from './contexts/SessionContext';
+
 
 function Links() {
+    const { updateAccessToken } = useSession();
 
     return (
         <Layout>
             <div id="links-container">
                 <h1>Links</h1>
-                <LunchButton to="https://forms.office.com/Pages/ResponsePage.aspx?id=3zlyfmyFe0ObLZamOIhIW0Tb2ozw6d1Fu5JeRkE3OUtUMTlDTUNFUUVEQ1hRTlkwV0ZTVzZUMFRSVS4u">
+                <LunchButton to="https://forms.office.com/Pages/ResponsePage.aspx?id=3zlyfmyFe0ObLZamOIhIW0Tb2ozw6d1Fu5JeRkE3OUtUMTlDTUNFUUVEQ1hRTlkwV0ZTVzZUMFRSVS4u" updateAccessToken={updateAccessToken}>
                     Almuerzos
                 </LunchButton>
-                <MedicalCertificatesButton to="/medicalCertificates">Certificados Médicos</MedicalCertificatesButton>
-                <MedicationButton to="/medications">Solicitudes de Medicamentos</MedicationButton>
-                <MyRequestsButton to="/myRequests">Mis Solicitudes de Medicamentos</MyRequestsButton>
+                <MedicalCertificatesButton to="/medicalCertificates" updateAccessToken={updateAccessToken}>Certificados Médicos</MedicalCertificatesButton>
+                <MedicationButton to="/medications" updateAccessToken={updateAccessToken}>Solicitudes de Medicamentos</MedicationButton>
+                <MyRequestsButton to="/myRequests" updateAccessToken={updateAccessToken}>Mis Solicitudes de Medicamentos</MyRequestsButton>
                 <ExitButton to="/">Salir</ExitButton>
             </div>
 
@@ -27,15 +30,15 @@ function Links() {
 
 }
 
-function LunchButton({ type = 'button', children, to}) {
+function LunchButton({ type = 'button', children, to, updateAccessToken}) {
     const handleClick = () => {
         if (to) {
             if (to.startsWith('http')) {
                 window.location.href = to;
-                refreshAccessToken();
+                refreshAccessToken(updateAccessToken);
             } else {
                 navigate(to);
-                refreshAccessToken();
+                refreshAccessToken(updateAccessToken);
             }
         }
     };
@@ -50,13 +53,13 @@ function LunchButton({ type = 'button', children, to}) {
         </button>
     );
 }
-function MedicalCertificatesButton({ type = 'button', children, to }) {
+function MedicalCertificatesButton({ type = 'button', children, to, updateAccessToken }) {
     const navigate = useNavigate();
 
     const handleClick = () => {
         if (to) {
             navigate(to);
-            refreshAccessToken();
+            refreshAccessToken(updateAccessToken);
         }
     };
 
@@ -71,13 +74,13 @@ function MedicalCertificatesButton({ type = 'button', children, to }) {
     );
 }
 
-function MedicationButton({ type = 'button', children, to }) {
+function MedicationButton({ type = 'button', children, to, updateAccessToken }) {
     const navigate = useNavigate();
 
     const handleClick = () => {
         if (to) {
             navigate(to);
-            refreshAccessToken();
+            refreshAccessToken(updateAccessToken);
         }
     };
 
@@ -92,13 +95,13 @@ function MedicationButton({ type = 'button', children, to }) {
     );
 }
 
-function MyRequestsButton({ type = 'button', children, to }) {
+function MyRequestsButton({ type = 'button', children, to, updateAccessToken }) {
     const navigate = useNavigate();
 
     const handleClick = () => {
         if (to) {
             navigate(to);
-            refreshAccessToken();
+            refreshAccessToken(updateAccessToken);
         }
     };
 
