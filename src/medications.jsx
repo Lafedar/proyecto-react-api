@@ -53,9 +53,19 @@ function Medications() {
                 return;
             }
 
-            const payload = { dni_user, medication, amount, medication2, amount2, medication3, amount3 };
+            const payload = {
+                data: {
+                    dni_user,
+                    medication,
+                    amount,
+                    medication2,
+                    amount2,
+                    medication3,
+                    amount3
+                }
+            };
 
-            const encrypted = await encryptData({ data: payload }, sessionKey);
+            const encrypted = await encryptData(payload, sessionKey);
             if (!encrypted) {
                 console.error('Error al encriptar los datos en medications.');
                 return;
