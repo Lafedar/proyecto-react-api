@@ -100,7 +100,7 @@ function Login() {
 
     async function encryptLoginAndSend(email, password) {
         try {
-            if (!aesKey) {
+            if (!sessionKey) {
                 console.error('La clave AES no está cargada.');
                 throw new Error('Clave AES faltante');
             }
@@ -112,9 +112,9 @@ function Login() {
                 }
             };
 
-            const encrypted = await encryptData(loginPayload, aesKey); // usa JSON.stringify internamente
+            const encrypted = await encryptData(loginPayload, sessionKey); // usa JSON.stringify internamente
 
-            const rawKey = await crypto.subtle.exportKey('raw', aesKey);
+            const rawKey = await crypto.subtle.exportKey('raw', sessionKey);
             const base64Key = arrayBufferToBase64(rawKey);
 
             const response = await fetch(`${API_BASE}/api/loginApi`, {
