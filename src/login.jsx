@@ -202,6 +202,8 @@ function Login() {
     }
     async function refreshAccessToken() {
         try {
+
+            console.log("Token de refresco en refreshAccessToken:", window.tokens.refreshToken);
             const response = await fetch(`${API_BASE}/api/refresh-token`, {
                 method: 'POST',
                 headers: {
