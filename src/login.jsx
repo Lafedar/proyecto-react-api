@@ -125,6 +125,7 @@ function Login() {
                     'Content-Type': 'application/json',
                     'X-AES-Key': base64Key, // 
                 },
+                credentials: 'include',
                 body: JSON.stringify({
                     ciphertext: ciphertext,
                     iv: ivBase64
@@ -151,7 +152,6 @@ function Login() {
             if (usuarioData.token) {
                 //localStorage.setItem('jwt', usuarioData.token); // ✅ Guardar JWT
                 console.log("Token de acceso:", usuarioData.token);
-                console.log("Token de refresco:", usuarioData.refresh_token);
                 accessToken = usuarioData.token;
 
             }
