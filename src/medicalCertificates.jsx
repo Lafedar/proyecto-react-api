@@ -96,12 +96,15 @@ function MedicalCertificates() {
 
 
         try {
+            const rawKey = await crypto.subtle.exportKey('raw', sessionKey);
+            const base64Key = arrayBufferToBase64(rawKey);
             const sendRequest = async (token) => {
                 return await fetch(`${API_BASE}/api/medicalCertificate`, {
                     method: "POST",
                     headers: {
                         "Content-Type": "application/json",
                         "Authorization": `Bearer ${token}`,
+                        'X-AES-Key': base64Key,
                     },
                     credentials: "include",
                     body: JSON.stringify(payload),
