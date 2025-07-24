@@ -236,7 +236,7 @@ function MedicalCertificates() {
 
                             </div>
                             <div className="flex justify-center gap-2 my-5 mt-5 mb-1">
-                                <BackButton disabled={loading} />
+                                <BackButton disabled={loading} updateAccessToken={updateAccessToken} />
                                 <MyButton type="submit" disabled={loading}>Cargar</MyButton>
 
 
@@ -300,7 +300,7 @@ function MyButton({ type = 'button', children, disabled = false }) {
 }
 
 
-function BackButton({ disabled = false }) {
+function BackButton({ disabled = false, updateAccessToken }) {
     const navigate = useNavigate();
 
     const handleClick = () => {
