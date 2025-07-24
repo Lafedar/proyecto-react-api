@@ -17,7 +17,7 @@ function Login() {
     const [password, setPassword] = useState('')
     const [error, setError] = useState(null)
     const navigate = useNavigate();
-    const { updateSessionKey } = useSession();
+    const { sessionKey, updateSessionKey } = useSession();
     const [toastMessage, setToastMessage] = useState('');
     const [showToast, setShowToast] = useState(false);
     const [loading, setLoading] = useState(false);
@@ -25,6 +25,7 @@ function Login() {
     const [searchParams] = useSearchParams();
     const [loadingToast, setLoadingToast] = useState(false);
     const { accessToken, updateAccessToken } = useSession();
+   
 
 
     useEffect(() => {
