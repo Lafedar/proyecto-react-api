@@ -30,20 +30,31 @@ function MyRequests() {
                 }
                 const rawKey = await crypto.subtle.exportKey('raw', sessionKey);
                 const base64Key = arrayBufferToBase64(rawKey);
-                const response = await fetch(`${API_BASE}/api/medicationsRequests`, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        "Authorization": `Bearer ${accessToken}`,
-                        'X-AES-Key': base64Key,
+                const sendRequest = async (token) => {
+                    return await fetch(`${API_BASE}/api/medicationsRequests`, {
+                        method: "POST",
+                        headers: {
+                            "Content-Type": "application/json",
+                            "Authorization": `Bearer ${token}`,
+                            'X-AES-Key': base64Key,
+                        },
+                        credentials: "include",
+                        body: JSON.stringify({
+                            ciphertext: encrypted.ciphertext,
+                            iv: encrypted.iv
+                        })
+                    });
+                };
 
-                    },
-                    credentials: 'include',
-                    body: JSON.stringify({
-                        ciphertext: encrypted.ciphertext,
-                        iv: encrypted.iv
-                    })
-                });
+                let response = await sendRequest(accessToken);
+
+                // Si expira el token, intentá refrescarlo
+                if (response.status === 401) {
+                    const newToken = await refreshAccessToken(updateAccessToken);
+                    if (newToken) {
+                        response = await sendRequest(newToken); // Reintenta con el nuevo token
+                    }
+                }
 
                 const data = await response.json();
 
@@ -164,7 +175,7 @@ function MyRequests() {
 
 
 
-function BackButton({ disabled = false , updateAccessToken}) {
+function BackButton({ disabled = false, updateAccessToken }) {
     const navigate = useNavigate();
 
     const handleClick = () => {
