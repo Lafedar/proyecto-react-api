@@ -292,7 +292,7 @@ function Medications() {
 
 
                             <div className="flex justify-center gap-2 my-5 mt-10 mb-1">
-                                <BackButton disabled={loading} />
+                                <BackButton disabled={loading} updateAccessToken={updateAccessToken} />
                                 <MyButton type="submit" disabled={loading}> Solicitar</MyButton>
 
 
@@ -418,7 +418,7 @@ function MyButton({ children, disabled }) {
 
 
 
-function BackButton({ disabled = false }) {
+function BackButton({ disabled = false }, updateAccessToken) {
     const navigate = useNavigate();
 
     const handleClick = () => {
