@@ -418,7 +418,7 @@ function MyButton({ children, disabled }) {
 
 
 
-function BackButton({ disabled = false }, updateAccessToken) {
+function BackButton({ disabled = false , updateAccessToken}) {
     const navigate = useNavigate();
 
     const handleClick = () => {
