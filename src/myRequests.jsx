@@ -4,6 +4,7 @@ import Layout from './components/Layout';
 import { useNavigate } from 'react-router-dom';
 import { useSession } from './contexts/SessionContext';
 import { encryptData, decryptData } from './cryptoUtils';
+import { arrayBufferToBase64 } from './cryptoUtils';
 
 function MyRequests() {
     const API_BASE = process.env.REACT_APP_API_BASE_URL;
