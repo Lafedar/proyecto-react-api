@@ -98,15 +98,19 @@ function MailResetPassword() {
                 const encrypted = await encryptData({ dni }, aesKey);
 
                 if (!encrypted) {
-                    console.error("Falló la encriptación en medications");
+                    console.error("Falló la encriptación en buscar persona.");
                     return;
                 }
-
+                const rawKey = await crypto.subtle.exportKey('raw', aesKey);
+                const base64Key = arrayBufferToBase64(rawKey);
                 const res = await fetch(
                     `${API_BASE}/api/buscarPersona`,
                     {
                         method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'X-AES-Key': base64Key,
+                        },
                         credentials: 'include',
                         body: JSON.stringify({
                             ciphertext: encrypted.ciphertext,
