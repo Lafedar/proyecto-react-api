@@ -4,6 +4,7 @@ import Toast from './components/Toast';
 import Layout from './components/Layout';
 import './styles/App.css';
 import { encryptData, decryptData } from './cryptoUtils';
+import { arrayBufferToBase64 } from './cryptoUtils';
 
 function MailResetPassword() {
     const API_BASE = process.env.REACT_APP_API_BASE_URL;
