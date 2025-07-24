@@ -11,6 +11,7 @@ function MyRequests() {
     const { usuario } = useSession();
     const [requests, setRequests] = useState([]);
     const [loading, setLoading] = useState(false);
+    const { accessToken, updateAccessToken } = useSession();
 
     useEffect(() => {
         const fetchRequests = async () => {
@@ -25,10 +26,16 @@ function MyRequests() {
                     console.error('Error al encriptar los datos.');
                     return;
                 }
-
+                const rawKey = await crypto.subtle.exportKey('raw', sessionKey);
+                const base64Key = arrayBufferToBase64(rawKey);
                 const response = await fetch(`${API_BASE}/api/medicationsRequests`, {
                     method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
+                    headers: {
+                        'Content-Type': 'application/json',
+                        "Authorization": `Bearer ${accessToken}`,
+                        'X-AES-Key': base64Key,
+
+                    },
                     credentials: 'include',
                     body: JSON.stringify({
                         ciphertext: encrypted.ciphertext,
@@ -140,7 +147,7 @@ function MyRequests() {
                         </div>
                     </div>
                     <div className="flex justify-center mb-25">
-                        <BackButton />
+                        <BackButton updateAccessToken={updateAccessToken} />
                     </div>
                 </div>
             )}
@@ -155,7 +162,7 @@ function MyRequests() {
 
 
 
-function BackButton({ disabled = false }) {
+function BackButton({ disabled = false }, updateAccessToken) {
     const navigate = useNavigate();
 
     const handleClick = () => {
@@ -165,6 +172,7 @@ function BackButton({ disabled = false }) {
         }
 
         navigate('/links');
+        refreshAccessToken(updateAccessToken);
     };
 
     return (

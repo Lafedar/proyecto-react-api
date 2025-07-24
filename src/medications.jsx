@@ -89,6 +89,7 @@ function Medications() {
                 setShowToast(true);
                 setTimeout(() => {
                     navigate("/links");
+                    refreshAccessToken(updateAccessToken);
                 }, 3000);
 
             } else {
@@ -97,6 +98,7 @@ function Medications() {
                 setTimeout(() => {
                     setShowToast(false);
                     navigate("/links");
+                    refreshAccessToken(updateAccessToken);
                 }, 3000);
             }
         } catch (error) {
@@ -426,6 +428,7 @@ function BackButton({ disabled = false }) {
         }
 
         navigate('/links');
+        refreshAccessToken(updateAccessToken);
     };
 
     return (
