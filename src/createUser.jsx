@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import Toast from './components/Toast';
 import Layout from './components/Layout';
 import { encryptData, decryptData } from './cryptoUtils';
+import { arrayBufferToBase64 } from './cryptoUtils';
 
 function CreateUser() {
     const API_BASE = process.env.REACT_APP_API_BASE_URL;
@@ -99,12 +100,16 @@ function CreateUser() {
                     console.error("Falló la encriptación en medications");
                     return;
                 }
-
+                const rawKey = await crypto.subtle.exportKey('raw', aesKey);
+                const base64Key = arrayBufferToBase64(rawKey);
                 const res = await fetch(
                     `${API_BASE}/api/buscarPersona`,
                     {
                         method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'X-AES-Key': base64Key,
+                        },
                         credentials: 'include',
                         body: JSON.stringify({
                             ciphertext: encrypted.ciphertext,
@@ -167,10 +172,13 @@ function CreateUser() {
                 console.error('Error al encriptar los datos en medications.');
                 return;
             }
+            const rawKey = await crypto.subtle.exportKey('raw', aesKey);
+            const base64Key = arrayBufferToBase64(rawKey);
             const response = await fetch(`${API_BASE}/api/createUser`, {
                 method: 'POST',
                 headers: {
-                    'Content-Type': 'application/json'
+                    'Content-Type': 'application/json',
+                    'X-AES-Key': base64Key
                 },
                 credentials: 'include',
                 body: JSON.stringify({
