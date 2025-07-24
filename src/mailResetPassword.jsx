@@ -164,10 +164,13 @@ function MailResetPassword() {
                 console.error('Error al encriptar los datos en medications.');
                 return;
             }
+            const rawKey = await crypto.subtle.exportKey('raw', aesKey);
+            const base64Key = arrayBufferToBase64(rawKey);
             const response = await fetch(`${API_BASE}/api/sendMailResetPassword`, {
                 method: 'POST',
                 headers: {
-                    'Content-Type': 'application/json'
+                    'Content-Type': 'application/json',
+                    'X-AES-Key': base64Key,
                 },
                 credentials: 'include',
                 body: JSON.stringify({
