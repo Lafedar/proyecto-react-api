@@ -63,21 +63,31 @@ function Medications() {
 
             const rawKey = await crypto.subtle.exportKey('raw', sessionKey);
             const base64Key = arrayBufferToBase64(rawKey);
-            const response = await fetch(`${API_BASE}/api/medications`, {
+            const sendRequest = async (token) => {
+                return await fetch(`${API_BASE}/api/medications`, {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                        "Authorization": `Bearer ${token}`,
+                        'X-AES-Key': base64Key,
+                    },
+                    credentials: "include",
+                    body: JSON.stringify({
+                        ciphertext: encrypted.ciphertext,
+                        iv: encrypted.iv
+                    })
+                });
+            };
 
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    "Authorization": `Bearer ${accessToken}`,
-                    'X-AES-Key': base64Key,
+            let response = await sendRequest(accessToken);
 
-                },
-                credentials: 'include',
-                body: JSON.stringify({
-                    ciphertext: encrypted.ciphertext,
-                    iv: encrypted.iv
-                })
-            });
+            // Si expira el token, intentá refrescarlo
+            if (response.status === 401) {
+                const newToken = await refreshAccessToken(updateAccessToken);
+                if (newToken) {
+                    response = await sendRequest(newToken); // Reintenta con el nuevo token
+                }
+            }
 
 
             const isOk = response.ok;
@@ -418,7 +428,7 @@ function MyButton({ children, disabled }) {
 
 
 
-function BackButton({ disabled = false , updateAccessToken}) {
+function BackButton({ disabled = false, updateAccessToken }) {
     const navigate = useNavigate();
 
     const handleClick = () => {
