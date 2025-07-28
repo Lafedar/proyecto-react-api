@@ -34,7 +34,7 @@ function LunchButton({ type = 'button', children, to, updateAccessToken}) {
     const handleClick = () => {
         if (to) {
             if (to.startsWith('http')) {
-                window.location.href = to;
+                window.open(to, '_blank');
                 refreshAccessToken(updateAccessToken);
             } else {
                 navigate(to);
