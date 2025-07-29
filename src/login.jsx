@@ -225,7 +225,7 @@ function Login() {
 
                 setInterval(() => {
                     refreshAccessToken(updateAccessToken);
-                }, 1 * 60 * 1000);
+                }, 25 * 60 * 1000);
 
                 setTimeout(() => {
                     sessionStorage.setItem('authToken', 'logged_in');
