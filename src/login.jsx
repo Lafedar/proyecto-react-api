@@ -288,15 +288,11 @@ function Login() {
                         <div className="form-group flex flex-col items-center mb-4">
                             <label htmlFor="password" className="font-bold">Contraseña</label>
                             <InputPassword value={password} onChange={e => setPassword(e.target.value)} disabled={loading} />
-                            <a
-                                href={loading ? undefined : "/mailResetPassword"}
-                                onClick={e => loading && e.preventDefault()}
-                                className={`mt-[-10px] ${loading ? 'pointer-events-none opacity-50 cursor-not-allowed' : ''}`}
-                                style={{ color: 'rgba(15, 79, 141, 0.83)' }}
-                                aria-disabled={loading}
-                            >
+                            <ResetPasswordLink
+                                to="/mailResetPassword" disabled={loading}
+                                onClick={e => loading && e.preventDefault()}>
                                 ¿Olvidaste tu contraseña?
-                            </a>
+                            </ResetPasswordLink>
 
                         </div>
 
@@ -378,6 +374,29 @@ function CreateUserLink({ children, to, disabled = false }) {
             href={disabled ? undefined : to}
             onClick={handleClick}
             className={`mt-2 ${disabled ? 'pointer-events-none opacity-50 cursor-not-allowed' : ''}`}
+            style={{ color: 'rgba(15, 79, 141, 0.83)' }}
+            aria-disabled={disabled}
+        >
+            {children}
+        </a>
+    );
+}
+
+function ResetPasswordLink({ children, to, disabled = false }) {
+    const navigate = useNavigate();
+
+    const handleClick = (e) => {
+        e.preventDefault();
+        if (!disabled && to) {
+            navigate(to);
+        }
+    };
+
+    return (
+        <a
+            href={disabled ? undefined : to}
+            onClick={handleClick}
+            className={`mt-[-10px] ${disabled ? 'pointer-events-none opacity-50 cursor-not-allowed' : ''}`}
             style={{ color: 'rgba(15, 79, 141, 0.83)' }}
             aria-disabled={disabled}
         >
