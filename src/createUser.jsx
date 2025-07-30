@@ -24,6 +24,9 @@ function CreateUser() {
     const [aesKey, setAesKey] = useState(null);
     const [loadingToast, setLoadingToast] = useState(false);
     const [search, setSearch] = useState(false);
+    const [showEmailSuggestion, setShowEmailSuggestion] = useState(false);
+    const [emailCorp, setEmailCorp] = useState('')
+
 
 
 
@@ -82,6 +85,7 @@ function CreateUser() {
             setDniValid(false);
             setPersonName('');
             setPersonActive(0);
+            setShowEmailSuggestion(false);
             return;
         }
         if (dni.length !== 8) return;
@@ -124,13 +128,25 @@ function CreateUser() {
                 if (res.ok) {
                     const decrypted = await decryptData(data, aesKey);
                     const persona = JSON.parse(decrypted);
+                    console.log('Persona:', persona);
+
                     setPersonActive(persona.activo);
                     setPersonName(`${persona.nombre_p} ${persona.apellido}`);
                     setDniValid(true);
-                    if (persona.usuario === null && persona.correo !== null) {
-                        setEmail(persona.correo);
-                        setEmail2(persona.correo);
+                    if (persona.usuario !== null && persona.correo !== null) {
+                        setToastMessage(`La persona ya tiene un usuario creado.`);
+                        setShowToast(true);
+                        setTimeout(() => {
+                            setShowToast(false);
+                        }, 3000);
+                        setPersonActive(0); // bloquea los inputs
+                    } else if (persona.usuario === null && persona.correo !== null) {
+                        setEmailCorp(persona.correo);
+                        setShowEmailSuggestion(true);
+                    } else {
+                        setShowEmailSuggestion(false);
                     }
+
                 } else if (res.status === 404) {
                     setDniError('Persona no encontrada');
                 } else {
@@ -169,7 +185,23 @@ function CreateUser() {
 
 
         try {
-            const payload = { dni, email, password };
+            let payload;
+
+            if (showEmailSuggestion) {
+                payload = {
+                    dni,
+                    email: emailCorp,  // email principal = corporativo
+                    emailPersonal: email,  // email2 pasa a ser el personal opcional
+                    password,
+                };
+            } else {
+                payload = {
+                    dni,
+                    email,
+                    password,
+                };
+            }
+
 
             const encrypted = await encryptData(payload, aesKey);
             if (!encrypted) {
@@ -255,23 +287,35 @@ function CreateUser() {
                                         )}
 
                                         {dniValid && personName && (
-                                            personActive === 0 ? (
-                                                <p className="text-red-500 text-sm mt-1">
-                                                    La persona no está activa en la empresa
-                                                </p>
-                                            ) : (
+                                            <>
                                                 <p className="text-green-600 text-sm mt-[-5px]">
                                                     Hola: <strong>{personName}</strong>
                                                 </p>
-                                            )
+                                            </>
                                         )}
+
+                                    </>
+                                )}
+                                {showEmailSuggestion && (
+                                    <>
+                                        <label htmlFor="suggestedEmail" className="font-bold mb-[-15px]">Email Corporativo</label>
+                                        <InputSuggestedEmail
+                                            value={emailCorp}
+                                            onChange={e => setEmailCorp(e.target.value)}
+                                            disabled={true}
+                                        />
                                     </>
                                 )}
 
-                                <label htmlFor="email" className="font-bold mb-[-15px]">Email</label>
+
+                                <label htmlFor="email" className="font-bold mb-[-15px]">
+                                    {showEmailSuggestion ? 'Email Personal (opcional)' : 'Email'}
+                                </label>
                                 <InputUser value={email} onChange={e => setEmail(e.target.value)} disabled={loading || personActive === 0} />
 
-                                <label htmlFor="email2" className="font-bold mb-[-15px]">Reingrese su email</label>
+                                <label htmlFor="email2" className="font-bold mb-[-15px]">
+                                    {showEmailSuggestion ? 'Reingrese su email personal' : 'Reingrese su email'}
+                                </label>
                                 <InputUser2 value={email2} onChange={e => setEmail2(e.target.value)} disabled={loading || personActive === 0} />
                             </div>
 
@@ -412,6 +456,20 @@ function BackButton({ disabled = false }) {
         >
             Volver
         </button>
+    );
+}
+function InputSuggestedEmail({ value, onChange, disabled }) {
+    return (
+        <input
+            type="text"
+            id="suggestedEmail"
+            name="suggestedEmail"
+            value={value}
+            onChange={onChange}
+            disabled={disabled}
+            className="w-70 px-3 py-2 rounded-md border border-green-600 focus:outline-none focus:ring-2 focus:ring-green-600"
+            placeholder="Correo sugerido"
+        />
     );
 }
 
