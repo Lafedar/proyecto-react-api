@@ -127,6 +127,10 @@ function CreateUser() {
                     setPersonActive(persona.activo);
                     setPersonName(`${persona.nombre_p} ${persona.apellido}`);
                     setDniValid(true);
+                    if (persona.usuario === null && persona.correo !== null) {
+                        setEmail(persona.correo);
+                        setEmail2(persona.correo);
+                    }
                 } else if (res.status === 404) {
                     setDniError('Persona no encontrada');
                 } else {
