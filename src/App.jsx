@@ -9,6 +9,7 @@ import CreateUser from './createUser';
 import VerifyEmail from './verifyEmail';
 import MailResetPassword from './mailResetPassword';
 import Documentation from './documentation';
+import MyDocumentation from './myDocumentation';
 import UpdateDataUser from './updateDataUser';
 import ResetPassword from './resetPassword';
 import ProtectedRoute from './ProtectedRoute';
@@ -27,6 +28,7 @@ export default function App() {
                         <Route path="/myRequests" element={<MyRequests />} />
                         <Route path="/documentation" element={<Documentation />} />
                         <Route path="/updateData" element={<UpdateDataUser />} />
+                        <Route path="/myDocumentation" element={<MyDocumentation />} />
                     </Route>
 
                     <Route path="/createUser" element={<CreateUser />} />
