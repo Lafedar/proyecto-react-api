@@ -17,7 +17,7 @@ function Links() {
                 <LunchButton to="https://forms.office.com/Pages/ResponsePage.aspx?id=3zlyfmyFe0ObLZamOIhIW0Tb2ozw6d1Fu5JeRkE3OUtUMTlDTUNFUUVEQ1hRTlkwV0ZTVzZUMFRSVS4u" updateAccessToken={updateAccessToken}>
                     Almuerzos
                 </LunchButton>
-                <MedicalCertificatesButton to="/medicalCertificates" updateAccessToken={updateAccessToken}>Certificados Médicos</MedicalCertificatesButton>
+                <DocumentationButton to="/documentation" updateAccessToken={updateAccessToken}>Adjuntar Documentación</DocumentationButton>
                 <MedicationButton to="/medications" updateAccessToken={updateAccessToken}>Solicitudes de Medicamentos</MedicationButton>
                 <MyRequestsButton to="/myRequests" updateAccessToken={updateAccessToken}>Mis Solicitudes de Medicamentos</MyRequestsButton>
                 <UpdateDataButton to="/updateData" updateAccessToken={updateAccessToken}>Actualizá tus datos</UpdateDataButton>
@@ -54,7 +54,7 @@ function LunchButton({ type = 'button', children, to, updateAccessToken }) {
         </button>
     );
 }
-function MedicalCertificatesButton({ type = 'button', children, to, updateAccessToken }) {
+function DocumentationButton({ type = 'button', children, to, updateAccessToken }) {
     const navigate = useNavigate();
 
     const handleClick = () => {

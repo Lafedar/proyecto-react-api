@@ -100,7 +100,7 @@ function MedicalCertificates() {
             const rawKey = await crypto.subtle.exportKey('raw', sessionKey);
             const base64Key = arrayBufferToBase64(rawKey);
             const sendRequest = async (token) => {
-                return await fetch(`${API_BASE}/api/medicalCertificate`, {
+                return await fetch(`${API_BASE}/api/documentation`, {
                     method: "POST",
                     headers: {
                         "Content-Type": "application/json",
@@ -116,14 +116,14 @@ function MedicalCertificates() {
 
             // Si expira el token, intentá refrescarlo
             if (response.status === 401) {
-                const newToken = await refreshAccessToken(updateAccessToken); 
+                const newToken = await refreshAccessToken(updateAccessToken);
                 if (newToken) {
                     response = await sendRequest(newToken); // Reintenta con el nuevo token
                 }
             }
 
             const data = await response.json();
-           
+
             setLoadingToast(false);
             if (response.ok) {
                 setToastMessage(data.message);
@@ -147,7 +147,7 @@ function MedicalCertificates() {
                 setSelectedFile(null);
             }
         } catch (error) {
-            console.error('Error al guardar el certificado médico:', error);
+            console.error('Error al guardar la documentación:', error);
 
         }
         finally {
@@ -200,7 +200,7 @@ function MedicalCertificates() {
                             />
                         )}
                         <form className="w-full" onSubmit={handleSubmit}>
-                            <h1 className="text-xl font-bold text-center text-white-600 mb-4" id="titulo-solicitudes">Certificado Médico</h1>
+                            <h1 className="text-xl font-bold text-center text-white-600 mb-4" id="titulo-solicitudes">Adjuntar Documentación</h1>
                             {error && <div className="error">{error}</div>}
 
                             <div className="form-group flex flex-col items-center mt-6 gap-4">
@@ -209,10 +209,11 @@ function MedicalCertificates() {
                                 <div className="flex justify-center gap-x-0.5 -mt-2">
 
                                     <div className="flex flex-col items-center">
-                                        <label htmlFor="input_title" className="font-bold" id="label-title">Título:</label>
-                                        <InputTitle value={title} onChange={e => setTitle(e.target.value)} disabled={loading} required />
+                                        <label htmlFor="input_title" className="font-bold mb-3" id="label-title">Tipo:</label>
+                                        <InputType value={title} onChange={e => setTitle(e.target.value)} disabled={loading} required />
 
-                                        <label htmlFor="input_description" className="font-bold mt-[-5px]" id="label-description">Observación (opcional):</label>
+
+                                        <label htmlFor="input_description" className="font-bold mt-3" id="label-description">Observación (opcional):</label>
                                         <InputDescription value={description} onChange={e => setDescription(e.target.value)} disabled={loading} />
 
                                         <label htmlFor="archivo" className="font-bold mt-[-5px]" id="label-archivo">Archivo (.jpg, .jpeg o .pdf):</label>
@@ -254,10 +255,16 @@ function MedicalCertificates() {
 }
 
 
-function InputTitle({ value, onChange, disabled }) {
+function InputType({ value, onChange, disabled }) {
+    const opciones = [
+        'Certificado Médico',
+        'Certificado de Estudios',
+        'Cambio de Domicilio',
+        'Otro'
+    ];
+
     return (
-        <input
-            type="text"
+        <select
             id="title"
             name="title"
             value={value}
@@ -265,11 +272,17 @@ function InputTitle({ value, onChange, disabled }) {
             disabled={disabled}
             required
             className="w-70 px-3 py-2 rounded-md border border-black focus:outline-none focus:ring-2 focus:ring-blue-500"
-            minLength="8" maxLength="99"
-
-        />
-    )
+        >
+            <option value="">Seleccione el tipo</option>
+            {opciones.map((opcion) => (
+                <option key={opcion} value={opcion}>
+                    {opcion}
+                </option>
+            ))}
+        </select>
+    );
 }
+
 function InputDescription({ value, onChange, disabled }) {
     return (
         <input
