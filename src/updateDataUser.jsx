@@ -1,11 +1,16 @@
 import React, { useState, useEffect } from 'react';
+import { createRoot } from 'react-dom/client'
+import './styles/App.css';
 import { useNavigate } from 'react-router-dom';
-import Toast from './components/Toast';
 import Layout from './components/Layout';
-import { encryptData, decryptData } from './cryptoUtils';
-import { arrayBufferToBase64 } from './cryptoUtils';
+import { refreshAccessToken } from './jwtUtils';
+import { useSession } from './contexts/SessionContext';
 
-function CreateUser() {
+
+
+
+
+function UpdateDataUser() {
     const API_BASE = process.env.REACT_APP_API_BASE_URL;
     const [dni, setDni] = useState('')
     const [dniError, setDniError] = useState('')
@@ -26,8 +31,9 @@ function CreateUser() {
     const [search, setSearch] = useState(false);
     const [showEmailSuggestion, setShowEmailSuggestion] = useState(false);
     const [emailCorp, setEmailCorp] = useState('')
-
-
+    const { usuario } = useSession();
+    const [secondaryEmail, setSecondaryEmail] = useState('');
+    const [secondaryEmail2, setSecondaryEmail2] = useState('');
 
 
     async function fetchKey() {
@@ -77,94 +83,28 @@ function CreateUser() {
 
 
     useEffect(() => {
-        if (!aesKey) return;
-
-        if (!dni) {
-
-            setDniError(null);
-            setDniValid(false);
-            setPersonName('');
-            setPersonActive(0);
-            setShowEmailSuggestion(false);
-            return;
-        }
-        if (dni.length !== 8) return;
-
-        setDniError(null);
-        setDniValid(false);
-        setPersonName('');
-        setPersonActive(0);
-
-        const fetchPerson = async () => {
-            try {
-                setSearch(true);
-                const encrypted = await encryptData({ dni }, aesKey);
-
-                if (!encrypted) {
-                    console.error("Falló la encriptación en medications");
-                    return;
-                }
-                const rawKey = await crypto.subtle.exportKey('raw', aesKey);
-                const base64Key = arrayBufferToBase64(rawKey);
-                const res = await fetch(
-                    `${API_BASE}/api/buscarPersona`,
-                    {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json',
-                            'X-AES-Key': base64Key,
-                        },
-                        credentials: 'include',
-                        body: JSON.stringify({
-                            ciphertext: encrypted.ciphertext,
-                            iv: encrypted.iv,
-                        }),
-                    }
-                );
-
-                const data = await res.json();
-                setSearch(false);
-
-                if (res.ok) {
-                    const decrypted = await decryptData(data, aesKey);
-                    const persona = JSON.parse(decrypted);
-                    console.log('Persona:', persona);
-
-                    setPersonActive(persona.activo);
-                    setPersonName(`${persona.nombre_p} ${persona.apellido}`);
-                    setDniValid(true);
-                    if (persona.usuario !== null && persona.correo !== null) {
-                        setToastMessage(`La persona ya tiene un usuario creado.`);
-                        setShowToast(true);
-                        setTimeout(() => {
-                            setShowToast(false);
-                        }, 3000);
-                        setPersonActive(0); // bloquea los inputs
-                    } else if (persona.usuario === null && persona.correo !== null) {
-                        setEmailCorp(persona.correo);
-                        setShowEmailSuggestion(true);
-                    } else {
-                        setShowEmailSuggestion(false);
-                    }
-
-                } else if (res.status === 404) {
-                    setDniError('Persona no encontrada');
-                } else {
-                    setDniError('Error validando DNI');
-                }
-            } catch (e) {
-                console.error(e);
-                alert(e.message);
-                setDniError('No se pudo contactar al servidor');
+        if (usuario && usuario.email) {
+            if (usuario.email.endsWith('@lafedar.com')) {
+                setShowEmailSuggestion(true);
+                setEmailCorp(usuario.email);
+                setEmail(usuario.email_secundario || '');
+                setEmail2(usuario.email_secundario || '');
+            } else {
+                setShowEmailSuggestion(false);
+                setEmail(usuario.email || '');
+                setEmail2(usuario.email || '');
             }
-        };
 
-        fetchPerson();
-    }, [dni, aesKey]);
+            setDni(usuario.dni || '');
+            setPersonActive(usuario.activo || false);
+            setPersonName(usuario.nombre || '');
+        }
+        console.log('Usuario actualizado:', usuario);
+    }, [usuario]);
 
 
 
-    async function crearUsuario(event) {
+    async function actualizarUsuario(event) {
         event.preventDefault();
         setError(null);
         setLoading(true);
@@ -190,8 +130,8 @@ function CreateUser() {
             if (showEmailSuggestion) {
                 payload = {
                     dni,
-                    email: emailCorp,  // email principal = corporativo
-                    emailPersonal: email,  // email2 pasa a ser el personal opcional
+                    email: emailCorp,
+                    emailPersonal: email,
                     password,
                 };
             } else {
@@ -205,12 +145,12 @@ function CreateUser() {
 
             const encrypted = await encryptData(payload, aesKey);
             if (!encrypted) {
-                console.error('Error al encriptar los datos en medications.');
+                console.error('Error al encriptar los datos.');
                 return;
             }
             const rawKey = await crypto.subtle.exportKey('raw', aesKey);
             const base64Key = arrayBufferToBase64(rawKey);
-            const response = await fetch(`${API_BASE}/api/createUser`, {
+            const response = await fetch(`${API_BASE}/api/updateUser`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -268,34 +208,15 @@ function CreateUser() {
                             <Toast message={toastMessage} onClose={() => setShowToast(false)} />
                         )}
 
-                        <form className="login-form" onSubmit={crearUsuario}>
+                        <form className="login-form" onSubmit={actualizarUsuario}>
                             <h1 className="text-x1 font-bold text-white-600 text-center sm:text-left">
-                                Registro de Usuario
+                                Actualizá tus datos
                             </h1>
 
                             {error && <div className="error">{error}</div>}
 
                             <div className="form-group flex flex-col items-center mt-3">
-                                <label htmlFor="dni" className="font-bold mb-[-15px]">Dni</label>
-                                <InputDni value={dni} onChange={e => setDni(e.target.value)} disabled={loading} />
-                                {search ? (
-                                    <p className="text-green-500 text-sm mt-[-5px]"><strong>Buscando...</strong></p>
-                                ) : (
-                                    <>
-                                        {dniError && (
-                                            <p className="text-red-500 text-sm mt-1">{dniError}</p>
-                                        )}
 
-                                        {dniValid && personName && (
-                                            <>
-                                                <p className="text-green-600 text-sm mt-[-5px]">
-                                                    Hola: <strong>{personName}</strong>
-                                                </p>
-                                            </>
-                                        )}
-
-                                    </>
-                                )}
                                 {showEmailSuggestion && (
                                     <>
                                         <label htmlFor="suggestedEmail" className="font-bold mb-[-15px]">Email Corporativo</label>
@@ -308,28 +229,23 @@ function CreateUser() {
                                 )}
 
 
+
                                 <label htmlFor="email" className="font-bold mb-[-15px]">
-                                    {showEmailSuggestion ? 'Email Personal (opcional)' : 'Email'}
+                                    Email Personal
                                 </label>
                                 <InputUser value={email} onChange={e => setEmail(e.target.value)} disabled={loading || personActive === 0} />
 
                                 <label htmlFor="email2" className="font-bold mb-[-15px]">
-                                    {showEmailSuggestion ? 'Reingrese su email personal' : 'Reingrese su email'}
+                                    Reingrese su email personal
                                 </label>
                                 <InputUser2 value={email2} onChange={e => setEmail2(e.target.value)} disabled={loading || personActive === 0} />
+
                             </div>
 
-                            <div className="form-group flex flex-col items-center mb-2">
-                                <label htmlFor="password" className="font-bold mb-[-15px]">Contraseña</label>
-                                <InputPassword value={password} onChange={e => setPassword(e.target.value)} disabled={loading || personActive === 0} />
-
-                                <label htmlFor="password2" className="font-bold mb-[-15px]">Reingrese su contraseña</label>
-                                <InputPassword2 value={password2} onChange={e => setPassword2(e.target.value)} disabled={loading || personActive === 0} />
-                            </div>
 
                             <div className="flex justify-center gap-2 my-5 mt-7 mb-5">
                                 <BackButton disabled={loading} />
-                                <MyButton type="submit" disabled={loading || personActive !== 1}>Crear</MyButton>
+                                <MyButton type="submit" disabled={loading || personActive !== 1}>Actualizar</MyButton>
                             </div>
                         </form>
                     </div>
@@ -427,8 +343,8 @@ function MyButton({ type = 'button', children, disabled = false }) {
     return (
         <button type={type} disabled={disabled}
             className={`w-full max-w-[140alapx] sm:max-w-[140px] px-2 py-2 bg-blue-500 rounded text-white text-sm transition delay-700 
-            duration-700 ease-in-out hover:-translate-y-1 hover:scale-101 hover:bg-indigo-500 
-            ${disabled ? 'opacity-50 cursor-not-allowed' : ''}`}>
+                duration-700 ease-in-out hover:-translate-y-1 hover:scale-101 hover:bg-indigo-500 
+                ${disabled ? 'opacity-50 cursor-not-allowed' : ''}`}>
 
             {children}
         </button>
@@ -443,7 +359,7 @@ function BackButton({ disabled = false }) {
             document.activeElement.blur();
         }
 
-        navigate('/');
+        navigate('/links');
     };
 
     return (
@@ -451,8 +367,8 @@ function BackButton({ disabled = false }) {
             onClick={handleClick}
             disabled={disabled}
             className={`w-full max-w-[140px] sm:max-w-[140px] px-2 py-2 bg-blue-500 rounded text-white text-sm transition delay-700 
-            duration-700 ease-in-out hover:-translate-y-1 hover:scale-101 hover:bg-indigo-500 
-            ${disabled ? 'opacity-50 cursor-not-allowed' : ''}`}
+                duration-700 ease-in-out hover:-translate-y-1 hover:scale-101 hover:bg-indigo-500 
+                ${disabled ? 'opacity-50 cursor-not-allowed' : ''}`}
         >
             Volver
         </button>
@@ -473,5 +389,6 @@ function InputSuggestedEmail({ value, onChange, disabled }) {
     );
 }
 
-export default CreateUser;
 
+
+export default UpdateDataUser;

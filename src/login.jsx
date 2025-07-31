@@ -149,7 +149,7 @@ function Login() {
             const mensajeDesencriptado = await decryptResponseFromBackend(data);
             const usuarioData = JSON.parse(mensajeDesencriptado);
             if (usuarioData.token) {
-                console.log("Token de acceso:", usuarioData.token);
+                
                 updateAccessToken(usuarioData.token);
 
             }
