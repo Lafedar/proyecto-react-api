@@ -111,6 +111,7 @@ function UpdateDataUser() {
 
     async function actualizarUsuario(event) {
         event.preventDefault();
+        if (loading) return; //evito reenvios
         setError(null);
         setLoading(true);
         setLoadingToast(true);
@@ -310,7 +311,7 @@ function UpdateDataUser() {
 
                             <div className="flex justify-center gap-2 my-5 mt-7 mb-5">
                                 <BackButton disabled={loading} />
-                                <MyButton type="submit">Actualizar</MyButton>
+                                <MyButton type="submit" disabled={loading}>Actualizar</MyButton>
                             </div>
                         </form>
                     </div>
@@ -386,7 +387,7 @@ function InputUser4({ value, onChange, disabled }) {
 }
 
 
-function MyButton({ type = 'button', children, disabled = false }) {
+function MyButton({ type = 'button', children, disabled }) {
     return (
         <button type={type} disabled={disabled}
             className={`w-full max-w-[140alapx] sm:max-w-[140px] px-2 py-2 bg-blue-500 rounded text-white text-sm transition delay-700 
