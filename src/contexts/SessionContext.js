@@ -22,7 +22,7 @@ export const SessionProvider = ({ children }) => {
         "raw",
         raw,
         { name: "AES-GCM" },
-        false,
+        true,
         ["encrypt", "decrypt"]
       ).then(importedKey => {
         setSessionKey(importedKey);

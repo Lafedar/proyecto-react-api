@@ -5,7 +5,9 @@ import { useNavigate } from 'react-router-dom';
 import Layout from './components/Layout';
 import { refreshAccessToken } from './jwtUtils';
 import { useSession } from './contexts/SessionContext';
-
+import Toast from './components/Toast';
+import { encryptData, decryptData } from './cryptoUtils';
+import { arrayBufferToBase64 } from './cryptoUtils';
 
 
 
@@ -83,24 +85,27 @@ function UpdateDataUser() {
 
 
     useEffect(() => {
-        if (usuario && usuario.email) {
-            if (usuario.email.endsWith('@lafedar.com')) {
-                setShowEmailSuggestion(true);
-                setEmailCorp(usuario.email);
+        if (usuario) {
+            const esCorporativo = usuario.email?.endsWith('@lafedar.com');
+            setShowEmailSuggestion(esCorporativo);
+
+            if (esCorporativo) {
+                // Modo sugerido con email corporativo
                 setEmail(usuario.email_secundario || '');
                 setEmail2(usuario.email_secundario || '');
+                setEmailCorp(usuario.email || '');
             } else {
-                setShowEmailSuggestion(false);
+                // Modo editable con 4 campos
                 setEmail(usuario.email || '');
                 setEmail2(usuario.email || '');
+                setSecondaryEmail(usuario.email_secundario || '');
+                setSecondaryEmail2(usuario.email_secundario || '');
             }
 
             setDni(usuario.dni || '');
-            setPersonActive(usuario.activo || false);
-            setPersonName(usuario.nombre || '');
         }
-        console.log('Usuario actualizado:', usuario);
     }, [usuario]);
+
 
 
 
@@ -114,15 +119,57 @@ function UpdateDataUser() {
             throw new Error('No se pudo obtener la clave AES, no se puede encriptar');
         }
 
-        if (email !== email2 || password !== password2) {
-            setToastMessage('Los emails o las contraseñas no coinciden.');
-            setShowToast(true);
-            setLoading(false);
-            setLoadingToast(false);
-            return;
+        if (showEmailSuggestion) {
+            // Caso con email corporativo
+
+            if (email !== email2) {
+                setToastMessage('Los emails personales no coinciden.');
+                setShowToast(true);
+                setLoading(false);
+                setLoadingToast(false);
+                setTimeout(() => setShowToast(false), 3000);
+                return;
+            }
+
+            if (email === emailCorp) {
+                setToastMessage('El email personal no puede ser igual al corporativo.');
+                setShowToast(true);
+                setLoading(false);
+                setLoadingToast(false);
+                setTimeout(() => setShowToast(false), 3000);
+                return;
+            }
+
+        } else {
+            // Caso sin email corporativo
+
+            if (email !== email2) {
+                setToastMessage('Los emails principales no coinciden.');
+                setShowToast(true);
+                setLoading(false);
+                setLoadingToast(false);
+                setTimeout(() => setShowToast(false), 3000);
+                return;
+            }
+
+            if (secondaryEmail !== secondaryEmail2) {
+                setToastMessage('Los emails secundarios no coinciden.');
+                setShowToast(true);
+                setLoading(false);
+                setLoadingToast(false);
+                setTimeout(() => setShowToast(false), 3000);
+                return;
+            }
+
+            if (email === secondaryEmail) {
+                setToastMessage('El email secundario no puede ser igual al principal.');
+                setShowToast(true);
+                setLoading(false);
+                setLoadingToast(false);
+                setTimeout(() => setShowToast(false), 3000);
+                return;
+            }
         }
-
-
 
         try {
             let payload;
@@ -130,18 +177,17 @@ function UpdateDataUser() {
             if (showEmailSuggestion) {
                 payload = {
                     dni,
-                    email: emailCorp,
+                    emailCorp: emailCorp,
                     emailPersonal: email,
-                    password,
+
                 };
             } else {
                 payload = {
                     dni,
-                    email,
-                    password,
+                    emailPerso: email,
+                    email_secundario: secondaryEmail,
                 };
             }
-
 
             const encrypted = await encryptData(payload, aesKey);
             if (!encrypted) {
@@ -150,7 +196,7 @@ function UpdateDataUser() {
             }
             const rawKey = await crypto.subtle.exportKey('raw', aesKey);
             const base64Key = arrayBufferToBase64(rawKey);
-            const response = await fetch(`${API_BASE}/api/updateUser`, {
+            const response = await fetch(`${API_BASE}/api/updateMailsUser`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -216,36 +262,55 @@ function UpdateDataUser() {
                             {error && <div className="error">{error}</div>}
 
                             <div className="form-group flex flex-col items-center mt-3">
-
-                                {showEmailSuggestion && (
+                                {showEmailSuggestion ? (
                                     <>
+                                        {/* Email corporativo fijo + email personal */}
                                         <label htmlFor="suggestedEmail" className="font-bold mb-[-15px]">Email Corporativo</label>
                                         <InputSuggestedEmail
                                             value={emailCorp}
                                             onChange={e => setEmailCorp(e.target.value)}
                                             disabled={true}
                                         />
+
+                                        <label htmlFor="email" className="font-bold mb-[-15px]">Email Personal</label>
+                                        <InputUser value={email} onChange={e => setEmail(e.target.value)} disabled={loading || personActive === 0} />
+
+                                        <label htmlFor="email2" className="font-bold mb-[-15px]">Reingrese su email personal</label>
+                                        <InputUser2 value={email2} onChange={e => setEmail2(e.target.value)} disabled={loading || personActive === 0} />
+                                    </>
+                                ) : (
+                                    <>
+                                        {/* Email principal */}
+                                        <label htmlFor="email" className="font-bold mb-[-15px]">Email Principal</label>
+                                        <InputUser value={email} onChange={e => setEmail(e.target.value)} disabled={loading || personActive === 0} />
+
+                                        <label htmlFor="email2" className="font-bold mb-[-15px]">Reingrese su email principal</label>
+                                        <InputUser2 value={email2} onChange={e => setEmail2(e.target.value)} disabled={loading || personActive === 0} />
+
+                                        {/* Email secundario */}
+                                        <label htmlFor="secondaryEmail" className="font-bold mb-[-15px]">Email Secundario</label>
+                                        <InputUser3
+                                            value={secondaryEmail}
+                                            onChange={e => setSecondaryEmail(e.target.value)}
+                                            disabled={loading || personActive === 0}
+                                        />
+
+                                        <label htmlFor="secondaryEmail2" className="font-bold mb-[-15px]">Reingrese su email secundario</label>
+                                        <InputUser4
+                                            value={secondaryEmail2}
+                                            onChange={e => setSecondaryEmail2(e.target.value)}
+                                            disabled={loading || personActive === 0}
+                                        />
+
                                     </>
                                 )}
-
-
-
-                                <label htmlFor="email" className="font-bold mb-[-15px]">
-                                    Email Personal
-                                </label>
-                                <InputUser value={email} onChange={e => setEmail(e.target.value)} disabled={loading || personActive === 0} />
-
-                                <label htmlFor="email2" className="font-bold mb-[-15px]">
-                                    Reingrese su email personal
-                                </label>
-                                <InputUser2 value={email2} onChange={e => setEmail2(e.target.value)} disabled={loading || personActive === 0} />
-
                             </div>
+
 
 
                             <div className="flex justify-center gap-2 my-5 mt-7 mb-5">
                                 <BackButton disabled={loading} />
-                                <MyButton type="submit" disabled={loading || personActive !== 1}>Actualizar</MyButton>
+                                <MyButton type="submit">Actualizar</MyButton>
                             </div>
                         </form>
                     </div>
@@ -259,21 +324,6 @@ function UpdateDataUser() {
 
 
 }
-function InputDni({ value, onChange, disabled }) {
-    return (
-        <input
-            type="number"
-            id="dni"
-            name="dni"
-            value={value}
-            onChange={onChange}
-            disabled={disabled}
-            required
-            className="w-70 px-3 py-2 rounded-md border border-black focus:outline-none focus:ring-2 focus:ring-blue-500"
-
-        />
-    )
-}
 
 function InputUser({ value, onChange, disabled }) {
     return (
@@ -284,7 +334,6 @@ function InputUser({ value, onChange, disabled }) {
             value={value}
             onChange={onChange}
             disabled={disabled}
-            required
             className="w-70 px-3 py-2 rounded-md border border-black focus:outline-none focus:ring-2 focus:ring-blue-500"
             autoComplete="username"
         />
@@ -299,43 +348,41 @@ function InputUser2({ value, onChange, disabled }) {
             value={value}
             onChange={onChange}
             disabled={disabled}
-            required
             className="w-70 px-3 py-2 rounded-md border border-black focus:outline-none focus:ring-2 focus:ring-blue-500"
             autoComplete="username"
         />
     )
 }
-
-function InputPassword({ value, onChange, disabled }) {
+function InputUser3({ value, onChange, disabled }) {
     return (
         <input
-            type="password"
-            id="password"
-            name="password"
+            type="text"
+            id="secondaryEmail"
+            name="secondaryEmail"
             value={value}
             onChange={onChange}
             disabled={disabled}
-            required
+            required={false}
             className="w-70 px-3 py-2 rounded-md border border-black focus:outline-none focus:ring-2 focus:ring-blue-500"
-            autoComplete="current-password" minLength="8" maxLength="25"
+            autoComplete="email"
         />
-    )
+    );
 }
 
-function InputPassword2({ value, onChange, disabled }) {
+function InputUser4({ value, onChange, disabled }) {
     return (
         <input
-            type="password"
-            id="password2"
-            name="password2"
+            type="text"
+            id="secondaryEmail2"
+            name="secondaryEmail2"
             value={value}
             onChange={onChange}
             disabled={disabled}
-            required
+            required={false}
             className="w-70 px-3 py-2 rounded-md border border-black focus:outline-none focus:ring-2 focus:ring-blue-500"
-            autoComplete="current-password" minLength="8" maxLength="25"
+            autoComplete="email"
         />
-    )
+    );
 }
 
 
@@ -364,6 +411,7 @@ function BackButton({ disabled = false }) {
 
     return (
         <button
+            type="button"
             onClick={handleClick}
             disabled={disabled}
             className={`w-full max-w-[140px] sm:max-w-[140px] px-2 py-2 bg-blue-500 rounded text-white text-sm transition delay-700 
