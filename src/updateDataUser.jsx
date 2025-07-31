@@ -432,7 +432,8 @@ function InputSuggestedEmail({ value, onChange, disabled }) {
             value={value}
             onChange={onChange}
             disabled={disabled}
-            className="w-70 px-3 py-2 rounded-md border border-green-600 focus:outline-none focus:ring-2 focus:ring-green-600"
+            className={`w-70 px-3 py-2 rounded-md border border-green-600 focus:outline-none focus:ring-2 focus:ring-green-600 
+                ${disabled ? 'bg-gray-100 text-gray-500 cursor-not-allowed opacity-70' : ''}`}
             placeholder="Correo sugerido"
         />
     );
