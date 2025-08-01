@@ -133,6 +133,7 @@ function CreateUser() {
                     setPersonActive(persona.activo);
                     setPersonName(`${persona.nombre_p} ${persona.apellido}`);
                     setDniValid(true);
+
                     if (persona.usuario !== null && persona.correo !== null) {
                         setToastMessage(`La persona ya tiene un usuario creado.`);
                         setShowToast(true);
@@ -140,12 +141,18 @@ function CreateUser() {
                             setShowToast(false);
                         }, 3000);
                         setPersonActive(0); // bloquea los inputs
-                    } else if (persona.usuario === null && persona.correo !== null) {
-                        setEmailCorp(persona.correo);
-                        setShowEmailSuggestion(true);
                     } else {
-                        setShowEmailSuggestion(false);
+                        console.log('Correo recibido:', `"${persona.correo}"`);
+
+                        const correo = persona.correo ? persona.correo.trim().toLowerCase() : '';
+                        if (persona.usuario === null && persona.correo !== null && correo.endsWith('@lafedar.com')) {
+                            setEmailCorp(persona.correo);
+                            setShowEmailSuggestion(true);
+                        } else {
+                            setShowEmailSuggestion(false);
+                        }
                     }
+
 
                 } else if (res.status === 404) {
                     setDniError('Persona no encontrada');
@@ -181,6 +188,8 @@ function CreateUser() {
             setLoadingToast(false);
             return;
         }
+
+
 
 
 
