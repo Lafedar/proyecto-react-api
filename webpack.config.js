@@ -46,6 +46,7 @@ module.exports = {
         { from: path.resolve(__dirname, 'public/manifest.json'), to: '' },
         { from: path.resolve(__dirname, 'public/service-worker.js'), to: '' },
         { from: path.resolve(__dirname, 'public/images'), to: 'images' },
+        { from: path.resolve(__dirname, 'public/favicon.ico'), to: '' },
         { from: path.resolve(__dirname, '_redirects'), to: '' },
       ],
     }),
