@@ -31,3 +31,11 @@ build/
 !src/images/*.jpeg
 !src/images/*.gif
 !src/images/*.svg
+
+
+!public/images/
+!public/images/**/*.png
+!public/images/**/*.jpg
+!public/images/**/*.jpeg
+!public/images/**/*.gif
+!public/images/**/*.svg
