@@ -26,6 +26,8 @@ function CreateUser() {
     const [search, setSearch] = useState(false);
     const [showEmailSuggestion, setShowEmailSuggestion] = useState(false);
     const [emailCorp, setEmailCorp] = useState('')
+    const [showForm, setShowForm] = useState(false);
+
 
 
 
@@ -137,17 +139,18 @@ function CreateUser() {
                     if (persona.usuario !== null && persona.correo !== null) {
                         setToastMessage(`La persona ya tiene un usuario creado.`);
                         setShowToast(true);
+                        setShowForm(false);
                         setTimeout(() => {
                             setShowToast(false);
                         }, 3000);
                         setPersonActive(0); // bloquea los inputs
                     } else {
-                        console.log('Correo recibido:', `"${persona.correo}"`);
-
+                        setShowForm(true);
                         const correo = persona.correo ? persona.correo.trim().toLowerCase() : '';
                         if (persona.usuario === null && persona.correo !== null && correo.endsWith('@lafedar.com')) {
                             setEmailCorp(persona.correo);
                             setShowEmailSuggestion(true);
+
                         } else {
                             setShowEmailSuggestion(false);
                         }
@@ -305,49 +308,56 @@ function CreateUser() {
 
                                     </>
                                 )}
-                                {showEmailSuggestion && (
+                                {showForm && (
                                     <>
-                                        <label htmlFor="suggestedEmail" className="font-bold mb-[-15px]">Email Corporativo</label>
-                                        <InputSuggestedEmail
-                                            value={emailCorp}
-                                            onChange={e => setEmailCorp(e.target.value)}
-                                            disabled={true}
-                                        />
+                                        <div className="form-group flex flex-col items-center mt-3">
+                                            {showEmailSuggestion && (
+                                                <>
+                                                    <div className="flex flex-col items-center justify-center mb-2">
+                                                        <span className="font-bold">Email Corporativo</span>
+                                                        <span className="text-green-700">{emailCorp}</span>
+                                                    </div>
+                                                </>
+                                            )}
+
+                                            <label htmlFor="email" className="font-bold mb-[-15px]">
+                                                {showEmailSuggestion ? 'Email Personal (opcional)' : 'Email'}
+                                            </label>
+                                            <InputUser value={email} onChange={e => setEmail(e.target.value)} disabled={loading || personActive === 0} />
+
+                                            <label htmlFor="email2" className="font-bold mb-[-15px]">
+                                                {showEmailSuggestion ? 'Reingrese su email personal' : 'Reingrese su email'}
+                                            </label>
+                                            <InputUser2 value={email2} onChange={e => setEmail2(e.target.value)} disabled={loading || personActive === 0} />
+
+                                            <label htmlFor="password" className="font-bold mb-[-15px] mt-4">Contraseña</label>
+                                            <InputPassword value={password} onChange={e => setPassword(e.target.value)} disabled={loading || personActive === 0} />
+
+                                            <label htmlFor="password2" className="font-bold mb-[-15px]">Reingrese su contraseña</label>
+                                            <InputPassword2 value={password2} onChange={e => setPassword2(e.target.value)} disabled={loading || personActive === 0} />
+
+                                            <div className="flex flex-row justify-between gap-2 mt-5 w-full max-w-[288px]">
+                                                <BackButton disabled={loading} />
+                                                <MyButton type="submit" disabled={loading || personActive !== 1}>Crear</MyButton>
+                                            </div>
+
+                                        </div>
                                     </>
                                 )}
-
-
-                                <label htmlFor="email" className="font-bold mb-[-15px]">
-                                    {showEmailSuggestion ? 'Email Personal (opcional)' : 'Email'}
-                                </label>
-                                <InputUser value={email} onChange={e => setEmail(e.target.value)} disabled={loading || personActive === 0} />
-
-                                <label htmlFor="email2" className="font-bold mb-[-15px]">
-                                    {showEmailSuggestion ? 'Reingrese su email personal' : 'Reingrese su email'}
-                                </label>
-                                <InputUser2 value={email2} onChange={e => setEmail2(e.target.value)} disabled={loading || personActive === 0} />
                             </div>
 
-                            <div className="form-group flex flex-col items-center mb-2">
-                                <label htmlFor="password" className="font-bold mb-[-15px]">Contraseña</label>
-                                <InputPassword value={password} onChange={e => setPassword(e.target.value)} disabled={loading || personActive === 0} />
-
-                                <label htmlFor="password2" className="font-bold mb-[-15px]">Reingrese su contraseña</label>
-                                <InputPassword2 value={password2} onChange={e => setPassword2(e.target.value)} disabled={loading || personActive === 0} />
-                            </div>
-
-                            <div className="flex justify-center gap-2 my-5 mt-7 mb-5">
-                                <BackButton disabled={loading} />
-                                <MyButton type="submit" disabled={loading || personActive !== 1}>Crear</MyButton>
-                            </div>
                         </form>
                     </div>
+
                 </Layout>
+
             </div>
 
 
         </>
+
     );
+
 
 
 
@@ -435,7 +445,7 @@ function InputPassword2({ value, onChange, disabled }) {
 function MyButton({ type = 'button', children, disabled = false }) {
     return (
         <button type={type} disabled={disabled}
-            className={`w-full max-w-[140alapx] sm:max-w-[140px] px-2 py-2 bg-blue-500 rounded text-white text-sm transition delay-700 
+            className={`w-full sm:max-w-[140px] px-2 py-2 bg-blue-500 rounded text-white text-sm transition delay-700 
             duration-700 ease-in-out hover:-translate-y-1 hover:scale-101 hover:bg-indigo-500 
             ${disabled ? 'opacity-50 cursor-not-allowed' : ''}`}>
 
@@ -459,7 +469,7 @@ function BackButton({ disabled = false }) {
         <button
             onClick={handleClick}
             disabled={disabled}
-            className={`w-full max-w-[140px] sm:max-w-[140px] px-2 py-2 bg-blue-500 rounded text-white text-sm transition delay-700 
+            className={`w-full sm:max-w-[140px] px-2 py-2 bg-blue-500 rounded text-white text-sm transition delay-700 
             duration-700 ease-in-out hover:-translate-y-1 hover:scale-101 hover:bg-indigo-500 
             ${disabled ? 'opacity-50 cursor-not-allowed' : ''}`}
         >
