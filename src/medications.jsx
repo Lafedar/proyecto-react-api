@@ -437,7 +437,7 @@ function BackButton({ disabled = false, updateAccessToken }) {
             document.activeElement.blur();
         }
 
-        navigate('/links');
+        navigate('/myRequests');
         refreshAccessToken(updateAccessToken);
     };
 

@@ -17,10 +17,8 @@ function Links() {
                 <LunchButton to="https://forms.office.com/Pages/ResponsePage.aspx?id=3zlyfmyFe0ObLZamOIhIW0Tb2ozw6d1Fu5JeRkE3OUtUMTlDTUNFUUVEQ1hRTlkwV0ZTVzZUMFRSVS4u" updateAccessToken={updateAccessToken}>
                     Almuerzos
                 </LunchButton>
-                <DocumentationButton to="/documentation" updateAccessToken={updateAccessToken}>Adjuntar Documentación</DocumentationButton>
-                <MyDocumentationButton to="/myDocumentation" updateAccessToken={updateAccessToken}>Mi Documentación</MyDocumentationButton>
-                <MedicationButton to="/medications" updateAccessToken={updateAccessToken}>Solicitudes de Medicamentos</MedicationButton>
-                <MyRequestsButton to="/myRequests" updateAccessToken={updateAccessToken}>Mis Solicitudes de Medicamentos</MyRequestsButton>
+                <MyDocumentationButton to="/myDocumentation" updateAccessToken={updateAccessToken}>Documentación</MyDocumentationButton>
+                <MyRequestsButton to="/myRequests" updateAccessToken={updateAccessToken}>Solicitudes de Medicamentos</MyRequestsButton>
                 <UpdateDataButton to="/updateData" updateAccessToken={updateAccessToken}>Actualizá tus datos</UpdateDataButton>
                 <ExitButton to="/">Salir</ExitButton>
             </div>
@@ -55,26 +53,7 @@ function LunchButton({ type = 'button', children, to, updateAccessToken }) {
         </button>
     );
 }
-function DocumentationButton({ type = 'button', children, to, updateAccessToken }) {
-    const navigate = useNavigate();
 
-    const handleClick = () => {
-        if (to) {
-            navigate(to);
-            refreshAccessToken(updateAccessToken);
-        }
-    };
-
-    return (
-        <button
-            type={type}
-            onClick={handleClick}
-            className="w-[300px] bg-blue-500 transition delay-700 duration-700 ease-in-out hover:-translate-y-1 hover:scale-110 hover:bg-indigo-500"
-        >
-            {children}
-        </button>
-    );
-}
 function MyDocumentationButton({ type = 'button', children, to, updateAccessToken }) {
     const navigate = useNavigate();
 
@@ -96,26 +75,7 @@ function MyDocumentationButton({ type = 'button', children, to, updateAccessToke
     );
 }
 
-function MedicationButton({ type = 'button', children, to, updateAccessToken }) {
-    const navigate = useNavigate();
 
-    const handleClick = () => {
-        if (to) {
-            navigate(to);
-            refreshAccessToken(updateAccessToken);
-        }
-    };
-
-    return (
-        <button
-            type={type}
-            onClick={handleClick}
-            className="w-[300px] bg-blue-500 transition delay-700 duration-700 ease-in-out hover:-translate-y-1 hover:scale-110 hover:bg-indigo-500"
-        >
-            {children}
-        </button>
-    );
-}
 
 function MyRequestsButton({ type = 'button', children, to, updateAccessToken }) {
     const navigate = useNavigate();

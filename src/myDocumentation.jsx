@@ -104,6 +104,13 @@ function MyDocumentation() {
                 <div className="w-full mx-auto">
                     <div className="max-h-[calc(100vh-200px)] overflow-y-auto px-4 hide-scrollbar mt-30">
                         <div className="flex flex-col items-center gap-2" style={{ minWidth: '350px' }}>
+                            <DocumentationButton
+                                to="/documentation"
+                                updateAccessToken={updateAccessToken}
+                                type="button"
+                            >
+                                Cargar
+                            </DocumentationButton>
 
                             {requests.length === 0 ? (
                                 <p className="text-center text-gray-600 text-lg font-semibold mt-10">
@@ -163,7 +170,27 @@ function MyDocumentation() {
 }
 
 
+function DocumentationButton({ type = 'button', children, to, updateAccessToken }) {
+    const navigate = useNavigate();
 
+    const handleClick = () => {
+        if (to) {
+            navigate(to);
+            refreshAccessToken(updateAccessToken);
+        }
+    };
+
+    return (
+        <button
+            type={type}
+            onClick={handleClick}
+            className="w-full max-w-[150px] text-xl font-bold bg-green-500 text-white py-1 px-2 rounded hover:bg-green-600 transition-all duration-300"
+
+        >
+            {children}
+        </button>
+    );
+}
 function BackButton({ disabled = false, updateAccessToken }) {
     const navigate = useNavigate();
 

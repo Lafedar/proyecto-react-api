@@ -266,14 +266,13 @@ function UpdateDataUser() {
                                 {showEmailSuggestion ? (
                                     <>
                                         {/* Email corporativo fijo + email personal */}
-                                        <label htmlFor="suggestedEmail" className="font-bold mb-[-15px]">Email Corporativo</label>
-                                        <InputSuggestedEmail
-                                            value={emailCorp}
-                                            onChange={e => setEmailCorp(e.target.value)}
-                                            disabled={true}
-                                        />
+                                        <div className="flex flex-col items-center justify-center mb-2">
+                                            <span className="font-bold">Email Corporativo:</span>
+                                            <span className="text-green-700">{emailCorp}</span>
+                                        </div>
 
-                                        <label htmlFor="email" className="font-bold mb-[-15px]">Email Personal</label>
+
+                                        <label htmlFor="email" className="font-bold mb-[-15px] mt-3">Email Personal</label>
                                         <InputUser value={email} onChange={e => setEmail(e.target.value)} disabled={loading || personActive === 0} />
 
                                         <label htmlFor="email2" className="font-bold mb-[-15px]">Reingrese su email personal</label>
@@ -432,7 +431,7 @@ function InputSuggestedEmail({ value, onChange, disabled }) {
             value={value}
             onChange={onChange}
             disabled={disabled}
-            className={`w-70 px-3 py-2 rounded-md border border-green-600 focus:outline-none focus:ring-2 focus:ring-green-600 
+            className={`w-70 px-3 py-2 rounded-md border border-grey-600 focus:outline-none focus:ring-2 focus:ring-green-600 
                 ${disabled ? 'bg-gray-100 text-gray-500 cursor-not-allowed opacity-70' : ''}`}
             placeholder="Correo sugerido"
         />

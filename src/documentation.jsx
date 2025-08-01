@@ -322,12 +322,13 @@ function BackButton({ disabled = false, updateAccessToken }) {
             document.activeElement.blur();
         }
 
-        navigate('/links');
+        navigate('/myDocumentation');
         refreshAccessToken(updateAccessToken);
     };
 
     return (
         <button
+            type="button"
             onClick={handleClick}
             disabled={disabled}
             className={`w-full max-w-[120px] sm:max-w-[160px] px-2 py-2 bg-blue-500 rounded text-white text-sm transition delay-700 

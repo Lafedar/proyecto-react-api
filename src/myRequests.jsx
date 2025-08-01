@@ -104,7 +104,7 @@ function MyRequests() {
                 <div className="w-full mx-auto">
                     <div className="max-h-[calc(100vh-200px)] overflow-y-auto px-4 hide-scrollbar mt-30">
                         <div className="flex flex-col items-center gap-2" style={{ minWidth: '350px' }}>
-
+                            <MedicationButton to="/medications" updateAccessToken={updateAccessToken}>Cargar</MedicationButton>
                             {requests.length === 0 ? (
                                 <p className="text-center text-gray-600 text-lg font-semibold mt-10">
                                     No tienes Solicitudes de Medicamentos.
@@ -174,7 +174,26 @@ function MyRequests() {
 }
 
 
+function MedicationButton({ type = 'button', children, to, updateAccessToken }) {
+    const navigate = useNavigate();
 
+    const handleClick = () => {
+        if (to) {
+            navigate(to);
+            refreshAccessToken(updateAccessToken);
+        }
+    };
+
+    return (
+        <button
+            type={type}
+            onClick={handleClick}
+            className="w-[150px] bg-blue-500 transition delay-700 duration-700 ease-in-out hover:-translate-y-[1px] hover:scale-99 hover:bg-indigo-500"
+        >
+            {children}
+        </button>
+    );
+}
 function BackButton({ disabled = false, updateAccessToken }) {
     const navigate = useNavigate();
 
@@ -192,7 +211,7 @@ function BackButton({ disabled = false, updateAccessToken }) {
         <button
             onClick={handleClick}
             disabled={disabled}
-            className={`w-full mt-2 max-w-[120px] sm:max-w-[160px] px-2 py-2 bg-blue-500 rounded text-white text-sm transition delay-700 
+            className={`w-full mt-8 max-w-[120px] sm:max-w-[160px] px-2 py-2 bg-blue-500 rounded text-white text-sm transition delay-700 
             duration-700 ease-in-out hover:-translate-y-1 hover:scale-101 hover:bg-indigo-500 
             ${disabled ? 'opacity-50 cursor-not-allowed' : ''}`}
         >
@@ -203,5 +222,3 @@ function BackButton({ disabled = false, updateAccessToken }) {
 
 
 export default MyRequests;
-
-
