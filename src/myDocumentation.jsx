@@ -184,7 +184,7 @@ function DocumentationButton({ type = 'button', children, to, updateAccessToken 
         <button
             type={type}
             onClick={handleClick}
-            className="w-full max-w-[150px] text-xl font-bold bg-green-500 text-white py-1 px-2 rounded hover:bg-green-600 transition-all duration-300"
+            className="w-[160px] text-xl font-bold bg-green-500 text-white py-1 px-2 rounded hover:bg-green-600 transition-all duration-300"
 
         >
             {children}
@@ -208,7 +208,7 @@ function BackButton({ disabled = false, updateAccessToken }) {
         <button
             onClick={handleClick}
             disabled={disabled}
-            className={`w-full mt-2 max-w-[120px] sm:max-w-[160px] px-2 py-2 bg-blue-500 rounded text-white text-sm transition delay-700 
+            className={`mt-2 w-[160px] sm:max-w-[160px] px-2 py-2 bg-blue-500 rounded text-white text-sm transition delay-700 
             duration-700 ease-in-out hover:-translate-y-1 hover:scale-101 hover:bg-indigo-500 
             ${disabled ? 'opacity-50 cursor-not-allowed' : ''}`}
         >
